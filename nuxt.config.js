@@ -46,7 +46,8 @@ export default {
         "faBars",
         "faChevronUp",
         "faChevronDown",
-        "faLink"
+        "faLink",
+        "faSearch"
       ],
       brands: ["faWhatsapp", "faTwitter", "faFacebookF"]
     }

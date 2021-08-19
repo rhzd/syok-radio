@@ -1,26 +1,16 @@
 <template>
-  <div v-if="stationData" class="flex my-container">
-    <div class="left-panel overflow-hidden">
-      <RadioPlayer :streamToken="streamToken" :stationData="stationData" />
-      <Show
-        :showsData="showsData"
-        :stationName="stationData.name"
-        :stationDesc="stationData.description"
-      />
-    </div>
-    <div class="right-panel overflow-hidden">
-      <div class="radio-banner overflow-hidden">
-        <BackgroundImage
-          :backgroundImage="
-            stationData.images.find((x) => x.name === 'background_images').url
-          "
-          :stationLogo="
-            stationData.images.find((x) => x.name === 'square_image').url
-          "
+  <div v-if="stationData">
+    <StationList v-show="isOpenStationList" :stationList="stationList" />
+    <div v-show="!isOpenStationList" class="flex my-container">
+      <div class="left-panel overflow-hidden">
+        <RadioPlayer :streamToken="streamToken" :stationData="stationData" />
+        <Show
+          v-if="!isOpenLastPlayed"
+          :showsData="showsData"
+          :stationName="stationData.name"
+          :stationDesc="stationData.description"
         />
-      </div>
-      <div class="flex other-info overflow-hidden">
-        <div v-if="playoutHistory.length > 0" class="last-played-song">
+        <div v-if="isOpenLastPlayed" class="last-played-left-panel">
           <LastPlayedSong
             :squareImage="
               stationData.images.find((x) => x.name === 'square_image').url
@@ -28,32 +18,54 @@
             :playoutHistory="playoutHistory"
           />
         </div>
-        <div
-          :class="
-            playoutHistory.length > 0 ? 'more-from-us' : 'more-from-us-full'
-          "
-        >
-          <MoreFromUs :moreFromUs="moreFromUs" />
+      </div>
+      <div class="right-panel overflow-hidden">
+        <div class="radio-banner overflow-hidden">
+          <BackgroundImage
+            :backgroundImage="
+              stationData.images.find((x) => x.name === 'background_images').url
+            "
+            :stationLogo="
+              stationData.images.find((x) => x.name === 'square_image').url
+            "
+          />
+        </div>
+        <div class="flex other-info overflow-hidden">
+          <div v-if="playoutHistory.length > 0" class="last-played-song">
+            <LastPlayedSong
+              :squareImage="
+                stationData.images.find((x) => x.name === 'square_image').url
+              "
+              :playoutHistory="playoutHistory"
+            />
+          </div>
+          <div
+            :class="
+              playoutHistory.length > 0 ? 'more-from-us' : 'more-from-us-full'
+            "
+          >
+            <MoreFromUs :moreFromUs="moreFromUs" />
+          </div>
         </div>
       </div>
-    </div>
-    <div v-if="ads" id="overlay-ad" @click="hideAds">
-      <div class="wrap">
-        <div class="image">
-          <a target="_blank" href="/">
-            <div class="ad-image-container">
-              <!-- <img
+      <div v-if="isAds" id="overlay-ad" @click="hideAds">
+        <div class="wrap">
+          <div class="image">
+            <a target="_blank" href="/">
+              <div class="ad-image-container">
+                <!-- <img
                 src="https://www.rawshorts.com/blog/wp-content/uploads/2019/10/how-to-use-facebook-video-ads.png"
                 class="ad-image"
               /> -->
+              </div>
+            </a>
+            <div>
+              <font-awesome-icon
+                class="icon-close"
+                icon="times"
+                @click="hideAds"
+              />
             </div>
-          </a>
-          <div>
-            <font-awesome-icon
-              class="icon-close"
-              icon="times"
-              @click="hideAds"
-            />
           </div>
         </div>
       </div>
@@ -155,21 +167,22 @@ export default {
         );
       }
 
+      let stationList = await $axios.$get(`${syokURL}/radio/stations`);
+
       let moreFromUs = [];
       if (stationData.data.language !== "en") {
-        let stationListTemp = await $axios.$get(
-          `${syokURL}/radio/stations?language=${stationData.data.language}`
-        );
-        stationListTemp.data.forEach((el) => {
-          moreFromUs.push(el);
+        stationList.data.forEach((el) => {
+          if (
+            el.language == stationData.data.language &&
+            el.stationCode !== params.id
+          ) {
+            moreFromUs.push(el);
+          }
         });
       }
-      let stationListTemp = await $axios.$get(
-        `${syokURL}/radio/stations?language=en`
-      );
 
-      stationListTemp.data.forEach((el) => {
-        if (el.stationCode !== params.id) {
+      stationList.data.forEach((el) => {
+        if (el.language == "en" && el.stationCode !== params.id) {
           moreFromUs.push(el);
         }
       });
@@ -184,6 +197,7 @@ export default {
         streamToken: streamToken.data,
         stationData: stationData.data,
         showsData: shows ? shows.data : [],
+        stationList: stationList ? stationList.data : [],
         moreFromUs: playoutHistory
           ? moreFromUs.slice(0, 4)
           : moreFromUs.slice(0, 6),
@@ -197,7 +211,9 @@ export default {
   },
   data() {
     return {
-      ads: false,
+      isAds: false,
+      isOpenLastPlayed: false,
+      isOpenStationList: false,
     };
   },
   created() {
@@ -206,10 +222,16 @@ export default {
   mounted() {},
   methods: {
     showAds() {
-      this.ads = true;
+      this.isAds = true;
     },
     hideAds() {
-      this.ads = false;
+      this.isAds = false;
+    },
+    toggleLastPlayed() {
+      this.isOpenLastPlayed = !this.isOpenLastPlayed;
+    },
+    toggleStationList() {
+      this.isOpenStationList = !this.isOpenStationList;
     },
   },
 };
@@ -303,6 +325,9 @@ export default {
 #overlay-ad .ad-image {
   border-radius: 5px;
 }
+.last-played-song-mid-player {
+  display: none;
+}
 
 @media only screen and (max-width: 1199px) {
   #overlay-ad .icon-close {
@@ -331,9 +356,22 @@ export default {
   .more-from-us {
     width: 450px;
   }
+  .last-played-left-panel {
+    border-radius: 0px 20px 20px 0px;
+    display: inline;
+    position: absolute;
+    top: 185px;
+    background-color: white;
+    height: 600px;
+    width: 340px;
+  }
 }
 
 @media only screen and (max-width: 799px) {
+  .last-played-left-panel {
+    top: 210px;
+    height: 550px;
+  }
   .right-panel {
     display: none;
   }

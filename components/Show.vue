@@ -22,6 +22,7 @@
             <div class="flex w-full">
               <div class="show-image-container">
                 <img
+                  v-if="showsData[0].images[0]"
                   class="show-image"
                   :src="showsData[0].images[0].url"
                   :alt="showsData[0].name"
@@ -120,6 +121,7 @@
             <div class="flex w-full">
               <div class="show-image-container">
                 <img
+                  v-if="showsData[0].images[0]"
                   class="show-image"
                   :src="showsData[0].images[0].url"
                   :alt="showsData[0].name"
@@ -342,6 +344,9 @@ hr.spacing {
 }
 
 @media only screen and (max-width: 1199px) {
+  .custom-bg {
+    height: 30px;
+  }
   .max-player {
     display: none;
   }

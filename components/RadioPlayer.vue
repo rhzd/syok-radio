@@ -3,12 +3,20 @@
     <div class="header-font text-white max-player">NOW PLAYING</div>
     <div class="flex min-player items-center justify-between">
       <div class="flex flex-col">
-        <div class="title-font text-white">NOW PLAYING</div>
+        <div class="now-playing-min-font text-white">NOW PLAYING</div>
         <div class="station-font text-white">HITZ</div>
       </div>
       <div class="flex button-container">
-        <font-awesome-icon class="icon bars" icon="bars" />
-        <font-awesome-icon class="icon th-large" icon="th-large" />
+        <font-awesome-icon
+          @click="toggleLastPlayed"
+          class="icon bars"
+          icon="bars"
+        />
+        <font-awesome-icon
+          @click="toggleStationList"
+          class="icon th-large"
+          icon="th-large"
+        />
       </div>
     </div>
     <div class="flex med-player items-center justify-between">
@@ -16,7 +24,11 @@
         <div class="header-font text-white">NOW PLAYING</div>
       </div>
       <div class="flex button-container">
-        <font-awesome-icon class="icon bars text-white" icon="bars" />
+        <font-awesome-icon
+          @click="toggleLastPlayed"
+          class="icon bars text-white"
+          icon="bars"
+        />
       </div>
     </div>
     <img
@@ -235,6 +247,12 @@ export default {
       this.audio.volume = 0;
       this.volume = 0;
     },
+    toggleLastPlayed() {
+      this.$root.$refs.MainPage.toggleLastPlayed();
+    },
+    toggleStationList() {
+      this.$root.$refs.MainPage.toggleStationList();
+    },
   },
   watch: {},
 };
@@ -257,11 +275,22 @@ export default {
   margin-top: 40px;
   margin-bottom: 8px;
 }
+.now-playing-min-font {
+  font-size: 18px;
+  margin-top: 8px;
+  letter-spacing: 0px;
+  font-weight: 600;
+}
 .title-font {
   font-size: 18px;
   margin-top: 8px;
   letter-spacing: 0px;
   font-weight: 600;
+  width: 300px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
 }
 .artist-font {
   font-size: 18px;

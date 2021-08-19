@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div class="header-font text-white">LAST PLAYED SONGS</div>
+    <font-awesome-icon
+      @click="$root.$refs.MainPage.toggleLastPlayed()"
+      class="icon-close"
+      icon="times"
+    />
+    <div class="header-font">LAST PLAYED SONGS</div>
     <div class="error-container" v-if="playoutHistory.length < 1">
       <div class="error-box">:(</div>
     </div>
@@ -15,10 +20,10 @@
           </div>
 
           <div class="song-info flex flex-col justify-center">
-            <div class="title-font text-white">
+            <div class="title-font">
               {{ el.song.track }}
             </div>
-            <div class="artist-font text-white">
+            <div class="artist-font">
               {{ el.song.artist }}
             </div>
           </div>
@@ -104,6 +109,7 @@ export default {
   letter-spacing: 0.02rem;
   font-size: 18px;
   font-weight: 600;
+  color: white;
 }
 .title-font {
   white-space: nowrap;
@@ -113,6 +119,7 @@ export default {
   letter-spacing: 1px;
   font-size: 12px;
   font-weight: 600;
+  color: white;
 }
 .artist-font {
   white-space: nowrap;
@@ -122,6 +129,7 @@ export default {
   letter-spacing: 1px;
   font-weight: 300;
   font-size: 12px;
+  color: white;
 }
 .song-list {
   margin-bottom: 10px;
@@ -130,5 +138,59 @@ export default {
   height: 50px;
   width: 143px;
   margin-left: 11px;
+}
+.icon-close {
+  display: none;
+}
+@media only screen and (max-width: 1199px) {
+  .header-font {
+    letter-spacing: 1px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #453232;
+  }
+  .title-font {
+    white-space: nowrap;
+    width: 100%;
+    overflow-x: clip;
+    text-overflow: ellipsis;
+    letter-spacing: 1px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #707070;
+  }
+  .artist-font {
+    white-space: nowrap;
+    width: 100%;
+    overflow-x: clip;
+    text-overflow: ellipsis;
+    letter-spacing: 1px;
+    font-weight: 500;
+    font-size: 12px;
+    color: #707070;
+  }
+  .list-container {
+    height: 553px;
+  }
+  .icon-close {
+    font-size: 35px;
+    left: 87%;
+    color: #e30f0f;
+    cursor: pointer;
+    margin-right: 10px;
+    position: absolute;
+    display: inline;
+  }
+}
+
+@media only screen and (max-width: 799px) {
+  .list-container {
+    height: 503px;
+  }
+  .player-container {
+    background-color: #ed0f0f;
+    width: 350px;
+    height: 550px;
+  }
 }
 </style>

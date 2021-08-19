@@ -32,18 +32,23 @@
           </a>
         </div>
         <div class="flex flex-col station-info-container">
-          <a href="/">
+          <div>
             <div
+              @click="$root.$refs.MainPage.toggleStationList()"
               class="station-logo-container flex justify-center items-center"
             >
-              <font-awesome-icon class="icon" icon="th-large" />
+              <font-awesome-icon
+                class="icon"
+                icon="th-large"
+              />
             </div>
-          </a>
-          <a :href="`/`" class="station-name-container">
-            <div class="station-name text-white">
-              ALL RADIO
-            </div>
-          </a>
+          </div>
+          <div
+            @click="$root.$refs.MainPage.toggleStationList()"
+            class="station-name-container"
+          >
+            <div class="station-name text-white">ALL RADIO</div>
+          </div>
         </div>
       </div>
     </div>
@@ -51,7 +56,7 @@
       <div class="flex margin-normal">
         <div
           class="flex flex-col station-info-container"
-          v-for="station in moreFromUs.slice(0,4)"
+          v-for="station in moreFromUs.slice(0, 4)"
           :key="station.stationCode"
         >
           <a :href="`/${station.stationCode}`">
@@ -70,18 +75,20 @@
           </a>
         </div>
         <div class="flex flex-col station-info-container">
-          <a href="/">
+          <div>
             <div
+              @click="$root.$refs.MainPage.toggleStationList()"
               class="station-logo-container flex justify-center items-center"
             >
               <font-awesome-icon class="icon" icon="th-large" />
             </div>
-          </a>
-          <a :href="`/`" class="station-name-container">
-            <div class="station-name text-white">
-              ALL RADIO
-            </div>
-          </a>
+          </div>
+          <div
+            @click="$root.$refs.MainPage.toggleStationList()"
+            class="station-name-container"
+          >
+            <div class="station-name text-white">ALL RADIO</div>
+          </div>
         </div>
       </div>
     </div>
@@ -118,6 +125,7 @@ export default {
 .station-logo-container {
   width: 100px;
   height: 100px;
+  cursor: pointer;
 }
 .station-logo {
   border-radius: 15px;
@@ -144,6 +152,9 @@ export default {
 }
 .max-player {
   display: inline;
+}
+.station-name-container {
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 1199px) {
