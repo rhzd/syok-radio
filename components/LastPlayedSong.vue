@@ -1,25 +1,26 @@
 <template>
-  <div class="h-full">
-    <div class="header-font text-white font-bold mb-4">LAST PLAYED SONGS</div>
+  <div>
+    <div class="header-font text-white">LAST PLAYED SONGS</div>
     <div class="error-container" v-if="playoutHistory.length < 1">
       <div class="error-box">:(</div>
     </div>
-    <div v-else v-for="el in playoutHistory" v-bind:key="el.song.id">
-      <div class="grid grid-rows-2 grid-cols-12" style="margin-bottom: 0.5vw">
-        <div class="row-span-2 col-span-2">
-          <img
-            class="rounded album-art"
-            :src="el.song.coverUrl ? el.song.coverUrl : squareImage"
-          />
-        </div>
-        <div class="col-span-10" style="align-self: center; margin-left: 0.7vw">
-          <div class="title-font">
-            {{ el.song.track }}
+    <div v-else class="list-container overflow-y-auto">
+      <div v-for="el in playoutHistory.slice(1)" v-bind:key="el.song.id">
+        <div class="flex song-list">
+          <div class="rounded album-container">
+            <img
+              class="rounded album-art"
+              :src="el.song.coverUrl ? el.song.coverUrl : squareImage"
+            />
           </div>
-        </div>
-        <div class="col-span-10" style="margin-left: 0.7vw">
-          <div class="artist-font">
-            {{ el.song.artist }}
+
+          <div class="song-info flex flex-col justify-center">
+            <div class="title-font text-white">
+              {{ el.song.track }}
+            </div>
+            <div class="artist-font text-white">
+              {{ el.song.artist }}
+            </div>
           </div>
         </div>
       </div>
@@ -31,9 +32,10 @@
 export default {
   props: ["playoutHistory", "squareImage"],
   data() {
-    return {};
+    return {
+      sameSong: false,
+    };
   },
-  computed: {},
   created() {
     this.$root.$refs.LastPlayedSong = this;
   },
@@ -50,7 +52,7 @@ export default {
           this.playoutHistory.push({ song: currentMetadata });
         }
       }
-      if (this.playoutHistory.length == 7) {
+      if (this.playoutHistory.length == 20) {
         this.playoutHistory.pop();
       }
     },
@@ -74,51 +76,59 @@ export default {
   top: -10%;
   font-size: 6vw;
 }
-.album-art {
-  max-width: 90%;
-  width: 90%;
-  border-radius: 0.5rem;
-  border: none;
+.list-container {
+  margin-top: 5px;
+  margin-left: 20px;
+  height: 168px;
+  -ms-overflow-style: none; /* IE and Edge scrollbar hide */
+  scrollbar-width: none;
+}
+.list-container::-webkit-scrollbar {
+  /* other scrollbar hide */
+  display: none;
+}
+.album-container {
+  width: 50px;
+  height: 50px;
   background-color: lightgrey;
 }
-.last-played-container {
-  margin-bottom: 0.4vw;
+.album-art {
+  width: 50px;
+  height: 50px;
 }
 .header-font {
-  line-height: 1vw;
-  margin-bottom: 1.5vw;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  margin-left: 20px;
+  margin-right: 20px;
   letter-spacing: 0.02rem;
-  font-size: 1.7vw;
+  font-size: 18px;
   font-weight: 600;
 }
-.last-played-img {
-  width: 47px;
-}
 .title-font {
-  line-height: 1vw;
   white-space: nowrap;
   width: 100%;
   overflow-x: clip;
   text-overflow: ellipsis;
-  letter-spacing: 0.04rem;
-  font-size: 1vw;
+  letter-spacing: 1px;
+  font-size: 12px;
   font-weight: 600;
 }
 .artist-font {
-  line-height: 1vw;
   white-space: nowrap;
   width: 100%;
   overflow-x: clip;
   text-overflow: ellipsis;
-  letter-spacing: 0.05rem;
+  letter-spacing: 1px;
   font-weight: 300;
-  font-size: 0.9vw;
+  font-size: 12px;
 }
-.album-container {
-  width: 2.7vw;
+.song-list {
+  margin-bottom: 10px;
 }
-.text-container {
-  align-items: flex-end;
-  margin-left: 0.7vw;
+.song-info {
+  height: 50px;
+  width: 143px;
+  margin-left: 11px;
 }
 </style>

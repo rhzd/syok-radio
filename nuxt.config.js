@@ -41,12 +41,15 @@ export default {
       solid: [
         "faPlay",
         "faStop",
-        "faVolumeOff",
+        "faVolumeDown",
+        "faVolumeMute",
         "faShareAlt",
         "faTimes",
         "faCode",
         "faThLarge",
-        "faChevronUp"
+        "faBars",
+        "faChevronUp",
+        "faChevronDown"
       ]
     }
   },
@@ -65,8 +68,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
-    "@nuxtjs/pwa",
-    "@nuxtjs/localtunnel"
+    "@nuxtjs/pwa"
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

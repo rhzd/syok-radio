@@ -24,7 +24,6 @@
     "@nuxtjs/fontawesome": "^1.1.2",
     "@nuxtjs/google-analytics": "^2.4.0",
     "@nuxtjs/google-fonts": "^1.3.0",
-    "@nuxtjs/localtunnel": "^1.1.3",
     "@nuxtjs/tailwindcss": "^4.2.0",
     "imagemin-mozjpeg": "^9.0.0",
     "lqip-loader": "^2.2.1",

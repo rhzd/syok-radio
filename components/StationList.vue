@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="list-container">
     <div class="mt-4">
       <div class="flex justify-between">
         <div class="self-center">
@@ -94,5 +94,8 @@ label {
   height: 38px;
   padding-left: 16px;
   border-radius: 8px;
+}
+.list-container {
+  margin: 20px;
 }
 </style>

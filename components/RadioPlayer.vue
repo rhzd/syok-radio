@@ -1,10 +1,26 @@
 <template>
   <div class="flex flex-col justify-start items-center">
-    <div class="header-font mt-6 lg:mt-9 text-white">
-      NOW PLAYING
+    <div class="header-font text-white max-player">NOW PLAYING</div>
+    <div class="flex min-player items-center justify-between">
+      <div class="flex flex-col">
+        <div class="title-font text-white">NOW PLAYING</div>
+        <div class="station-font text-white">HITZ</div>
+      </div>
+      <div class="flex button-container">
+        <font-awesome-icon class="icon bars" icon="bars" />
+        <font-awesome-icon class="icon th-large" icon="th-large" />
+      </div>
+    </div>
+    <div class="flex med-player items-center justify-between">
+      <div class="flex flex-col">
+        <div class="header-font text-white">NOW PLAYING</div>
+      </div>
+      <div class="flex button-container">
+        <font-awesome-icon class="icon bars text-white" icon="bars" />
+      </div>
     </div>
     <img
-      class="mt-5 rounded-xl ring-4 ring-red-500 square"
+      class="square"
       :src="
         currentMetadata
           ? currentMetadata.coverUrl
@@ -23,24 +39,39 @@
       <div
         key="1"
         v-if="!shareActive"
-        class="media-player mt-5 rounded-lg bg-color"
+        class="flex media-player bg-color items-center justify-between"
       >
-        <div class="content flex items-center justify-start">
+        <div>
           <button
-            class="ml-2 bg-white btn-circle rounded-full"
+            class="bg-white rounded-full btn-circle"
             v-show="paused"
             @click="play"
           >
             <font-awesome-icon class="icon play" icon="play" />
           </button>
           <button
-            class="ml-2 bg-white btn-circle rounded-full"
+            class="bg-white rounded-full btn-circle"
             v-show="playing"
             @click="pause"
           >
             <font-awesome-icon class="icon stop" icon="stop" />
           </button>
-          <font-awesome-icon class="icon volume" icon="volume-off" />
+        </div>
+
+        <div class="flex items-center">
+          <div class="volume-icon-container">
+            <font-awesome-icon
+              v-if="volume == 0"
+              class="icon volume"
+              icon="volume-mute"
+            />
+            <font-awesome-icon
+              v-else
+              class="icon volume"
+              icon="volume-down"
+              @click="mute"
+            />
+          </div>
           <input
             type="range"
             :value="volume"
@@ -49,6 +80,9 @@
             @input="volumeChange"
             :style="{ 'background-size': volume + '%' + '100%' }"
           />
+        </div>
+
+        <div>
           <font-awesome-icon
             class="icon share"
             icon="share-alt"
@@ -56,15 +90,17 @@
           />
         </div>
       </div>
-      <div key="2" v-else class="media-player mt-5 rounded-lg bg-white">
-        <div class="content flex items-center justify-start">
-          <font-awesome-icon class="icon code" icon="code" />
-          <font-awesome-icon
-            class="icon times"
-            icon="times"
-            @click="shareActive = !shareActive"
-          />
-        </div>
+      <div
+        key="2"
+        v-else
+        class="flex media-player bg-color items-center justify-between"
+      >
+        <font-awesome-icon class="icon code" icon="code" />
+        <font-awesome-icon
+          class="icon times"
+          icon="times"
+          @click="shareActive = !shareActive"
+        />
       </div>
     </transition>
     <audio
@@ -155,6 +191,10 @@ export default {
       this.audio.pause();
       this.audio.currentTime = 0;
     },
+    mute() {
+      this.audio.volume = 0;
+      this.volume = 0;
+    },
   },
   watch: {},
 };
@@ -162,34 +202,43 @@ export default {
 
 <style scoped>
 .square {
-  width: 60%;
-  height: 60%;
+  width: 300px;
+  height: 300px;
   background-color: lightgrey;
-  min-height: 47vw;
+  border-radius: 6px;
 }
 .bg-color {
   background-color: #d31414;
 }
 .header-font {
-  font-size: 8vw;
-  margin-top: 2vw;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-top: 40px;
+  margin-bottom: 8px;
 }
 .title-font {
-  font-size: 4.3vw;
-  margin-top: 4.7vw;
+  font-size: 18px;
+  margin-top: 8px;
+  letter-spacing: 0px;
+  font-weight: 600;
 }
 .artist-font {
-  font-size: 3.7vw;
+  font-size: 18px;
   font-weight: 300;
+  margin-top: -2px;
+  text-align: center;
+  width: 300px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .media-player {
-  position: relative;
-  width: 107%;
-}
-.media-player:after {
-  content: "";
-  display: block;
-  padding-bottom: 24%;
+  width: 100%;
+  margin-top: 33px;
+  height: 100px;
+  padding-left: 27px;
+  padding-right: 27px;
 }
 .content {
   position: absolute;
@@ -197,50 +246,50 @@ export default {
   height: 100%;
 }
 .btn-circle {
-  position: relative;
-  width: 19%;
-  height: 78%;
+  width: 70px;
+  height: 70px;
 }
 .icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 5.3vw;
+  font-size: 30px;
 }
 .icon.play {
-  left: 54%;
-  color: #c60e0e;
+  color: #ed0f0f;
+  left: 4%;
+  top: 2%;
+  position: relative;
 }
 .icon.stop {
-  left: 50%;
-  color: #c60e0e;
+  color: #ed0f0f;
+  top: 2%;
+  position: relative;
 }
 .icon.volume {
-  left: 29%;
   color: #ffffff;
 }
+.icon.volume-mute {
+  color: #ffffff;
+}
+.volume-icon-container {
+  width: 35px;
+  top: 2px;
+  position: relative;
+}
 .icon.share {
-  left: 90%;
   color: #ffffff;
   cursor: pointer;
-  font-size: 6.3vw;
 }
 .icon.times {
   left: 90%;
-  color: #000;
+  color: #ffffff;
   cursor: pointer;
-  font-size: 6.3vw;
 }
 .icon.code {
   left: 13%;
-  color: #000;
-  font-size: 6.3vw;
+  color: #ffffff;
 }
 input[type="range"] {
   -webkit-appearance: none;
-  width: 49%;
-  left: 11%;
+  width: 80%;
   position: relative;
   height: 4px;
   background: #e05b5b;
@@ -324,42 +373,90 @@ input[type="range"]::-ms-track {
 .fade-leave-to {
   opacity: 0;
 }
-@media only screen and (min-width: 1024px) {
-  .square {
-    width: 50%;
-    height: 50%;
-    min-height: 14vw;
+.min-player {
+  display: none;
+}
+.med-player {
+  display: none;
+}
+
+@media only screen and (max-width: 1199px) {
+  .button-container {
+    position: relative;
+    top: 5px;
+    left: 36px;
   }
   .header-font {
-    font-size: 2vw;
-    font-weight: 700;
-    letter-spacing: 0.1rem;
-  }
-  .title-font {
-    font-size: 1.3vw;
-    margin-top: 0.7vw;
-    letter-spacing: 0.04rem;
-    font-weight: 500;
-  }
-  .artist-font {
-    font-size: 1.1vw;
-    letter-spacing: 0.05rem;
-    font-weight: 300;
-  }
-  .icon {
-    font-size: 1.3vw;
-  }
-  .icon.share {
-    font-size: 2vw;
-  }
-  .icon.times {
-    font-size: 2vw;
-  }
-  .icon.code {
-    font-size: 2vw;
+    margin-top: 25px;
+    margin-bottom: 13px;
   }
   .media-player {
-    width: 90%;
+    margin-top: 33px;
+  }
+  .med-player {
+    display: flex;
+  }
+  .min-player {
+    display: none;
+  }
+  .max-player {
+    display: none;
+  }
+  .icon.bars {
+    cursor: pointer;
+    font-size: 32px;
+    color: #f68787;
+  }
+}
+
+@media only screen and (max-width: 799px) {
+  .square {
+    width: 250px;
+    height: 250px;
+  }
+  .right-panel {
+    display: none;
+  }
+  .media-player {
+    margin-top: 36px;
+  }
+  .min-player {
+    display: flex;
+    height: 80px;
+    width: 250px;
+  }
+  .med-player {
+    display: none;
+  }
+  .max-player {
+    display: none;
+  }
+  .title-font {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 3px;
+    letter-spacing: 1px;
+  }
+  .station-font {
+    line-height: 11px;
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .icon.bars {
+    cursor: pointer;
+    font-size: 32px;
+    color: #f68787;
+  }
+  .icon.th-large {
+    cursor: pointer;
+    color: #f68787;
+    font-size: 32px;
+    margin-left: 18px;
+  }
+  .button-container {
+    position: relative;
+    top: 3px;
+    left: 28px;
   }
 }
 </style>

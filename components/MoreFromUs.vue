@@ -1,21 +1,79 @@
 <template>
   <div>
-    <div class="header-font text-white font-bold mb-4">MORE FROM US</div>
-    <div class="grid gap-4 grid-cols-6">
-      <div v-for="station in moreFromUs" :key="station.stationCode">
-        <a :href="`/${station.stationCode}`">
-          <div class="square">
-            <div class="content">
-              <img class="rounded-2xl" :src="station.logo" />
+    <div
+      class="header-font text-white"
+      :class="moreFromUs.length == 6 ? 'margin-full' : 'margin-normal'"
+    >
+      MORE FROM US
+    </div>
+    <div class="max-player">
+      <div
+        class="flex"
+        :class="moreFromUs.length == 6 ? 'margin-full' : 'margin-normal'"
+      >
+        <div
+          class="flex flex-col station-info-container"
+          v-for="station in moreFromUs"
+          :key="station.stationCode"
+        >
+          <a :href="`/${station.stationCode}`">
+            <div class="station-logo-container">
+              <img
+                class="station-logo"
+                :src="station.logo"
+                :alt="station.name"
+              />
             </div>
-          </div>
-        </a>
-      </div>
-      <a href="/" class="square-btn rounded-2xl">
-        <div class="content">
-          <font-awesome-icon class="icon grid" icon="th-large" />
+          </a>
+          <a :href="`/${station.stationCode}`" class="station-name-container">
+            <div class="station-name text-white">
+              {{ station.name }}
+            </div>
+          </a>
         </div>
-      </a>
+        <div class="flex flex-col station-info-container">
+          <a href="/">
+            <div
+              class="station-logo-container flex justify-center items-center"
+            >
+              <font-awesome-icon class="icon" icon="th-large" />
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="medium-player">
+      <div class="flex margin-normal">
+        <div
+          class="flex flex-col station-info-container"
+          v-for="station in moreFromUs.slice(0,4)"
+          :key="station.stationCode"
+        >
+          <a :href="`/${station.stationCode}`">
+            <div class="station-logo-container">
+              <img
+                class="station-logo"
+                :src="station.logo"
+                :alt="station.name"
+              />
+            </div>
+          </a>
+          <a :href="`/${station.stationCode}`" class="station-name-container">
+            <div class="station-name text-white">
+              {{ station.name }}
+            </div>
+          </a>
+        </div>
+        <div class="flex flex-col station-info-container">
+          <a href="/">
+            <div
+              class="station-logo-container flex justify-center items-center"
+            >
+              <font-awesome-icon class="icon" icon="th-large" />
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -31,70 +89,74 @@ export default {
 
 <style scoped>
 .header-font {
-  line-height: 1vw;
-  margin-bottom: 1.5vw;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  margin-right: 20px;
   letter-spacing: 0.02rem;
-  font-size: 1.7vw;
+  font-size: 18px;
   font-weight: 600;
 }
-.station-box {
-  background-color: white;
-  width: 100%;
+.margin-full {
+  margin-left: 42px;
 }
-.square {
-  position: relative;
-  width: 100%;
-  cursor: pointer;
+.margin-normal {
+  margin-left: 15px;
 }
-.square-btn {
-  position: relative;
-  width: 100%;
-  border: 0.3vw solid #ef8585;
-  cursor: pointer;
+.station-info-container {
+  margin-right: 10px;
 }
-.square:after {
-  content: "";
-  display: block;
-  padding-bottom: 100%;
+.station-logo-container {
+  width: 100px;
+  height: 100px;
 }
-
-.content {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+.station-logo {
+  border-radius: 15px;
 }
-.grid-icon {
-  width: 20%;
-  padding-bottom: 20%;
-  margin: 5% 10%;
-  background-color: #6095c9;
-  position: relative;
-  float: left;
-}
-.grid-icon:after,
-.grid-icon:before {
-  content: "";
-  position: absolute;
-  background-color: #fff;
-}
-.one:before {
-  margin: 0 48%;
-  width: 4%;
-  height: 100%;
-}
-.one:after {
-  margin: 48% 0;
-  height: 4%;
-  width: 100%;
+.station-name {
+  width: 100px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 300;
+  margin-top: 10px;
+  line-height: 18px;
 }
 .icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 3.3vw;
+  font-size: 64px;
+  border: 7px #f68787 solid;
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  color: #f68787;
 }
-.icon.grid {
-  color: #ef8585;
+.medium-player {
+  display: none;
+}
+.max-player {
+  display: inline;
+}
+
+@media only screen and (max-width: 1199px) {
+  .max-player {
+    display: none;
+  }
+  .medium-player {
+    display: inline;
+  }
+  .header-font {
+    margin-top: 11px;
+    margin-left: 30px;
+    margin-bottom: 4px;
+  }
+  .margin-normal {
+    margin-left: 30px;
+  }
+  .station-logo-container {
+    width: 70px;
+    height: 70px;
+  }
+  .station-name-container {
+    display: none;
+  }
 }
 </style>

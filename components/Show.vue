@@ -1,48 +1,181 @@
 <template>
-  <div>
-    <div class="hidden lg:block mt-5">
-      <div class="last-played-container flex flex-wrap overflow-hidden">
-        <div class="album-container overflow-hidden">
-          <img
-            class="rounded-2xl"
-            src="https://cdn.static.radioactive.sg/songs/covers/m2-265a861d-43cc-4b19-b03f-86a037e6d133"
-          />
-        </div>
-        <div class="grid grid-rows-3 text-container w-auto overflow-hidden">
-          <div class="current-title-font">CURRENT SHOW</div>
-          <div class="current-name-font">HITZ MORNING CREW</div>
-          <div class="current-time-font">6AM - 10AM</div>
-        </div>
-      </div>
-    </div>
-    <div class="flex flex-col justify-start items-center">
-      <div class="show-container mt-5 rounded-2xl bg-color">
-        <div class="content flex items-center justify-start">
-          <div class="image-container">
-            <img
-              class="rounded-2xl"
-              src="https://cdn.static.radioactive.sg/songs/covers/m2-265a861d-43cc-4b19-b03f-86a037e6d133"
-            />
-          </div>
+  <div class="custom-bg">
+    <div v-if="showsData.length > 0">
+      <transition name="fade" mode="out-in">
+        <div key="1" v-if="open">
           <div
             class="
-              absolute-div
-              text
-              grid grid-rows-3
-              text-container
-              w-auto
-              overflow-hidden
+              flex flex-col
+              justify-start
+              items-center
+              bg-white
+              shows-container-open
             "
           >
-            <div class="title-font">UPCOMING SHOW</div>
-            <div class="name-font">HITZ MORNING CREW</div>
-            <div class="time-font">6AM - 10AM</div>
+            <div>
+              <font-awesome-icon
+                @click="open = !open"
+                class="chevron chevron-down"
+                icon="chevron-down"
+              />
+            </div>
+            <div class="flex w-full">
+              <div class="show-image-container">
+                <img
+                  class="show-image"
+                  :src="showsData[0].images[0].url"
+                  :alt="showsData[0].name"
+                />
+              </div>
+              <div class="flex flex-col justify-start">
+                <div class="title-font">CURRENT SHOW</div>
+                <div class="name-font">{{ showsData[0].name }}</div>
+                <div class="showtime-font">
+                  {{
+                    `${
+                      showsData[0].showtimes[0]
+                        ? customTime(
+                            showsData[0].showtimes[0].start_time_utc
+                          ).replace(/\s/g, "")
+                        : ""
+                    } - ${
+                      showsData[0].showtimes[0]
+                        ? customTime(
+                            showsData[0].showtimes[0].end_time_utc
+                          ).replace(/\s/g, "")
+                        : ""
+                    }`
+                  }}
+                </div>
+              </div>
+            </div>
+            <hr class="spacing" />
+            <div
+              class="
+                flex flex-col
+                justify-start
+                w-full
+                overflow-y-auto
+                upcoming-shows-container
+              "
+            >
+              <div class="upcoming-title-font">UPCOMING SHOWS</div>
+              <div
+                class="flex show-list-container"
+                v-for="show in showsData.slice(1)"
+                :key="show.id"
+              >
+                <div class="show-image-container">
+                  <img
+                    v-if="show.images[0]"
+                    class="show-image"
+                    :src="show.images[0].url"
+                    :alt="show.name"
+                  />
+                </div>
+                <div class="flex flex-col justify-center">
+                  <div class="name-font">{{ show.name }}</div>
+                  <div class="showtime-font">
+                    {{
+                      `${
+                        show.showtimes[0]
+                          ? customTime(
+                              show.showtimes[0].start_time_utc
+                            ).replace(/\s/g, "")
+                          : ""
+                      } - ${
+                        show.showtimes[0]
+                          ? customTime(show.showtimes[0].end_time_utc).replace(
+                              /\s/g,
+                              ""
+                            )
+                          : ""
+                      }`
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <font-awesome-icon
-            class="absolute-div chevron-up"
-            icon="chevron-up"
-          />
         </div>
+        <div v-else>
+          <div
+            class="
+              flex flex-col
+              justify-start
+              items-center
+              bg-white
+              shows-container
+            "
+          >
+            <div>
+              <font-awesome-icon
+                @click="open = !open"
+                class="chevron chevron-up"
+                icon="chevron-up"
+              />
+            </div>
+            <div class="flex w-full">
+              <div class="show-image-container">
+                <img
+                  class="show-image"
+                  :src="showsData[0].images[0].url"
+                  :alt="showsData[0].name"
+                />
+              </div>
+              <div class="flex flex-col justify-start">
+                <div class="title-font">CURRENT SHOW</div>
+                <div class="name-font">{{ showsData[0].name }}</div>
+                <div class="showtime-font">
+                  {{
+                    `${
+                      showsData[0].showtimes[0]
+                        ? customTime(
+                            showsData[0].showtimes[0].start_time_utc
+                          ).replace(/\s/g, "")
+                        : ""
+                    } - ${
+                      showsData[0].showtimes[0]
+                        ? customTime(
+                            showsData[0].showtimes[0].end_time_utc
+                          ).replace(/\s/g, "")
+                        : ""
+                    }`
+                  }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div>
+    <div v-else>
+      <div
+        class="
+          flex flex-col
+          justify-start
+          items-center
+          bg-white
+          shows-container
+          max-player
+        "
+      >
+        <div class="station-name">{{ stationName.toUpperCase() }}</div>
+        <div class="station-desc">{{ stationDesc.toUpperCase() }}</div>
+      </div>
+      <div
+        class="flex flex-col justify-start items-center bg-white medium-player"
+        :class="hover ? 'show-container-hover' : 'shows-container'"
+        @mouseover="hover = true"
+        @mouseleave="hover = false"
+      >
+        <font-awesome-icon
+          @click="hover = !hover"
+          class="chevron chevron-up"
+          :icon="hover ? 'chevron-down' : 'chevron-up'"
+        />
+        <div class="station-name">{{ stationName.toUpperCase() }}</div>
+        <div class="station-desc">{{ stationDesc.toUpperCase() }}</div>
       </div>
     </div>
   </div>
@@ -50,142 +183,167 @@
 
 <script>
 export default {
-  props: ["stationId"],
+  props: ["showsData", "stationName", "stationDesc"],
   data() {
-    return {};
+    return {
+      open: false,
+      hover: false,
+    };
+  },
+  computed: {
+    showToggle() {
+      return this.open ? "shows-container-open" : "shows-container";
+    },
+  },
+  methods: {
+    customTime(data) {
+      return new Date("1970-01-01T" + data + "Z").toLocaleTimeString(
+        {},
+        { timeZone: "UTC", hour12: true, hour: "numeric" }
+      );
+    },
   },
 };
 </script>
 
 <style scoped>
-.last-played-container {
-  justify-content: center;
+.custom-bg {
+  background-color: #d31414;
 }
-.header-font {
-  font-size: 1.7vw;
-  font-weight: 700;
-  line-height: 1vw;
-  margin-bottom: 1.5vw;
+.shows-container {
+  height: 120px;
+  border-radius: 20px 20px 0px 0px;
 }
-.last-played-img {
-  width: 47px;
+.shows-container-open {
+  height: 680px;
+  position: relative;
+  top: -560px;
+  border-radius: 20px 20px 0px 0px;
 }
-.title-font {
-  font-size: 3.4vw;
-  font-weight: 800;
-  align-self: self-end;
+.show-container-hover {
+  position: relative;
+  top: -100px;
+  height: 130px;
+  border-radius: 20px 20px 0px 0px;
 }
-.name-font {
-  font-size: 3.4vw;
-  font-weight: 600;
+.show-image-container {
+  height: 80px;
+  width: 80px;
+  background-color: darkgrey;
+  border-radius: 6px;
+  margin-left: 20px;
+  margin-right: 10px;
 }
-.time-font {
-  font-size: 2.7vw;
-  font-weight: 600;
-  align-self: self-start;
-}
-.album-container {
-  width: 5.3vw;
-}
-.text-container {
-  align-items: center;
-  margin-left: 1.2vw;
-}
-.square {
-  width: 60%;
-  height: 60%;
-}
-.bg-color {
-  background-color: white;
-}
-
-.show-container:after {
-  content: "";
-  display: block;
-  padding-bottom: 25%;
-}
-.content {
-  position: absolute;
+.show-image {
   width: 100%;
   height: 100%;
+  border-radius: 6px;
+}
+.show-list-container {
+  margin-bottom: 10px;
+}
+.title-font {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #453232;
+  letter-spacing: 1px;
+}
+.upcoming-shows-container {
+  padding-bottom: 8px;
+  -ms-overflow-style: none; /* IE and Edge scrollbar hide */
+  scrollbar-width: none;
+}
+.upcoming-shows-container::-webkit-scrollbar {
+  /* other scrollbar hide */
+  display: none;
+}
+.upcoming-title-font {
+  margin: 0px 20px 13px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #453232;
+  letter-spacing: 1px;
+}
+.name-font {
+  font-size: 17px;
+  font-weight: 600;
+  color: #707070;
+  letter-spacing: 0px;
+}
+.showtime-font {
+  font-size: 14px;
+  font-weight: 400;
+  color: #707070;
+  line-height: 8px;
+}
+.station-name {
+  margin-top: 25px;
+  font-size: 18px;
+  font-weight: 700;
+  color: red;
+}
+.station-desc {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  width: 88%;
+  color: #707070;
+}
+.chevron {
+  font-size: 23px;
+  color: #b1b1b1;
+  margin-bottom: 1px;
+  margin-top: 2px;
+  cursor: pointer;
+}
+.chevron-up {
+  margin-top: 2px;
+}
+.chevron-down {
+  margin-top: 8px;
+}
+hr.spacing {
+  border-top: 1px solid lightgrey;
+  width: 330px;
+  margin-top: 13px;
+  margin-bottom: 20px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s;
 }
 
-.show-container {
-  position: relative;
-  width: 107%;
-  height: 26vw;
+.fade-enter,
+.fade-leave-to {
+  opacity: 0.8;
 }
-.image-container {
-  position: relative;
-  width: 25%;
-  left: 5%;
+.medium-player {
+  display: none;
 }
-.absolute-div {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 5.3vw;
-}
-.absolute-div.chevron-up {
-  left: 90%;
-  color: grey;
-  font-size: 4.5vw;
-}
-.absolute-div.text {
-  left: 55%;
-}
-@media only screen and (min-width: 1024px) {
-  .show-container {
+
+@media only screen and (max-width: 1199px) {
+  .max-player {
+    display: none;
+  }
+  .medium-player {
+    display: flex;
+  }
+  .shows-container-open {
+    height: 580px;
     position: relative;
-    width: 100%;
-    height: 6.9vw;
+    top: -550px;
+    border-radius: 20px 20px 0px 0px;
   }
-  .image-container {
+}
+
+@media only screen and (max-width: 799px) {
+  .shows-container-open {
+    height: 550px;
     position: relative;
-    width: 17%;
-    left: 5%;
-  }
-  .absolute-div.text {
-    left: 40%;
-  }
-  .absolute-div.chevron-up {
-    font-size: 1.5vw;
-  }
-  .current-title-font {
-    font-size: 1.2vw;
-    color: white;
-    line-height: 1vw;
-    align-self: self-end;
-    font-weight: 700;
-  }
-  .current-name-font {
-    font-size: 1.2vw;
-    color: white;
-    font-weight: 400;
-  }
-  .current-time-font {
-    font-size: 1vw;
-    color: white;
-    line-height: 0.5vw;
-    font-weight: 400;
-    align-self: self-start;
-  }
-  .title-font {
-    font-size: 1vw;
-    font-weight: 800;
-    line-height: 1.5vw;
-    align-self: self-end;
-  }
-  .name-font {
-    font-size: 1vw;
-    font-weight: 500;
-  }
-  .time-font {
-    font-size: 1vw;
-    font-weight: 500;
-    line-height: 0.7vw;
-    align-self: self-start;
+    top: -520px;
+    border-radius: 20px 20px 0px 0px;
   }
 }
 </style>
