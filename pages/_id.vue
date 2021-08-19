@@ -169,7 +169,9 @@ export default {
       );
 
       stationListTemp.data.forEach((el) => {
-        moreFromUs.push(el);
+        if (el.stationCode !== params.id) {
+          moreFromUs.push(el);
+        }
       });
 
       let shows = await $axios

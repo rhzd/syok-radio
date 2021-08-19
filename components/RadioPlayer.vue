@@ -116,6 +116,18 @@
 import Hls from "hls.js";
 
 export default {
+  head() {
+    return {
+      script: [
+        {
+          src: "https://synchrobox.adswizz.com/register2.php",
+        },
+        {
+          src: "https://cdn.adswizz.com/adswizz/js/SynchroClient2.js",
+        },
+      ],
+    };
+  },
   props: ["stationData", "streamToken"],
   data() {
     return {
@@ -128,7 +140,13 @@ export default {
   },
   mounted() {
     let hls = new Hls();
-    let stream = `${this.stationData.streams[0].endpoint}?authtoken=${this.streamToken}`;
+    const uri_component = encodeURIComponent(
+      `companionads:true;tags:radioactive;stationid:${this.stationData.stationCode}`
+    );
+    const lang = encodeURIComponent(`["${this.stationData.language}"]`); //ikut station language
+    const listenerId = com_adswizz_synchro_getListenerId(); //get listener id
+    let stream = `${this.stationData.streams[0].endpoint}?awparams=${uri_component}&authtoken=${this.streamToken}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
+
     this.audio = this.$refs["audio"];
     this.audio.volume = 0.3;
     hls.loadSource(stream);
