@@ -27,15 +27,11 @@ export default {
     "@nuxtjs/tailwindcss",
     "@nuxtjs/fontawesome",
     "@nuxtjs/google-fonts",
-    // '@nuxtjs/google-analytics',
-    "@aceforth/nuxt-optimized-images"
+    // '@nuxtjs/google-analytics'
   ],
   // googleAnalytics: {
   //   id: process.env.GOOGLE_ANALYTICS_ID, // Use as fallback if no runtime config is provided
   // },
-  optimizedImages: {
-    optimizeImages: true
-  },
   fontawesome: {
     icons: {
       solid: [
@@ -98,5 +94,5 @@ export default {
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {}
+  build: { analyze: true }
 };

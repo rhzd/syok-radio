@@ -74,7 +74,7 @@ export default {
   align-items: center;
   position: relative;
   top: -10%;
-  font-size: 6vw;
+  font-size: 16px;
 }
 .list-container {
   margin-top: 5px;

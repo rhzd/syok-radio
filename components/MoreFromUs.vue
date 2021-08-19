@@ -27,7 +27,7 @@
           </a>
           <a :href="`/${station.stationCode}`" class="station-name-container">
             <div class="station-name text-white">
-              {{ station.name }}
+              {{ station.name.toUpperCase() }}
             </div>
           </a>
         </div>
@@ -37,6 +37,11 @@
               class="station-logo-container flex justify-center items-center"
             >
               <font-awesome-icon class="icon" icon="th-large" />
+            </div>
+          </a>
+          <a :href="`/`" class="station-name-container">
+            <div class="station-name text-white">
+              ALL RADIO
             </div>
           </a>
         </div>
@@ -60,7 +65,7 @@
           </a>
           <a :href="`/${station.stationCode}`" class="station-name-container">
             <div class="station-name text-white">
-              {{ station.name }}
+              {{ station.name.toUpperCase() }}
             </div>
           </a>
         </div>
@@ -70,6 +75,11 @@
               class="station-logo-container flex justify-center items-center"
             >
               <font-awesome-icon class="icon" icon="th-large" />
+            </div>
+          </a>
+          <a :href="`/`" class="station-name-container">
+            <div class="station-name text-white">
+              ALL RADIO
             </div>
           </a>
         </div>

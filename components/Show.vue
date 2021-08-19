@@ -29,7 +29,9 @@
               </div>
               <div class="flex flex-col justify-start">
                 <div class="title-font">CURRENT SHOW</div>
-                <div class="name-font">{{ showsData[0].name }}</div>
+                <div class="name-font">
+                  {{ showsData[0].name.toUpperCase() }}
+                </div>
                 <div class="showtime-font">
                   {{
                     `${
@@ -74,7 +76,7 @@
                   />
                 </div>
                 <div class="flex flex-col justify-center">
-                  <div class="name-font">{{ show.name }}</div>
+                  <div class="names-font">{{ show.name.toUpperCase() }}</div>
                   <div class="showtime-font">
                     {{
                       `${
@@ -125,7 +127,9 @@
               </div>
               <div class="flex flex-col justify-start">
                 <div class="title-font">CURRENT SHOW</div>
-                <div class="name-font">{{ showsData[0].name }}</div>
+                <div class="name-font">
+                  {{ showsData[0].name.toUpperCase() }}
+                </div>
                 <div class="showtime-font">
                   {{
                     `${
@@ -271,6 +275,20 @@ export default {
   font-weight: 600;
   color: #707070;
   letter-spacing: 0px;
+  width: 225px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.names-font {
+  font-size: 15px;
+  font-weight: 600;
+  color: #707070;
+  letter-spacing: 0px;
+  width: 225px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .showtime-font {
   font-size: 14px;

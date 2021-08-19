@@ -1,6 +1,6 @@
 <template>
   <div v-if="stationData" class="flex my-container">
-    <div class="left-panel overflow-hidden shadow-2xl">
+    <div class="left-panel overflow-hidden">
       <RadioPlayer :streamToken="streamToken" :stationData="stationData" />
       <Show
         :showsData="showsData"
@@ -197,7 +197,7 @@ export default {
   },
   data() {
     return {
-      ads: true,
+      ads: false,
     };
   },
   created() {
