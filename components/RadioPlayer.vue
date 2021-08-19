@@ -85,7 +85,7 @@
         <div>
           <font-awesome-icon
             class="icon share"
-            icon="share-alt"
+            icon="share-square"
             @click="shareActive = !shareActive"
           />
         </div>
@@ -95,7 +95,29 @@
         v-else
         class="flex media-player bg-color items-center justify-between"
       >
-        <font-awesome-icon class="icon code" icon="code" />
+        <div>
+          <button class="rounded-full share-btn-circle">
+            <font-awesome-icon
+              class="share-icon facebook"
+              :icon="['fab', 'facebook-f']"
+            />
+          </button>
+          <button class="rounded-full share-btn-circle">
+            <font-awesome-icon
+              class="share-icon twitter"
+              :icon="['fab', 'twitter']"
+            />
+          </button>
+          <button class="rounded-full share-btn-circle">
+            <font-awesome-icon
+              class="share-icon whatsapp"
+              :icon="['fab', 'whatsapp']"
+            />
+          </button>
+          <button class="rounded-full share-btn-circle">
+            <font-awesome-icon class="share-icon link" icon="link" />
+          </button>
+        </div>
         <font-awesome-icon
           class="icon times"
           icon="times"
@@ -263,12 +285,38 @@ export default {
   width: 100%;
   height: 100%;
 }
+.share-btn-circle {
+  width: 50px;
+  height: 50px;
+  border: solid 1px white;
+  margin-right: 6px;
+}
 .btn-circle {
   width: 70px;
   height: 70px;
 }
 .icon {
   font-size: 30px;
+}
+.share-icon {
+  font-size: 24px;
+  color: white;
+}
+.share-icon.link {
+  position: relative;
+  top: 2px;
+}
+.share-icon.whatsapp {
+  position: relative;
+  top: 2px;
+}
+.share-icon.twitter {
+  position: relative;
+  top: 2px;
+}
+.share-icon.facebook {
+  position: relative;
+  top: 2px;
 }
 .icon.play {
   color: #ed0f0f;
@@ -291,6 +339,7 @@ export default {
   width: 35px;
   top: 2px;
   position: relative;
+  margin-left: 10px;
 }
 .icon.share {
   color: #ffffff;
@@ -300,6 +349,7 @@ export default {
   left: 90%;
   color: #ffffff;
   cursor: pointer;
+  margin-right: 10px;
 }
 .icon.code {
   left: 13%;
@@ -307,7 +357,7 @@ export default {
 }
 input[type="range"] {
   -webkit-appearance: none;
-  width: 80%;
+  width: 64%;
   position: relative;
   height: 4px;
   background: #e05b5b;

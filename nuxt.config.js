@@ -26,7 +26,7 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     "@nuxtjs/tailwindcss",
     "@nuxtjs/fontawesome",
-    "@nuxtjs/google-fonts",
+    "@nuxtjs/google-fonts"
     // '@nuxtjs/google-analytics'
   ],
   // googleAnalytics: {
@@ -39,14 +39,16 @@ export default {
         "faStop",
         "faVolumeDown",
         "faVolumeMute",
-        "faShareAlt",
+        "faShareSquare",
         "faTimes",
         "faCode",
         "faThLarge",
         "faBars",
         "faChevronUp",
-        "faChevronDown"
-      ]
+        "faChevronDown",
+        "faLink"
+      ],
+      brands: ["faWhatsapp", "faTwitter", "faFacebookF"]
     }
   },
   googleFonts: {

@@ -6,9 +6,9 @@
           <input type="radio" value="all" v-model="picked" />
           <label for="all">ALL RADIO</label>
           <input type="radio" value="ms" v-model="picked" />
-          <label for="ms">ENGLISH</label>
+          <label for="en">ENGLISH</label>
           <input type="radio" value="en" v-model="picked" />
-          <label for="en">MALAY</label>
+          <label for="ms">MALAY</label>
           <input type="radio" value="zh" v-model="picked" />
           <label for="zh">CHINESE</label>
           <input type="radio" value="ta" v-model="picked" />

@@ -13,6 +13,11 @@ export default {};
 <style>
 body {
   font-family: "Poppins", sans-serif;
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
 }
 .bg-color {
   background: #f8f8f8;
