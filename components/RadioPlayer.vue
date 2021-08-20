@@ -158,9 +158,11 @@ export default {
       script: [
         {
           src: "https://synchrobox.adswizz.com/register2.php",
+          defer: true,
         },
         {
           src: "https://cdn.adswizz.com/adswizz/js/SynchroClient2.js",
+          defer: true,
         },
       ],
     };

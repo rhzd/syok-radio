@@ -82,6 +82,7 @@ export default {
         { hid: "title", property: "title", content: this.stationData.name },
         {
           hid: "description",
+          name: "description",
           property: "description",
           content: this.stationData.description,
         },
