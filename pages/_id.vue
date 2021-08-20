@@ -240,6 +240,7 @@ export default {
 <style scoped>
 .my-container {
   height: 100%;
+  position: relative;
 }
 
 .left-panel {
@@ -360,7 +361,7 @@ export default {
     border-radius: 0px 20px 20px 0px;
     display: inline;
     position: absolute;
-    top: 185px;
+    top: 0px;
     background-color: white;
     height: 600px;
     width: 340px;
@@ -369,7 +370,7 @@ export default {
 
 @media only screen and (max-width: 799px) {
   .last-played-left-panel {
-    top: 210px;
+    top: 0px;
     height: 550px;
   }
   .right-panel {

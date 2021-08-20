@@ -1,51 +1,53 @@
 <template>
   <div class="flex flex-col justify-start items-center">
-    <div class="header-font text-white max-player">NOW PLAYING</div>
-    <div class="flex min-player items-center justify-between">
-      <div class="flex flex-col">
-        <div class="now-playing-min-font text-white">NOW PLAYING</div>
-        <div class="station-font text-white">HITZ</div>
+    <div class="flex flex-col justify-start items-center height-container">
+      <div class="header-font text-white max-player">NOW PLAYING</div>
+      <div class="flex min-player items-center justify-between">
+        <div class="flex flex-col">
+          <div class="now-playing-min-font text-white">NOW PLAYING</div>
+          <div class="station-font text-white">HITZ</div>
+        </div>
+        <div class="flex button-container">
+          <font-awesome-icon
+            @click="toggleLastPlayed"
+            class="icon bars"
+            icon="bars"
+          />
+          <font-awesome-icon
+            @click="toggleStationList"
+            class="icon th-large"
+            icon="th-large"
+          />
+        </div>
       </div>
-      <div class="flex button-container">
-        <font-awesome-icon
-          @click="toggleLastPlayed"
-          class="icon bars"
-          icon="bars"
-        />
-        <font-awesome-icon
-          @click="toggleStationList"
-          class="icon th-large"
-          icon="th-large"
-        />
+      <div class="flex med-player items-center justify-between">
+        <div class="flex flex-col">
+          <div class="header-font text-white">NOW PLAYING</div>
+        </div>
+        <div class="flex button-container">
+          <font-awesome-icon
+            @click="toggleLastPlayed"
+            class="icon bars text-white"
+            icon="bars"
+          />
+        </div>
       </div>
-    </div>
-    <div class="flex med-player items-center justify-between">
-      <div class="flex flex-col">
-        <div class="header-font text-white">NOW PLAYING</div>
-      </div>
-      <div class="flex button-container">
-        <font-awesome-icon
-          @click="toggleLastPlayed"
-          class="icon bars text-white"
-          icon="bars"
-        />
-      </div>
-    </div>
-    <img
-      class="square"
-      :src="
-        currentMetadata
-          ? currentMetadata.coverUrl
+      <img
+        class="square"
+        :src="
+          currentMetadata
             ? currentMetadata.coverUrl
+              ? currentMetadata.coverUrl
+              : stationData.images[1].url
             : stationData.images[1].url
-          : stationData.images[1].url
-      "
-    />
-    <div class="title-font text-white">
-      {{ currentMetadata ? currentMetadata.track : stationData.description }}
-    </div>
-    <div class="artist-font text-white">
-      {{ currentMetadata ? currentMetadata.artist : stationData.name }}
+        "
+      />
+      <div class="title-font text-white">
+        {{ currentMetadata ? currentMetadata.track : stationData.description }}
+      </div>
+      <div class="artist-font text-white">
+        {{ currentMetadata ? currentMetadata.artist : stationData.name }}
+      </div>
     </div>
     <transition name="fade" mode="out-in">
       <div
@@ -304,7 +306,6 @@ export default {
 }
 .media-player {
   width: 100%;
-  margin-top: 33px;
   height: 100px;
   padding-left: 27px;
   padding-right: 27px;
@@ -476,8 +477,14 @@ input[type="range"]::-ms-track {
 .med-player {
   display: none;
 }
+.height-container {
+  height: 480px;
+}
 
 @media only screen and (max-width: 1199px) {
+  .height-container {
+    height: 470px;
+  }
   .button-container {
     position: relative;
     top: 5px;
@@ -486,9 +493,6 @@ input[type="range"]::-ms-track {
   .header-font {
     margin-top: 25px;
     margin-bottom: 13px;
-  }
-  .media-player {
-    margin-top: 33px;
   }
   .med-player {
     display: flex;
@@ -507,15 +511,15 @@ input[type="range"]::-ms-track {
 }
 
 @media only screen and (max-width: 799px) {
+  .height-container {
+    height: 420px;
+  }
   .square {
     width: 250px;
     height: 250px;
   }
   .right-panel {
     display: none;
-  }
-  .media-player {
-    margin-top: 36px;
   }
   .min-player {
     display: flex;
