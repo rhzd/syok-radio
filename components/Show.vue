@@ -214,7 +214,7 @@ export default {
 
 <style scoped>
 .custom-bg {
-  background-color: #d31414;
+  background-color: rgb(206, 0, 41);
 }
 .shows-container {
   height: 120px;
@@ -302,7 +302,7 @@ export default {
   margin-top: 25px;
   font-size: 18px;
   font-weight: 700;
-  color: red;
+  color: rgb(234, 0, 41);
 }
 .station-desc {
   text-align: center;

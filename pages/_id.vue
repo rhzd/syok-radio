@@ -3,7 +3,7 @@
     <StationList v-show="isOpenStationList" :stationList="stationList" />
     <div v-show="!isOpenStationList" class="flex my-container">
       <div class="left-panel overflow-hidden">
-        <RadioPlayer :streamToken="streamToken" :stationData="stationData" />
+        <RadioPlayer :streamToken="streamToken" :stationData="stationData" :host="host" />
         <Show
           v-if="!isOpenLastPlayed"
           :showsData="showsData"

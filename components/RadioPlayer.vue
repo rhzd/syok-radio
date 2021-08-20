@@ -73,12 +73,13 @@
           </button>
         </div>
 
-        <div class="flex items-center">
+        <div v-if="isHlsSupported" class="flex items-center">
           <div class="volume-icon-container">
             <font-awesome-icon
               v-if="volume == 0"
               class="icon volume"
               icon="volume-mute"
+              @click="unmute"
             />
             <font-awesome-icon
               v-else
@@ -111,25 +112,25 @@
         class="flex media-player bg-color items-center justify-between"
       >
         <div>
-          <button class="rounded-full share-btn-circle">
+          <button @click="shareFacebook" class="rounded-full share-btn-circle">
             <font-awesome-icon
               class="share-icon facebook"
               :icon="['fab', 'facebook-f']"
             />
           </button>
-          <button class="rounded-full share-btn-circle">
+          <button @click="shareTwitter" class="rounded-full share-btn-circle">
             <font-awesome-icon
               class="share-icon twitter"
               :icon="['fab', 'twitter']"
             />
           </button>
-          <button class="rounded-full share-btn-circle">
+          <button @click="shareWhatsapp" class="rounded-full share-btn-circle">
             <font-awesome-icon
               class="share-icon whatsapp"
               :icon="['fab', 'whatsapp']"
             />
           </button>
-          <button class="rounded-full share-btn-circle">
+          <button @click="shareLink" class="rounded-full share-btn-circle">
             <font-awesome-icon class="share-icon link" icon="link" />
           </button>
         </div>
@@ -167,7 +168,7 @@ export default {
       ],
     };
   },
-  props: ["stationData", "streamToken"],
+  props: ["stationData", "streamToken", "host"],
   data() {
     return {
       paused: true,
@@ -175,10 +176,12 @@ export default {
       volume: 30,
       audio: null,
       currentMetadata: null,
+      isHlsSupported: false,
     };
   },
   mounted() {
-    let hls = new Hls();
+    this.audio = this.$refs["audio"];
+    this.audio.volume = 0.3;
     const uri_component = encodeURIComponent(
       `companionads:true;tags:radioactive;stationid:${this.stationData.stationCode}`
     );
@@ -186,43 +189,54 @@ export default {
     const listenerId = com_adswizz_synchro_getListenerId(); //get listener id
     let stream = `${this.stationData.streams[0].endpoint}?awparams=${uri_component}&authtoken=${this.streamToken}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
 
-    this.audio = this.$refs["audio"];
-    this.audio.volume = 0.3;
-    hls.loadSource(stream);
-    hls.attachMedia(this.audio);
-    hls.on(Hls.Events.FRAG_PARSING_METADATA, (event, data) => {
-      let dict = {};
-      let tmp = data["frag"]["title"].split("=");
-      if (tmp.length > 0) {
-        if (tmp[0] == "title") {
-          dict["title"] = tmp[1].replace(",url", "").replace(/"/g, "").trim();
-        }
-        if (tmp.length == 3 && tmp[2].toString()[1] === "%") {
-          try {
-            dict["data"] = JSON.parse(
-              decodeURIComponent(tmp[2].substring(1, tmp[2].length - 1))
-            );
-          } catch (err) {
-            console.error("Metadata Parsing Error", err);
-            console.error(decodeURIComponent(tmp[2].replace('"', "")));
+    if (Hls.isSupported()) {
+      this.isHlsSupported = true;
+      let hls = new Hls();
+      hls.loadSource(stream);
+      hls.attachMedia(this.audio);
+      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+        this.audio.play();
+      });
+      hls.on(Hls.Events.FRAG_PARSING_METADATA, (event, data) => {
+        let dict = {};
+        let tmp = data["frag"]["title"].split("=");
+        if (tmp.length > 0) {
+          if (tmp[0] == "title") {
+            dict["title"] = tmp[1].replace(",url", "").replace(/"/g, "").trim();
+          }
+          if (tmp.length == 3 && tmp[2].toString()[1] === "%") {
+            try {
+              dict["data"] = JSON.parse(
+                decodeURIComponent(tmp[2].substring(1, tmp[2].length - 1))
+              );
+            } catch (err) {
+              console.error("Metadata Parsing Error", err);
+              console.error(decodeURIComponent(tmp[2].replace('"', "")));
+            }
           }
         }
-      }
-      if (dict.data) {
-        if (this.currentMetadata) {
-          if (dict.data.current_song.track !== this.currentMetadata.track) {
+        if (dict.data) {
+          if (this.currentMetadata) {
+            if (dict.data.current_song.track !== this.currentMetadata.track) {
+              this.$root.$refs.LastPlayedSong.fetchPlayoutHistory(
+                dict.data.current_song
+              );
+            }
+          } else {
             this.$root.$refs.LastPlayedSong.fetchPlayoutHistory(
               dict.data.current_song
             );
           }
-        } else {
-          this.$root.$refs.LastPlayedSong.fetchPlayoutHistory(
-            dict.data.current_song
-          );
         }
-      }
-      this.currentMetadata = dict.data ? dict.data.current_song : null;
-    });
+        this.currentMetadata = dict.data ? dict.data.current_song : null;
+      });
+    } else {
+      this.isHlsSupported = false;
+      this.audio.src = stream;
+      this.audio.addEventListener("loadedmetadata", function (event) {
+        this.audio.play();
+      });
+    }
   },
   computed: {
     playing() {
@@ -252,11 +266,45 @@ export default {
       this.audio.volume = 0;
       this.volume = 0;
     },
+    unmute() {
+      this.audio.volume = 0.3;
+      this.volume = 30;
+    },
     toggleLastPlayed() {
       this.$root.$refs.MainPage.toggleLastPlayed();
     },
     toggleStationList() {
       this.$root.$refs.MainPage.toggleStationList();
+    },
+    shareTwitter() {
+      window.open(
+        `https://twitter.com/intent/tweet?text=I%20am%20listening%20to%20${this.stationData.name}.%20Stream%20us%20online%20now.%20${this.host}`,
+        "Twitter",
+        "width=500,height=350"
+      );
+    },
+    shareFacebook() {
+      console.log(this.host);
+      window.open(
+        `https://www.facebook.com/sharer/sharer.php?u=${this.host}`,
+        "Facebook",
+        "width=500,height=350"
+      );
+    },
+    shareWhatsapp() {
+      window.open(
+        `whatsapp://send?text=I am listening to ${this.stationData.name}. Stream us online now. ${this.host}`
+      );
+    },
+    shareLink() {
+      const tmpTextField = document.createElement("textarea");
+      tmpTextField.textContent = this.host;
+      document.body.appendChild(tmpTextField);
+      tmpTextField.select();
+      tmpTextField.setSelectionRange(0, 99999); /*For mobile devices*/
+      document.execCommand("copy");
+      tmpTextField.remove();
+      alert(`Copied ${this.host} to clipboard!`);
     },
   },
   watch: {},
@@ -271,7 +319,7 @@ export default {
   border-radius: 6px;
 }
 .bg-color {
-  background-color: #d31414;
+  background-color: rgb(206, 0, 41);
 }
 .header-font {
   font-size: 26px;
@@ -352,18 +400,19 @@ export default {
   top: 2px;
 }
 .icon.play {
-  color: #ed0f0f;
+  color: rgb(234, 0, 41);
   left: 4%;
   top: 2%;
   position: relative;
 }
 .icon.stop {
-  color: #ed0f0f;
+  color: rgb(234, 0, 41);
   top: 2%;
   position: relative;
 }
 .icon.volume {
   color: #ffffff;
+  cursor: pointer;
 }
 .icon.volume-mute {
   color: #ffffff;

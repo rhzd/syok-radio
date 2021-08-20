@@ -176,7 +176,7 @@ export default {
   .icon-close {
     font-size: 35px;
     left: 87%;
-    color: #e30f0f;
+    color: rgb(234, 0, 41);
     cursor: pointer;
     margin-right: 10px;
     position: absolute;

@@ -18,12 +18,13 @@ body {
   -khtml-user-select: none; /* Konqueror HTML */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
+  background-color: #212121;
 }
 .bg-color {
-  background: #212121;;
+  background-color: #212121;
 }
 .player-container {
-  background-color: #ed0f0f;
+  background-color: rgb(234, 0, 41);
   width: 1200px;
   height: 700px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -31,15 +32,26 @@ body {
 
 @media only screen and (max-width: 1199px) {
   .player-container {
-    background-color: #ed0f0f;
+    background-color: rgb(234, 0, 41);
     width: 800px;
     height: 600px;
   }
 }
 
 @media only screen and (max-width: 799px) {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    touch-action: none;
+    overscroll-behavior: none;
+    background-color: #212121;
+  }
   .player-container {
-    background-color: #ed0f0f;
+    background-color: rgb(234, 0, 41);
     width: 350px;
     height: 550px;
   }

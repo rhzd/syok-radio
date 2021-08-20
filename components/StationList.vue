@@ -174,7 +174,7 @@ input[type="text"]:focus {
   margin-left: 17px;
   margin-top: 17px;
   z-index: 1;
-  color: #f82424;
+  color: rgb(234, 0, 41);
 }
 .menu-container {
   margin-left: 40px;
@@ -238,12 +238,12 @@ input[type="text"]:focus {
 }
 .selected {
   background-color: white;
-  color: #f82424;
+  color: rgb(234, 0, 41);
   font-weight: 800;
 }
 .not-selected {
   font-weight: 700;
-  background-color: #ed0f0f;
+  background-color: rgb(234, 0, 41);
   color: white;
   border: 1px solid white;
 }
@@ -332,7 +332,7 @@ input[type="text"]:focus {
   .select-bar {
     width: 280px;
     height: 55px;
-    background-color: #ed0f0f;
+    background-color: rgb(234, 0, 41);
     border-radius: 10px;
     border: 2px solid white;
     color: white;
