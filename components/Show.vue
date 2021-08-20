@@ -314,7 +314,7 @@ export default {
 .chevron {
   font-size: 23px;
   color: #b1b1b1;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
   margin-top: 2px;
   cursor: pointer;
 }
