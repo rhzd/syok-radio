@@ -34,6 +34,7 @@
       </div>
       <img
         class="square"
+        alt="Current song"
         :src="
           currentMetadata
             ? currentMetadata.coverUrl

@@ -15,6 +15,7 @@
           <div class="rounded album-container">
             <img
               class="rounded album-art"
+              :alt="`${el.song.artist} - ${el.song.track}`"
               :src="el.song.coverUrl ? el.song.coverUrl : squareImage"
             />
           </div>

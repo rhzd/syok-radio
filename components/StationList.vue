@@ -64,7 +64,7 @@
         <div v-for="station in filteredList" v-bind:key="station.name">
           <div class="station-image-container">
             <a :href="`/${station.stationCode}`"
-              ><img class="station-image" :src="station.logo"
+              ><img class="station-image" :src="station.logo" :alt="station.name"
             /></a>
           </div>
           <div class="flex flex-wrap justify-center">
