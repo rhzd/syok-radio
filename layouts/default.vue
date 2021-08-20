@@ -20,7 +20,7 @@ body {
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
 .bg-color {
-  background: #f8f8f8;
+  background: #212121;;
 }
 .player-container {
   background-color: #ed0f0f;
