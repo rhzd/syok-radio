@@ -482,7 +482,7 @@ input[type="text"]:focus {
 }
 
 @media only screen and (max-width: 1199px) {
-  .vertical[data-v-5046c4e7] {
+  .vertical {
     left: 142px;
   }
   .search-container input#search {
