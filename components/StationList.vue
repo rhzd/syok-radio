@@ -12,7 +12,7 @@
       <div>
         <button
           class="btn btn-all"
-          @click="picked = { code: 'all', name: 'All Radio' }"
+          @click="selectStation({ code: 'all', name: 'All Radio' })"
           :class="picked.code == 'all' ? 'selected' : 'not-selected'"
         >
           ALL RADIO
@@ -21,7 +21,7 @@
       <div v-for="lang in languages" :key="lang.code">
         <button
           class="btn btn-lang"
-          @click="picked = lang"
+          @click="selectStation(lang)"
           :class="picked.code == lang.code ? 'selected' : 'not-selected'"
         >
           {{ lang.name.toUpperCase() }}
