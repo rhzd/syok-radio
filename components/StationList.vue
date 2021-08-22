@@ -82,7 +82,7 @@
       </div>
       <div class="info-font max-player">CLICK ON ANY RADIO BELOW TO PLAY:</div>
       <div v-if="search == ''">
-        <div style="position: relative">
+        <div class="station-main-container">
           <div class="vertical"></div>
           <div
             class="station-container-main flex flex-wrap"
@@ -288,6 +288,9 @@ export default {
 </script>
 
 <style scoped>
+.station-main-container {
+  position: relative;
+}
 .content-container {
   height: 567px;
   overflow: hidden;
@@ -698,6 +701,9 @@ input[type="text"]:focus {
   #myInput {
     font-size: 12px;
     border-bottom: 0px;
+  }
+  .station-main-container {
+    position: unset;
   }
 }
 </style>
