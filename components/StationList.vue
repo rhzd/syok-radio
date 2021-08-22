@@ -76,73 +76,69 @@
                 placeholder="SEARCH RADIO"
               />
               <font-awesome-icon class="icon search-min" icon="search" />
-
-              <!-- <input
-                id="myInput"
-                type="text"
-                placeholder="Search.."
-                v-model="search"
-                v-on:keyup.enter="isDropDown = !isDropDown"
-              /> -->
             </div>
           </div>
         </div>
       </div>
       <div class="info-font max-player">CLICK ON ANY RADIO BELOW TO PLAY:</div>
       <div v-if="search == ''">
-        <div
-          class="flex flex-wrap station-container-main"
-          v-for="station in filteredMain()"
-          :key="station.name"
-        >
-          <div class="w-full flex flex-col items-center min-player">
-            <div class="flex justify-center">
-              <a :href="`/${station.stationCode}`"
-                ><img
-                  class="station-image-min"
-                  :src="station.logo"
-                  :alt="station.name"
-              /></a>
-            </div>
-          </div>
-          <div class="station-image-main flex flex-col items-center max-player">
-            <div class="station-image-container-main">
-              <a :href="`/${station.stationCode}`"
-                ><img
-                  class="station-image"
-                  :src="station.logo"
-                  :alt="station.name"
-              /></a>
-            </div>
-            <div class="station-font-main">
-              {{ station.description }}
-            </div>
-          </div>
-          <div class="flex flex-wrap station-container-main-splinter">
-            <div
-              class="flex"
-              v-for="splinter in filteredSplinter(station.stationCode)"
-              :key="splinter.name"
-            >
-              <div class="splinter-image-container-main">
-                <a :href="`/${splinter.stationCode}`"
+        <div style="position: relative">
+          <div class="vertical"></div>
+          <div
+            class="station-container-main flex flex-wrap"
+            v-for="station in filteredMain()"
+            :key="station.name"
+          >
+            <div class="w-full flex flex-col items-center min-player">
+              <div class="flex justify-center">
+                <a :href="`/${station.stationCode}`"
                   ><img
-                    class="station-image"
-                    :src="splinter.logo"
-                    :alt="splinter.name"
+                    class="station-image-min"
+                    :src="station.logo"
+                    :alt="station.name"
                 /></a>
               </div>
-              <div class="splinter-font">
-                <div class="splinter-name-font">
-                  {{ splinter.name.toUpperCase() }}
+            </div>
+            <div class="flex flex-col items-center max-player">
+              <div class="station-image-container-main">
+                <a :href="`/${station.stationCode}`"
+                  ><img
+                    class="station-image"
+                    :src="station.logo"
+                    :alt="station.name"
+                /></a>
+              </div>
+              <div class="station-font-main">
+                {{ station.description }}
+              </div>
+            </div>
+            <div class="flex flex-wrap station-container-main-splinter">
+              <div
+                class="flex"
+                v-for="splinter in filteredSplinter(station.stationCode)"
+                :key="splinter.name"
+              >
+                <div class="splinter-image-container-main">
+                  <a :href="`/${splinter.stationCode}`"
+                    ><img
+                      class="station-image"
+                      :src="splinter.logo"
+                      :alt="splinter.name"
+                  /></a>
                 </div>
-                <div class="splinter-desc-font">
-                  {{ splinter.description }}
+                <div class="splinter-font">
+                  <div class="splinter-name-font">
+                    {{ splinter.name.toUpperCase() }}
+                  </div>
+                  <div class="splinter-desc-font">
+                    {{ splinter.description }}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
         <div class="flex flex-wrap station-container">
           <div
             class="flex flex-col items-center"
@@ -433,11 +429,11 @@ input[type="text"]:focus {
   border-radius: 16px;
   margin: 0px 10px 10px 20px;
 }
-.station-image-main {
-  background-image: linear-gradient(#e27676 23%, rgba(255, 255, 255, 0) 0%);
-  background-position: right;
-  background-size: 3px 15px;
-  background-repeat: repeat-y;
+.vertical {
+  border-right: 4px dotted #e27676;
+  position: absolute;
+  height: 100%;
+  left: 177px;
 }
 .station-font {
   width: 100px;
@@ -486,6 +482,9 @@ input[type="text"]:focus {
 }
 
 @media only screen and (max-width: 1199px) {
+  .vertical[data-v-5046c4e7] {
+    left: 142px;
+  }
   .search-container input#search {
     width: 130px;
   }
@@ -692,6 +691,9 @@ input[type="text"]:focus {
     position: absolute;
     right: 20px;
     color: rgb(234, 0, 41);
+  }
+  .vertical {
+    display: none;
   }
   #myInput {
     font-size: 12px;
