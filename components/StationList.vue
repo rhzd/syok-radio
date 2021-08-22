@@ -69,12 +69,21 @@
             </div>
             <div class="flex items-center justify-center dropdown-search-bar">
               <input
+                v-model="search"
+                v-on:keyup.enter="isDropDown = !isDropDown"
+                type="text"
+                id="myInput"
+                placeholder="SEARCH RADIO"
+              />
+              <font-awesome-icon class="icon search-min" icon="search" />
+
+              <!-- <input
                 id="myInput"
                 type="text"
                 placeholder="Search.."
                 v-model="search"
                 v-on:keyup.enter="isDropDown = !isDropDown"
-              />
+              /> -->
             </div>
           </div>
         </div>
@@ -675,9 +684,18 @@ input[type="text"]:focus {
   }
   .station-container-main-splinter {
     width: 100%;
-}
-.splinter-font {
+  }
+  .splinter-font {
     width: 208px;
-}
+  }
+  .icon.search-min {
+    position: absolute;
+    right: 20px;
+    color: rgb(234, 0, 41);
+  }
+  #myInput {
+    font-size: 12px;
+    border-bottom: 0px;
+  }
 }
 </style>
