@@ -284,7 +284,6 @@ export default {
       );
     },
     shareFacebook() {
-      console.log(this.host);
       window.open(
         `https://www.facebook.com/sharer/sharer.php?u=${this.host}`,
         "Facebook",

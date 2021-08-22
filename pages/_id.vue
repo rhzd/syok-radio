@@ -3,12 +3,19 @@
     <StationList v-show="isOpenStationList" :stationList="stationList" />
     <div v-show="!isOpenStationList" class="flex my-container">
       <div class="left-panel overflow-hidden">
-        <RadioPlayer :streamToken="streamToken" :stationData="stationData" :host="host" />
+        <RadioPlayer
+          :streamToken="streamToken"
+          :stationData="stationData"
+          :host="host"
+        />
         <Show
           v-if="!isOpenLastPlayed"
           :showsData="showsData"
           :stationName="stationData.name"
           :stationDesc="stationData.description"
+          :squareImage="
+            stationData.images.find((x) => x.name === 'square_image').url
+          "
         />
         <div v-if="isOpenLastPlayed" class="last-played-left-panel">
           <LastPlayedSong
@@ -193,7 +200,6 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-
       return {
         streamToken: streamToken.data,
         stationData: stationData.data,
@@ -203,7 +209,7 @@ export default {
           ? moreFromUs.slice(0, 4)
           : moreFromUs.slice(0, 6),
         playoutHistory: playoutHistory ? playoutHistory.data : [],
-        host: req.headers.referer,
+        host: `${baseURL}/${params.id}`,
       };
     } catch (e) {
       console.log(e);

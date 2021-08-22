@@ -9,67 +9,173 @@
       />
     </div>
     <div class="flex menu-container max-player">
-      <button
-        class="btn btn-all"
-        @click="picked = 'all'"
-        :class="picked == 'all' ? 'selected' : 'not-selected'"
-      >
-        ALL RADIO
-      </button>
-      <button
-        class="btn btn-lang"
-        @click="picked = 'en'"
-        :class="picked == 'en' ? 'selected' : 'not-selected'"
-      >
-        ENGLISH
-      </button>
-      <button
-        class="btn btn-lang"
-        @click="picked = 'ms'"
-        :class="picked == 'ms' ? 'selected' : 'not-selected'"
-      >
-        MALAY
-      </button>
-      <button
-        class="btn btn-lang"
-        @click="picked = 'zh'"
-        :class="picked == 'zh' ? 'selected' : 'not-selected'"
-      >
-        CHINESE
-      </button>
-      <button
-        class="btn btn-lang"
-        @click="picked = 'ta'"
-        :class="picked == 'ta' ? 'selected' : 'not-selected'"
-      >
-        TAMIL
-      </button>
+      <div>
+        <button
+          class="btn btn-all"
+          @click="picked = { code: 'all', name: 'All Radio' }"
+          :class="picked.code == 'all' ? 'selected' : 'not-selected'"
+        >
+          ALL RADIO
+        </button>
+      </div>
+      <div v-for="lang in languages" :key="lang.code">
+        <button
+          class="btn btn-lang"
+          @click="picked = lang"
+          :class="picked.code == lang.code ? 'selected' : 'not-selected'"
+        >
+          {{ lang.name.toUpperCase() }}
+        </button>
+      </div>
       <div class="search-container">
         <font-awesome-icon class="icon" icon="search" />
         <input v-model="search" type="text" id="search" placeholder="SEARCH" />
       </div>
     </div>
-    <div class="content-container">
-      <div class="flex justify-center min-player-flex">
-        <select class="select-bar" v-model="picked">
-          <option value="all">ALL RADIO</option>
-          <option value="en">ENGLISH</option>
-          <option value="ms">MALAY</option>
-          <option value="zh">CHINESE</option>
-          <option value="ta">TAMIL</option>
-        </select>
+    <div class="content-container" :class="isDropDown ? 'open' : ''">
+      <div
+        class="flex justify-center min-player-flex"
+        :class="isDropDown ? 'dropdown-open' : ''"
+      >
+        <div class="select-bar">
+          <button
+            @click="isDropDown = !isDropDown"
+            class="dropdown-btn"
+            :class="isDropDown ? 'open' : 'close'"
+          >
+            {{ picked.name.toUpperCase() }}
+          </button>
+          <div v-show="isDropDown" class="dropdown-content">
+            <div
+              v-show="picked.code != 'all'"
+              class="flex items-center justify-center dropdown-language"
+            >
+              <a
+                @click="selectStation({ code: 'all', name: 'All Radio' })"
+                class="flex items-center"
+              >
+                ALL RADIO
+              </a>
+            </div>
+            <div v-for="lang in languages" :key="lang.code">
+              <div
+                v-show="picked.code != lang.code"
+                class="flex items-center justify-center dropdown-language"
+              >
+                <a @click="selectStation(lang)" class="flex items-center">{{
+                  lang.name.toUpperCase()
+                }}</a>
+              </div>
+            </div>
+            <div class="flex items-center justify-center dropdown-search-bar">
+              <input
+                id="myInput"
+                type="text"
+                placeholder="Search.."
+                v-model="search"
+                v-on:keyup.enter="isDropDown = !isDropDown"
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <div class="info-font max-player">CLICK ON ANY RADIO BELOW TO PLAY:</div>
-      <div class="flex flex-wrap station-container">
-        <div v-for="station in filteredList" v-bind:key="station.name">
-          <div class="station-image-container">
-            <a :href="`/${station.stationCode}`"
-              ><img class="station-image" :src="station.logo" :alt="station.name"
-            /></a>
+      <div v-if="search == ''">
+        <div
+          class="flex flex-wrap station-container-main"
+          v-for="station in filteredMain()"
+          :key="station.name"
+        >
+          <div class="w-full flex flex-col items-center min-player">
+            <div class="flex justify-center">
+              <a :href="`/${station.stationCode}`"
+                ><img
+                  class="station-image-min"
+                  :src="station.logo"
+                  :alt="station.name"
+              /></a>
+            </div>
           </div>
-          <div class="flex flex-wrap justify-center">
-            <div class="station-font">{{ station.name.toUpperCase() }}</div>
+          <div class="station-image-main flex flex-col items-center max-player">
+            <div class="station-image-container-main">
+              <a :href="`/${station.stationCode}`"
+                ><img
+                  class="station-image"
+                  :src="station.logo"
+                  :alt="station.name"
+              /></a>
+            </div>
+            <div class="station-font-main">
+              {{ station.description }}
+            </div>
           </div>
+          <div class="flex flex-wrap station-container-main-splinter">
+            <div
+              class="flex"
+              v-for="splinter in filteredSplinter(station.stationCode)"
+              :key="splinter.name"
+            >
+              <div class="splinter-image-container-main">
+                <a :href="`/${splinter.stationCode}`"
+                  ><img
+                    class="station-image"
+                    :src="splinter.logo"
+                    :alt="splinter.name"
+                /></a>
+              </div>
+              <div class="splinter-font">
+                <div class="splinter-name-font">
+                  {{ splinter.name.toUpperCase() }}
+                </div>
+                <div class="splinter-desc-font">
+                  {{ splinter.description }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap station-container">
+          <div
+            class="flex flex-col items-center"
+            v-for="dvr in filteredOther()"
+            :key="dvr.name"
+          >
+            <div class="station-image-container">
+              <a :href="`/${dvr.stationCode}`"
+                ><img class="station-image" :src="dvr.logo" :alt="dvr.name"
+              /></a>
+            </div>
+            <div class="other-station-font">
+              {{ dvr.name.toUpperCase() }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div
+          class="flex flex-wrap station-container"
+          v-if="filteredSearch.length > 0"
+        >
+          <div v-for="station in filteredSearch" :key="station.name">
+            <div class="station-image-container">
+              <a :href="`/${station.stationCode}`"
+                ><img
+                  class="station-image"
+                  :src="station.logo"
+                  :alt="station.name"
+              /></a>
+            </div>
+            <div class="flex flex-wrap justify-center">
+              <div class="station-font">{{ station.name.toUpperCase() }}</div>
+            </div>
+          </div>
+        </div>
+        <div
+          v-else
+          class="flex justify-center station-container"
+          style="margin: 20px 10px 30px 10px"
+        >
+          <div class="white-text">No station found</div>
         </div>
       </div>
     </div>
@@ -81,19 +187,78 @@ export default {
   props: ["stationList"],
   data() {
     return {
-      picked: "all",
       search: "",
       selectedStation: [],
+      isDropDown: false,
+      picked: { code: "all", name: "All Radio" },
+      languages: [
+        { code: "en", name: "English" },
+        { code: "ms", name: "Malay" },
+        { code: "zh", name: "Chinese" },
+        { code: "ta", name: "Tamil" },
+      ],
+      splinterStations: [],
     };
   },
   mounted() {
     this.selectedStation = this.stationList.filter((station) => {
       return station.language.toLowerCase();
     });
+    this.splinterStations = this.selectedStation.filter(
+      (station) =>
+        station.stationCode.includes("-") || station.stationCode.includes("_")
+    );
   },
-  methods: {},
-  computed: {
+  methods: {
+    selectStation(val) {
+      this.picked = val;
+      this.search = "";
+      this.isDropDown = false;
+    },
     filteredList() {
+      return this.selectedStation.filter((station) => {
+        return station.name.toLowerCase().includes(this.search.toLowerCase());
+      });
+    },
+    filteredMain() {
+      return this.filteredList().filter(
+        (station) =>
+          (!station.stationCode.includes("-") &&
+            !station.stationCode.includes("_")) ||
+          station.stationCode.includes("amp-melody")
+      );
+    },
+    filteredSplinter(val) {
+      return this.splinterStations.filter((station) => {
+        return (
+          station.stationCode.toLowerCase().includes(val.toLowerCase()) &&
+          !station.stationCode.includes("amp-melody")
+        );
+      });
+    },
+    filteredOther() {
+      let arr = [];
+      let final = [];
+      this.filteredMain().forEach((element) => {
+        let test = this.selectedStation.filter((station) => {
+          return station.stationCode
+            .toLowerCase()
+            .includes(element.stationCode.toLowerCase());
+        });
+        test.forEach((el) => {
+          arr.push(el);
+        });
+      });
+      this.selectedStation.forEach((el) => {
+        if (!arr.some((element) => element.stationCode === el.stationCode)) {
+          final.push(el);
+        }
+      });
+      return final;
+    },
+  },
+  computed: {
+    filteredSearch() {
       return this.selectedStation.filter((station) => {
         return station.name.toLowerCase().includes(this.search.toLowerCase());
       });
@@ -101,9 +266,11 @@ export default {
   },
   watch: {
     picked: function (val) {
-      if (val !== "all") {
+      if (val.code !== "all") {
         this.selectedStation = this.stationList.filter((station) => {
-          return station.language.toLowerCase().includes(val.toLowerCase());
+          return station.language
+            .toLowerCase()
+            .includes(val.code.toLowerCase());
         });
       } else {
         this.selectedStation = this.stationList.filter((station) => {
@@ -204,7 +371,7 @@ input[type="text"]:focus {
   height: 100px;
   background-color: grey;
   border-radius: 16px;
-  margin: 20px 20px 10px 20px;
+  margin: 0px 5px 10px 5px;
 }
 .station-image {
   width: 100px;
@@ -212,8 +379,56 @@ input[type="text"]:focus {
   cursor: pointer;
   border-radius: 16px;
 }
+.station-image-container-main {
+  width: 100px;
+  height: 100px;
+  background-color: grey;
+  border-radius: 16px;
+  margin: 0px 21px 10px 20px;
+}
+.station-font-main {
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 300;
+  margin-bottom: 35px;
+  width: 100px;
+}
 .station-container {
-  margin: 0px 40px 30px 40px;
+  margin: 30px 45px 60px 55px;
+}
+.station-container-main {
+  margin: 0px 40px 0px 40px;
+}
+.splinter-font {
+  color: white;
+  font-size: 14px;
+  margin-top: 10px;
+  width: 187px;
+}
+.splinter-name-font {
+  font-weight: 600;
+}
+.splinter-desc-font {
+  font-weight: 300;
+  margin-top: 5px;
+}
+.station-container-main-splinter {
+  margin: 0px 0px 0px 0px;
+  width: 85%;
+}
+.splinter-image-container-main {
+  width: 100px;
+  height: 100px;
+  background-color: grey;
+  border-radius: 16px;
+  margin: 0px 10px 10px 20px;
+}
+.station-image-main {
+  background-image: linear-gradient(#e27676 23%, rgba(255, 255, 255, 0) 0%);
+  background-position: right;
+  background-size: 3px 15px;
+  background-repeat: repeat-y;
 }
 .station-font {
   width: 100px;
@@ -222,6 +437,13 @@ input[type="text"]:focus {
   font-size: 14px;
   font-weight: 300;
   margin-bottom: 10px;
+}
+.other-station-font {
+  width: 100px;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 300;
 }
 .btn {
   height: 55px;
@@ -255,6 +477,9 @@ input[type="text"]:focus {
 }
 
 @media only screen and (max-width: 1199px) {
+  .search-container input#search {
+    width: 130px;
+  }
   .station-image-container {
     width: 100px;
     height: 100px;
@@ -274,6 +499,9 @@ input[type="text"]:focus {
     overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+  .content-container.open {
+    overflow-y: hidden;
   }
   .info-font {
     margin-left: 30px;
@@ -302,6 +530,21 @@ input[type="text"]:focus {
     margin-right: 5px;
     margin-left: 5px;
   }
+  .station-container-main {
+    margin: 0px 10px 0px 10px;
+  }
+  .splinter-font {
+    width: 190px;
+  }
+  .station-container-main-splinter {
+    width: 80%;
+  }
+  .station-image-container-main {
+    margin: 0px 15px 10px 20px;
+  }
+  .splinter-image-container-main {
+    margin: 0px 10px 10px 12px;
+  }
 }
 
 @media only screen and (max-width: 799px) {
@@ -318,6 +561,15 @@ input[type="text"]:focus {
   .min-player-flex {
     display: flex;
   }
+  .dropdown-open:before {
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.8);
+  }
   .min-player {
     display: inline;
   }
@@ -332,10 +584,23 @@ input[type="text"]:focus {
   .select-bar {
     width: 280px;
     height: 55px;
+    position: relative;
+  }
+  .dropdown-btn.open {
+    background-color: #1f1c1c;
+    border-radius: 10px 10px 0px 0px;
+  }
+  .dropdown-btn.close {
     background-color: rgb(234, 0, 41);
     border-radius: 10px;
+  }
+  .dropdown-btn {
+    width: 100%;
+    height: 100%;
     border: 2px solid white;
     color: white;
+    font-size: 20px;
+    font-weight: 600;
   }
   input:focus,
   select:focus,
@@ -346,5 +611,73 @@ input[type="text"]:focus {
   .content-container {
     height: 490px;
   }
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    position: relative;
+    top: -2px;
+    background-color: #1f1c1c;
+    width: 280px;
+    border: 2px solid #fff;
+    border-radius: 0px 0px 10px 10px;
+    z-index: 1;
+  }
+
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: #fff;
+    width: 93%;
+    height: 87%;
+    border-radius: 5px;
+    padding: 15px;
+    cursor: pointer;
+    font-weight: 300;
+  }
+
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {
+    background-color: rgb(234, 0, 41);
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .dropdown-language {
+    border-bottom: 1px white solid;
+    height: 60px;
+  }
+  .dropdown-search-bar {
+    height: 60px;
+  }
+  #myInput {
+    box-sizing: border-box;
+    background-position: 14px 12px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    color: black;
+    width: 260px;
+    height: 40px;
+    border-radius: 8px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .station-image-min {
+    width: 140px;
+    height: 140px;
+    cursor: pointer;
+    border-radius: 16px;
+    margin: 20px;
+  }
+  .station-container-main-splinter {
+    width: 100%;
+}
+.splinter-font {
+    width: 208px;
+}
 }
 </style>

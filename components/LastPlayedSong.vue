@@ -9,13 +9,14 @@
     <div class="error-container" v-if="playoutHistory.length < 1">
       <div class="error-box">:(</div>
     </div>
-    <div v-else class="list-container overflow-y-auto">
+    <div v-else class="list-container overflow-y-auto overflow-x-hidden">
       <div v-for="el in playoutHistory.slice(1)" v-bind:key="el.song.id">
         <div class="flex song-list">
-          <div class="rounded album-container">
+          <div class="rounded album-container" :style="{ 'background-image': 'url(' + squareImage + ')' }">
             <img
               class="rounded album-art"
               :alt="`${el.song.artist} - ${el.song.track}`"
+              @error="setAltImg"
               :src="el.song.coverUrl ? el.song.coverUrl : squareImage"
             />
           </div>
@@ -62,6 +63,9 @@ export default {
         this.playoutHistory.pop();
       }
     },
+    setAltImg(event) {
+      event.target.src = this.squareImage;
+    },
   },
 };
 </script>
@@ -101,6 +105,7 @@ export default {
 .album-art {
   width: 50px;
   height: 50px;
+  border: 1px solid lightgrey;
 }
 .header-font {
   margin-top: 18px;
@@ -137,7 +142,7 @@ export default {
 }
 .song-info {
   height: 50px;
-  width: 143px;
+  width: 179px;
   margin-left: 11px;
 }
 .icon-close {
@@ -181,6 +186,9 @@ export default {
     margin-right: 10px;
     position: absolute;
     display: inline;
+  }
+  .song-info {
+    width: 210px;
   }
 }
 

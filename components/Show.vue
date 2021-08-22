@@ -22,9 +22,8 @@
             <div class="flex w-full">
               <div class="show-image-container">
                 <img
-                  v-if="showsData[0].images[0]"
                   class="show-image"
-                  :src="showsData[0].images[0].url"
+                  :src="showsData[0].images[0] ? showsData[0].images[0].url : squareImage"
                   :alt="showsData[0].name"
                 />
               </div>
@@ -70,9 +69,8 @@
               >
                 <div class="show-image-container">
                   <img
-                    v-if="show.images[0]"
                     class="show-image"
-                    :src="show.images[0].url"
+                    :src="show.images[0] ? show.images[0].url : squareImage"
                     :alt="show.name"
                   />
                 </div>
@@ -121,9 +119,8 @@
             <div class="flex w-full">
               <div class="show-image-container">
                 <img
-                  v-if="showsData[0].images[0]"
                   class="show-image"
-                  :src="showsData[0].images[0].url"
+                  :src="showsData[0].images[0] ? showsData[0].images[0].url : squareImage"
                   :alt="showsData[0].name"
                 />
               </div>
@@ -189,7 +186,7 @@
 
 <script>
 export default {
-  props: ["showsData", "stationName", "stationDesc"],
+  props: ["showsData", "stationName", "stationDesc", "squareImage"],
   data() {
     return {
       open: false,
@@ -244,6 +241,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 6px;
+  border: 1px solid lightgrey;
 }
 .show-list-container {
   margin-bottom: 10px;
