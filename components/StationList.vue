@@ -590,11 +590,6 @@ input[type="text"]:focus {
   .max-player {
     display: none;
   }
-  .player-container {
-    background-color: #ed0f0f;
-    width: 350px;
-    height: 550px;
-  }
   .select-bar {
     width: 280px;
     height: 55px;
@@ -625,13 +620,6 @@ input[type="text"]:focus {
   .content-container {
     height: 490px;
   }
-  /* The container <div> - needed to position the dropdown content */
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-
-  /* Dropdown Content (Hidden by Default) */
   .dropdown-content {
     position: relative;
     top: -2px;
@@ -642,7 +630,6 @@ input[type="text"]:focus {
     z-index: 1;
   }
 
-  /* Links inside the dropdown */
   .dropdown-content a {
     color: #fff;
     width: 93%;
@@ -653,7 +640,6 @@ input[type="text"]:focus {
     font-weight: 300;
   }
 
-  /* Change color of dropdown links on hover */
   .dropdown-content a:hover {
     background-color: rgb(234, 0, 41);
     font-size: 18px;

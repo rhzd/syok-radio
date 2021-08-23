@@ -363,9 +363,6 @@ hr.spacing {
 }
 
 @media only screen and (max-width: 1199px) {
-  .custom-bg {
-    height: 30px;
-  }
   .max-player {
     display: none;
   }

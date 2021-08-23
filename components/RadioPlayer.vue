@@ -400,11 +400,6 @@ export default {
   padding-left: 27px;
   padding-right: 27px;
 }
-.content {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
 .share-btn-circle {
   width: 50px;
   height: 50px;
@@ -464,9 +459,6 @@ export default {
   color: #ffffff;
   cursor: pointer;
 }
-.icon.volume-mute {
-  color: #ffffff;
-}
 .volume-icon-container {
   width: 35px;
   top: 2px;
@@ -482,10 +474,6 @@ export default {
   color: #ffffff;
   cursor: pointer;
   margin-right: 10px;
-}
-.icon.code {
-  left: 13%;
-  color: #ffffff;
 }
 input[type="range"] {
   -webkit-appearance: none;
@@ -618,9 +606,6 @@ input[type="range"]::-ms-track {
   .square {
     width: 250px;
     height: 250px;
-  }
-  .right-panel {
-    display: none;
   }
   .min-player {
     display: flex;
