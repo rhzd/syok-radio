@@ -44,7 +44,7 @@ body {
 }
 
 .fof h1 {
-  font-size: 6vw;
+  font-size: 24px;
   display: inline-block;
   padding-right: 12px;
   animation: type 0.5s alternate infinite;
@@ -52,7 +52,7 @@ body {
 }
 
 .fof h5 {
-  font-size: 12vw;
+  font-size: 32px;
   display: inline-block;
   padding-right: 12px;
   color: #888;

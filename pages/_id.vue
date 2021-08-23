@@ -441,9 +441,6 @@ export default {
 #overlay-ad .ad-image {
   border-radius: 5px;
 }
-.last-played-song-mid-player {
-  display: none;
-}
 
 @media only screen and (max-width: 1199px) {
   #overlay-ad .icon-close {
