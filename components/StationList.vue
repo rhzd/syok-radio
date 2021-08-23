@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col bg-stationlist">
     <div class="flex close-btn-container justify-end items-center">
       <font-awesome-icon
         v-if="$route.fullPath !== '/'"
@@ -288,6 +288,9 @@ export default {
 </script>
 
 <style scoped>
+.bg-stationlist {
+  background-color: rgb(234, 0, 41);
+}
 .station-main-container {
   position: relative;
 }

@@ -9,14 +9,17 @@
         </div>
         <div class="flex button-container">
           <font-awesome-icon
+            v-if="isPlayoutHistory"
             @click="toggleLastPlayed"
             class="icon bars"
             icon="bars"
+            :style="{ 'color': stationColor.tertiary }"
           />
           <font-awesome-icon
             @click="toggleStationList"
             class="icon th-large"
             icon="th-large"
+            :style="{ 'color': stationColor.tertiary }"
           />
         </div>
       </div>
@@ -29,6 +32,7 @@
             @click="toggleLastPlayed"
             class="icon bars text-white"
             icon="bars"
+            :style="{ 'color': stationColor.tertiary }"
           />
         </div>
       </div>
@@ -50,26 +54,44 @@
         {{ currentMetadata ? currentMetadata.artist : stationData.name }}
       </div>
     </div>
-    <transition name="fade" mode="out-in">
+    <!-- <transition name="fade" mode="out-in"> -->
       <div
         key="1"
         v-if="!shareActive"
-        class="flex media-player bg-color items-center justify-between"
+        class="flex media-player items-center justify-between"
+        :style="{ 'background-color': stationColor.secondary }"
       >
-        <div>
+        <div v-if="loading">
+          <button class="bg-white rounded-full btn-circle">
+            <font-awesome-icon
+              class="icon spinner"
+              icon="spinner"
+              :style="{ 'color': stationColor.secondary }"
+            />
+          </button>
+        </div>
+        <div v-else>
           <button
             class="bg-white rounded-full btn-circle"
             v-show="paused"
             @click="play"
           >
-            <font-awesome-icon class="icon play" icon="play" />
+            <font-awesome-icon
+              class="icon play"
+              icon="play"
+              :style="{ 'color': stationColor.secondary }"
+            />
           </button>
           <button
             class="bg-white rounded-full btn-circle"
             v-show="playing"
             @click="pause"
           >
-            <font-awesome-icon class="icon stop" icon="stop" />
+            <font-awesome-icon
+              class="icon stop"
+              icon="stop"
+              :style="{ 'color': stationColor.secondary }"
+            />
           </button>
         </div>
 
@@ -109,7 +131,8 @@
       <div
         key="2"
         v-else
-        class="flex media-player bg-color items-center justify-between"
+        class="flex media-player items-center justify-between"
+        :style="{ 'background-color': stationColor.secondary }"
       >
         <div>
           <button @click="shareFacebook" class="rounded-full share-btn-circle">
@@ -140,7 +163,7 @@
           @click="shareActive = !shareActive"
         />
       </div>
-    </transition>
+    <!-- </transition> -->
     <audio
       ref="audio"
       @canplay="updatePaused"
@@ -168,9 +191,16 @@ export default {
       ],
     };
   },
-  props: ["stationData", "streamToken", "host"],
+  props: [
+    "stationData",
+    "streamToken",
+    "host",
+    "isPlayoutHistory",
+    "stationColor",
+  ],
   data() {
     return {
+      loading: true,
       paused: true,
       shareActive: false,
       volume: 30,
@@ -185,12 +215,18 @@ export default {
     const uri_component = encodeURIComponent(
       `companionads:true;tags:radioactive;stationid:${this.stationData.stationCode}`
     );
-    const lang = encodeURIComponent(`["${this.stationData.language}"]`); //ikut station language
-    const listenerId = com_adswizz_synchro_getListenerId(); //get listener id
-    let stream = `${this.stationData.streams[0].endpoint}?awparams=${uri_component}&authtoken=${this.streamToken}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
+    const lang = encodeURIComponent(`["${this.stationData.language}"]`);
+    const listenerId = com_adswizz_synchro_getListenerId();
+    let stream;
+    if (this.stationData.streams[0].endpoint.includes("revma")) {
+      stream = `${this.stationData.streams[0].endpoint}?rj-auth=${this.streamToken}&awparams=${uri_component}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
+    } else if (this.stationData.streams[0].endpoint.includes("rastream")) {
+      stream = `${this.stationData.streams[0].endpoint}?authtoken=${this.streamToken}&awparams=${uri_component}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
+    } else {
+      stream = null;
+    }
 
     if (Hls.isSupported()) {
-      this.isHlsSupported = true;
       let hls = new Hls();
       hls.loadSource(stream);
       hls.attachMedia(this.audio);
@@ -235,6 +271,7 @@ export default {
       this.audio.src = stream;
       this.audio.addEventListener("loadedmetadata", function (event) {
         this.audio.play();
+        this.loading = false;
       });
     }
   },
@@ -254,6 +291,12 @@ export default {
     updatePaused(event) {
       this.audio = event.target;
       this.paused = event.target.paused;
+      this.loading = false;
+      if (Hls.isSupported()) {
+        this.isHlsSupported = true;
+      } else {
+        this.isHlsSupported = false;
+      }
     },
     play() {
       this.audio.play();
@@ -316,9 +359,6 @@ export default {
   height: 300px;
   background-color: lightgrey;
   border-radius: 6px;
-}
-.bg-color {
-  background-color: rgb(206, 0, 41);
 }
 .header-font {
   font-size: 26px;
@@ -399,15 +439,26 @@ export default {
   top: 2px;
 }
 .icon.play {
-  color: rgb(234, 0, 41);
   left: 4%;
   top: 2%;
   position: relative;
 }
 .icon.stop {
-  color: rgb(234, 0, 41);
-  top: 2%;
+  top: 3%;
+  left: 1%;
   position: relative;
+}
+.icon.spinner {
+  top: 3%;
+  position: relative;
+}
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  animation: spinner 2s linear infinite;
 }
 .icon.volume {
   color: #ffffff;
@@ -441,7 +492,7 @@ input[type="range"] {
   width: 64%;
   position: relative;
   height: 4px;
-  background: #e05b5b;
+  background: darkgrey;
   border-radius: 5px;
   background-image: linear-gradient(#fff, #fff);
   background-repeat: no-repeat;
@@ -454,7 +505,7 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: #ffffff;
   cursor: pointer;
-  box-shadow: 0 0 2px 0 #e05b5b;
+  box-shadow: 0 0 2px 0 darkgrey;
   transition: background 0.3s ease-in-out;
 }
 
@@ -465,7 +516,7 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 50%;
   background: #fff;
   cursor: pointer;
-  box-shadow: 0 0 2px 0 #e05b5b;
+  box-shadow: 0 0 2px 0 darkgrey;
   transition: background 0.3s ease-in-out;
 }
 
@@ -474,9 +525,9 @@ input[type="range"]::-ms-thumb {
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background: #ff4500;
+  background: darkgrey;
   cursor: pointer;
-  box-shadow: 0 0 2px 0 #e05b5b;
+  box-shadow: 0 0 2px 0 darkgrey;
   transition: background 0.3s ease-in-out;
 }
 
@@ -557,7 +608,6 @@ input[type="range"]::-ms-track {
   .icon.bars {
     cursor: pointer;
     font-size: 32px;
-    color: #f68787;
   }
 }
 
@@ -597,11 +647,9 @@ input[type="range"]::-ms-track {
   .icon.bars {
     cursor: pointer;
     font-size: 32px;
-    color: #f68787;
   }
   .icon.th-large {
     cursor: pointer;
-    color: #f68787;
     font-size: 32px;
     margin-left: 18px;
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-bg">
+  <div>
     <div v-if="showsData.length > 0">
       <transition name="fade" mode="out-in">
         <div key="1" v-if="open">
@@ -23,7 +23,11 @@
               <div class="show-image-container">
                 <img
                   class="show-image"
-                  :src="showsData[0].images[0] ? showsData[0].images[0].url : squareImage"
+                  :src="
+                    showsData[0].images[0]
+                      ? showsData[0].images[0].url
+                      : squareImage
+                  "
                   :alt="showsData[0].name"
                 />
               </div>
@@ -120,7 +124,11 @@
               <div class="show-image-container">
                 <img
                   class="show-image"
-                  :src="showsData[0].images[0] ? showsData[0].images[0].url : squareImage"
+                  :src="
+                    showsData[0].images[0]
+                      ? showsData[0].images[0].url
+                      : squareImage
+                  "
                   :alt="showsData[0].name"
                 />
               </div>
@@ -163,7 +171,12 @@
           max-player
         "
       >
-        <div class="station-name">{{ stationName.toUpperCase() }}</div>
+        <div
+          class="station-name"
+          :style="{ color: stationColor.secondary }"
+        >
+          {{ stationName.toUpperCase() }}
+        </div>
         <div class="station-desc">{{ stationDesc.toUpperCase() }}</div>
       </div>
       <div
@@ -177,7 +190,12 @@
           class="chevron chevron-up"
           :icon="hover ? 'chevron-down' : 'chevron-up'"
         />
-        <div class="station-name">{{ stationName.toUpperCase() }}</div>
+        <div
+          class="station-name"
+          :style="{ color: stationColor.secondary }"
+        >
+          {{ stationName.toUpperCase() }}
+        </div>
         <div class="station-desc">{{ stationDesc.toUpperCase() }}</div>
       </div>
     </div>
@@ -186,7 +204,14 @@
 
 <script>
 export default {
-  props: ["showsData", "stationName", "stationDesc", "squareImage"],
+  props: [
+    "showsData",
+    "stationName",
+    "stationDesc",
+    "stationColor",
+    "squareImage",
+    "isOpenLastPlayed",
+  ],
   data() {
     return {
       open: false,
@@ -210,9 +235,6 @@ export default {
 </script>
 
 <style scoped>
-.custom-bg {
-  background-color: rgb(206, 0, 41);
-}
 .shows-container {
   height: 120px;
   border-radius: 20px 20px 0px 0px;
@@ -300,7 +322,6 @@ export default {
   margin-top: 25px;
   font-size: 18px;
   font-weight: 700;
-  color: rgb(234, 0, 41);
 }
 .station-desc {
   text-align: center;

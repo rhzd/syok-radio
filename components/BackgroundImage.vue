@@ -2,8 +2,9 @@
   <div @click="openAds" :style="bgImg" class="station-background-image">
     <div class="flex">
       <div
-        class="flex sponsored-container shadow-lg justify-center items-center"
+        class="flex sponsored-container shadow-lg items-center"
       >
+        <img class="sponsored-logo" :src="stationLogo" alt="syok" />
         <img class="sponsored-logo" :src="stationLogo" alt="syok" />
       </div>
     </div>

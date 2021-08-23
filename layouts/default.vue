@@ -24,7 +24,6 @@ body {
   background-color: #212121;
 }
 .player-container {
-  background-color: rgb(234, 0, 41);
   width: 1200px;
   height: 700px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -32,7 +31,6 @@ body {
 
 @media only screen and (max-width: 1199px) {
   .player-container {
-    background-color: rgb(234, 0, 41);
     width: 800px;
     height: 600px;
   }
@@ -51,7 +49,6 @@ body {
     background-color: #212121;
   }
   .player-container {
-    background-color: rgb(234, 0, 41);
     width: 350px;
     height: 550px;
   }

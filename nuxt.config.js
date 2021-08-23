@@ -5,7 +5,11 @@ export default {
     title: "SYOK",
     meta: [
       { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" },
+      {
+        name: "viewport",
+        content:
+          "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+      },
       { hid: "description", name: "description", content: "Everything Got!" },
       { name: "format-detection", content: "telephone=no" }
     ],
@@ -16,8 +20,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
-
+  plugins: ['~/plugins/helper.js'],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
@@ -27,11 +30,7 @@ export default {
     "@nuxtjs/tailwindcss",
     "@nuxtjs/fontawesome",
     "@nuxtjs/google-fonts"
-    // '@nuxtjs/google-analytics'
   ],
-  // googleAnalytics: {
-  //   id: process.env.GOOGLE_ANALYTICS_ID, // Use as fallback if no runtime config is provided
-  // },
   fontawesome: {
     icons: {
       solid: [
@@ -47,7 +46,8 @@ export default {
         "faChevronUp",
         "faChevronDown",
         "faLink",
-        "faSearch"
+        "faSearch",
+        "faSpinner"
       ],
       brands: ["faWhatsapp", "faTwitter", "faFacebookF"]
     }
@@ -67,8 +67,14 @@ export default {
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
-    "@nuxtjs/pwa"
+    "@nuxtjs/pwa",
+    "@nuxtjs/gtm"
   ],
+  gtm: {
+    enabled: true,
+    pageTracking: true,
+    id: "GTM-PLTFP8W"
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
@@ -82,8 +88,8 @@ export default {
   publicRuntimeConfig: {
     syokURL: process.env.SYOK_URL,
     baseURL: process.env.BASE_URL,
-    googleAnalytics: {
-      id: process.env.GOOGLE_ANALYTICS_ID
+    gtm: {
+      id: process.env.GOOGLE_TAG_MANAGER_ID
     }
   },
   privateRuntimeConfig: {

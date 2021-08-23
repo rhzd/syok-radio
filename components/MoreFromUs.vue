@@ -40,6 +40,10 @@
               <font-awesome-icon
                 class="icon"
                 icon="th-large"
+                :style="{
+                  color: stationColor.tertiary,
+                  border: `7px ${stationColor.tertiary} solid`,
+                }"
               />
             </div>
           </div>
@@ -80,7 +84,14 @@
               @click="$root.$refs.MainPage.toggleStationList()"
               class="station-logo-container flex justify-center items-center"
             >
-              <font-awesome-icon class="icon" icon="th-large" />
+              <font-awesome-icon
+                class="icon"
+                icon="th-large"
+                :style="{
+                  color: stationColor.tertiary,
+                  border: `7px ${stationColor.tertiary} solid`,
+                }"
+              />
             </div>
           </div>
           <div
@@ -97,7 +108,7 @@
 
 <script>
 export default {
-  props: ["moreFromUs"],
+  props: ["moreFromUs", "stationColor"],
   data() {
     return {};
   },
@@ -140,12 +151,10 @@ export default {
 }
 .icon {
   font-size: 64px;
-  border: 7px #f68787 solid;
   padding: 10px;
   width: 100%;
   height: 100%;
   border-radius: 15px;
-  color: #f68787;
 }
 .medium-player {
   display: none;

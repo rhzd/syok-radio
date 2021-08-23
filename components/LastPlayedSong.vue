@@ -4,6 +4,7 @@
       @click="$root.$refs.MainPage.toggleLastPlayed()"
       class="icon-close"
       icon="times"
+      :style="{ color: stationColor.secondary }"
     />
     <div class="header-font">LAST PLAYED SONGS</div>
     <div class="error-container" v-if="playoutHistory.length < 1">
@@ -12,7 +13,10 @@
     <div v-else class="list-container overflow-y-auto overflow-x-hidden">
       <div v-for="el in playoutHistory.slice(1)" v-bind:key="el.song.id">
         <div class="flex song-list">
-          <div class="rounded album-container" :style="{ 'background-image': 'url(' + squareImage + ')' }">
+          <div
+            class="rounded album-container"
+            :style="{ 'background-image': 'url(' + squareImage + ')' }"
+          >
             <img
               class="rounded album-art"
               :alt="`${el.song.artist} - ${el.song.track}`"
@@ -37,7 +41,7 @@
 
 <script>
 export default {
-  props: ["playoutHistory", "squareImage"],
+  props: ["playoutHistory", "squareImage", "stationColor"],
   data() {
     return {
       sameSong: false,
@@ -181,7 +185,6 @@ export default {
   .icon-close {
     font-size: 35px;
     left: 87%;
-    color: rgb(234, 0, 41);
     cursor: pointer;
     margin-right: 10px;
     position: absolute;
@@ -195,11 +198,6 @@ export default {
 @media only screen and (max-width: 799px) {
   .list-container {
     height: 503px;
-  }
-  .player-container {
-    background-color: #ed0f0f;
-    width: 350px;
-    height: 550px;
   }
 }
 </style>
