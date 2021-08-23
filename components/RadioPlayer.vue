@@ -62,7 +62,7 @@
         :style="{ 'background-color': stationColor.secondary }"
       >
         <div v-if="loading">
-          <button class="bg-white rounded-full btn-circle">
+          <button class="bg-white rounded-full btn-circle" aria-label="loading">
             <font-awesome-icon
               class="icon spinner"
               icon="spinner"
@@ -73,6 +73,7 @@
         <div v-else>
           <button
             class="bg-white rounded-full btn-circle"
+            aria-label="play"
             v-show="paused"
             @click="play"
           >
@@ -84,6 +85,7 @@
           </button>
           <button
             class="bg-white rounded-full btn-circle"
+            aria-label="pause"
             v-show="playing"
             @click="pause"
           >
@@ -135,25 +137,25 @@
         :style="{ 'background-color': stationColor.secondary }"
       >
         <div>
-          <button @click="shareFacebook" class="rounded-full share-btn-circle">
+          <button @click="shareFacebook" aria-label="share to facebook" class="rounded-full share-btn-circle">
             <font-awesome-icon
               class="share-icon facebook"
               :icon="['fab', 'facebook-f']"
             />
           </button>
-          <button @click="shareTwitter" class="rounded-full share-btn-circle">
+          <button @click="shareTwitter" aria-label="share to twitter" class="rounded-full share-btn-circle">
             <font-awesome-icon
               class="share-icon twitter"
               :icon="['fab', 'twitter']"
             />
           </button>
-          <button @click="shareWhatsapp" class="rounded-full share-btn-circle">
+          <button @click="shareWhatsapp" aria-label="share to whatsapp" class="rounded-full share-btn-circle">
             <font-awesome-icon
               class="share-icon whatsapp"
               :icon="['fab', 'whatsapp']"
             />
           </button>
-          <button @click="shareLink" class="rounded-full share-btn-circle">
+          <button @click="shareLink" aria-label="copy link" class="rounded-full share-btn-circle">
             <font-awesome-icon class="share-icon link" icon="link" />
           </button>
         </div>
