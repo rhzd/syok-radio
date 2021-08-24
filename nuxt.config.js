@@ -90,10 +90,13 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
+      name: 'Syok Radio',
+      short_name: "Syok Radio",
       lang: "en",
       theme_color: "#212121"
     },
     meta: {
+      "name": "Syok Radio",
       "theme-color": "#212121"
     }
   },
