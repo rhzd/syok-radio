@@ -24,8 +24,8 @@
                 <img
                   class="show-image"
                   :src="
-                    showsData[0].images[0]
-                      ? showsData[0].images[0].url
+                    showsData[0].SquareImage
+                      ? showsData[0].SquareImage
                       : squareImage
                   "
                   :alt="showsData[0].name"
@@ -39,16 +39,12 @@
                 <div class="showtime-font">
                   {{
                     `${
-                      showsData[0].showtimes[0]
-                        ? customTime(
-                            showsData[0].showtimes[0].start_time_utc
-                          ).replace(/\s/g, "")
+                      showsData[0].StartHour
+                        ? customTime(showsData[0].StartHour).replace(/\s/g, "")
                         : ""
                     } - ${
-                      showsData[0].showtimes[0]
-                        ? customTime(
-                            showsData[0].showtimes[0].end_time_utc
-                          ).replace(/\s/g, "")
+                      showsData[0].StartHour
+                        ? customTime(showsData[0].EndHour).replace(/\s/g, "")
                         : ""
                     }`
                   }}
@@ -74,7 +70,7 @@
                 <div class="show-image-container">
                   <img
                     class="show-image"
-                    :src="show.images[0] ? show.images[0].url : squareImage"
+                    :src="show.SquareImage ? show.SquareImage : squareImage"
                     :alt="show.name"
                   />
                 </div>
@@ -83,17 +79,12 @@
                   <div class="showtime-font">
                     {{
                       `${
-                        show.showtimes[0]
-                          ? customTime(
-                              show.showtimes[0].start_time_utc
-                            ).replace(/\s/g, "")
+                        show.StartHour
+                          ? customTime(show.StartHour).replace(/\s/g, "")
                           : ""
                       } - ${
-                        show.showtimes[0]
-                          ? customTime(show.showtimes[0].end_time_utc).replace(
-                              /\s/g,
-                              ""
-                            )
+                        show.EndHour
+                          ? customTime(show.EndHour).replace(/\s/g, "")
                           : ""
                       }`
                     }}
@@ -125,8 +116,8 @@
                 <img
                   class="show-image"
                   :src="
-                    showsData[0].images[0]
-                      ? showsData[0].images[0].url
+                    showsData[0].SquareImage
+                      ? showsData[0].SquareImage
                       : squareImage
                   "
                   :alt="showsData[0].name"
@@ -140,16 +131,12 @@
                 <div class="showtime-font">
                   {{
                     `${
-                      showsData[0].showtimes[0]
-                        ? customTime(
-                            showsData[0].showtimes[0].start_time_utc
-                          ).replace(/\s/g, "")
+                      showsData[0].StartHour
+                        ? customTime(showsData[0].StartHour).replace(/\s/g, "")
                         : ""
                     } - ${
-                      showsData[0].showtimes[0]
-                        ? customTime(
-                            showsData[0].showtimes[0].end_time_utc
-                          ).replace(/\s/g, "")
+                      showsData[0].StartHour
+                        ? customTime(showsData[0].EndHour).replace(/\s/g, "")
                         : ""
                     }`
                   }}
@@ -216,6 +203,70 @@ export default {
     showToggle() {
       return this.open ? "shows-container-open" : "shows-container";
     },
+  },
+  mounted() {
+    let days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    let shows = {
+      Sunday: [],
+      Monday: [],
+      Tuesday: [],
+      Wednesday: [],
+      Thursday: [],
+      Friday: [],
+      Saturday: [],
+    };
+    let d = new Date();
+    let dayName = days[d.getDay()];
+    this.showsData.forEach((show) => {
+      let test = show.Day.split("|");
+      test.forEach((el) => {
+        shows[el].push({
+          day: el,
+          name: show.name,
+          startTime: show.StartHour,
+          endTime: show.EndHour,
+        });
+      });
+    });
+
+    var time = new Date();
+    let minute = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
+    let formattedTime = time.getHours() + "" + minute;
+    console.log(Number(formattedTime));
+
+    let finalShows = [
+      ...shows.Sunday,
+      ...shows.Monday,
+      ...shows.Tuesday,
+      ...shows.Wednesday,
+      ...shows.Thursday,
+      ...shows.Friday,
+      ...shows.Saturday,
+    ];
+
+    console.log(finalShows);
+
+    const index = finalShows.findIndex(
+      (show) =>
+        show.day === dayName &&
+        Number(show.startTime) <= Number(formattedTime) &&
+        Number(show.endTime) >= Number(formattedTime)
+    );
+
+    if (index) {
+      currentShow = finalShows[index]
+    }
+
+    console.log(finalShows[index]);
+    console.log(dayName);
   },
   methods: {
     customTime(data) {
