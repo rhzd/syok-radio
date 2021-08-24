@@ -55,7 +55,6 @@
         {{ currentMetadata ? currentMetadata.artist : stationData.name }}
       </div>
     </div>
-    <!-- <transition name="fade" mode="out-in"> -->
     <div
       key="1"
       v-if="!shareActive"
@@ -182,7 +181,6 @@
         @click="shareActive = !shareActive"
       />
     </div>
-    <!-- </transition> -->
     <audio
       ref="audio"
       @canplay="updatePaused"
@@ -570,15 +568,6 @@ input[type="range"]::-ms-track {
   box-shadow: none;
   border: none;
   background: transparent;
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.1s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
 }
 .min-player {
   display: none;

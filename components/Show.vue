@@ -1,133 +1,151 @@
 <template>
   <div>
     <div v-if="showsData">
-      <transition name="fade" mode="out-in">
-        <div key="1" v-if="open">
+      <div key="1" v-if="open">
+        <div
+          class="
+            flex flex-col
+            justify-start
+            items-center
+            bg-white
+            shows-container-open
+          "
+        >
+          <div>
+            <font-awesome-icon
+              @click="open = !open"
+              class="chevron chevron-down"
+              icon="chevron-down"
+            />
+          </div>
+          <div class="flex w-full">
+            <div class="show-image-container">
+              <img
+                class="show-image"
+                :src="
+                  showsData.currentShow.image
+                    ? showsData.currentShow.image
+                    : squareImage
+                "
+                :alt="showsData.currentShow.name"
+              />
+            </div>
+            <div class="flex flex-col justify-start">
+              <div class="title-font">CURRENT SHOW</div>
+              <div class="name-font">
+                {{ showsData.currentShow.name.toUpperCase() }}
+              </div>
+              <div class="showtime-font">
+                {{
+                  `${
+                    showsData.currentShow.startTime
+                      ? customTime(showsData.currentShow.startTime)
+                      : ""
+                  } - ${
+                    showsData.currentShow.endTime
+                      ? customTime(showsData.currentShow.endTime)
+                      : ""
+                  }, ${
+                    showsData.currentShow.day.toUpperCase()
+                      ? showsData.currentShow.day.toUpperCase()
+                      : ""
+                  }`
+                }}
+              </div>
+            </div>
+          </div>
+          <hr class="spacing" />
           <div
             class="
               flex flex-col
               justify-start
-              items-center
-              bg-white
-              shows-container-open
+              w-full
+              overflow-y-auto
+              upcoming-shows-container
             "
           >
-            <div>
-              <font-awesome-icon
-                @click="open = !open"
-                class="chevron chevron-down"
-                icon="chevron-down"
-              />
-            </div>
-            <div class="flex w-full">
-              <div class="show-image-container">
-                <img
-                  class="show-image"
-                  :src="showsData.currentShow.image ? showsData.currentShow.image : squareImage"
-                  :alt="showsData.currentShow.name"
-                />
-              </div>
-              <div class="flex flex-col justify-start">
-                <div class="title-font">CURRENT SHOW</div>
-                <div class="name-font">
-                  {{ showsData.currentShow.name.toUpperCase() }}
-                </div>
-                <div class="showtime-font">
-                  {{
-                    `${
-                      showsData.currentShow.startTime
-                        ? customTime(showsData.currentShow.startTime)
-                        : ""
-                    } - ${
-                      showsData.currentShow.endTime ? customTime(showsData.currentShow.endTime) : ""
-                    }, ${showsData.currentShow.day.toUpperCase() ? showsData.currentShow.day.toUpperCase() : ""}`
-                  }}
-                </div>
-              </div>
-            </div>
-            <hr class="spacing" />
+            <div class="upcoming-title-font">UPCOMING SHOWS</div>
             <div
-              class="
-                flex flex-col
-                justify-start
-                w-full
-                overflow-y-auto
-                upcoming-shows-container
-              "
+              class="flex show-list-container"
+              v-for="(show, index) in showsData.upcomingShow"
+              :key="index"
             >
-              <div class="upcoming-title-font">UPCOMING SHOWS</div>
-              <div
-                class="flex show-list-container"
-                v-for="(show, index) in showsData.upcomingShow"
-                :key="index"
-              >
-                <div class="show-image-container">
-                  <img
-                    class="show-image"
-                    :src="show.image ? show.image : squareImage"
-                    :alt="show.name"
-                  />
-                </div>
-                <div class="flex flex-col justify-center">
-                  <div class="names-font">{{ show.name.toUpperCase() }}</div>
-                  <div class="showtime-font">
-                    {{
-                      `${show.startTime ? customTime(show.startTime) : ""} - ${
-                        show.endTime ? customTime(show.endTime) : ""
-                      }, ${show.day.toUpperCase() ? show.day.toUpperCase() : ""}`
-                    }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div
-            class="
-              flex flex-col
-              justify-start
-              items-center
-              bg-white
-              shows-container
-            "
-          >
-            <div>
-              <font-awesome-icon
-                @click="open = !open"
-                class="chevron chevron-up"
-                icon="chevron-up"
-              />
-            </div>
-            <div class="flex w-full">
               <div class="show-image-container">
                 <img
                   class="show-image"
-                  :src="showsData.currentShow.image ? showsData.currentShow.image : squareImage"
-                  :alt="showsData.currentShow.name"
+                  :src="show.image ? show.image : squareImage"
+                  :alt="show.name"
                 />
               </div>
-              <div class="flex flex-col justify-start">
-                <div class="title-font">CURRENT SHOW</div>
-                <div class="name-font">
-                  {{ showsData.currentShow.name.toUpperCase() }}
-                </div>
+              <div class="flex flex-col justify-center">
+                <div class="names-font">{{ show.name.toUpperCase() }}</div>
                 <div class="showtime-font">
                   {{
-                    `${
-                      showsData.currentShow.startTime
-                        ? customTime(showsData.currentShow.startTime)
-                        : ""
-                    } - ${
-                      showsData.currentShow.endTime ? customTime(showsData.currentShow.endTime) : ""
-                    }, ${showsData.currentShow.day.toUpperCase() ? showsData.currentShow.day.toUpperCase() : ""}`
+                    `${show.startTime ? customTime(show.startTime) : ""} - ${
+                      show.endTime ? customTime(show.endTime) : ""
+                    }, ${show.day.toUpperCase() ? show.day.toUpperCase() : ""}`
                   }}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </transition>
+      </div>
+      <div v-else>
+        <div
+          class="
+            flex flex-col
+            justify-start
+            items-center
+            bg-white
+            shows-container
+          "
+        >
+          <div>
+            <font-awesome-icon
+              @click="open = !open"
+              class="chevron chevron-up"
+              icon="chevron-up"
+            />
+          </div>
+          <div class="flex w-full">
+            <div class="show-image-container">
+              <img
+                class="show-image"
+                :src="
+                  showsData.currentShow.image
+                    ? showsData.currentShow.image
+                    : squareImage
+                "
+                :alt="showsData.currentShow.name"
+              />
+            </div>
+            <div class="flex flex-col justify-start">
+              <div class="title-font">CURRENT SHOW</div>
+              <div class="name-font">
+                {{ showsData.currentShow.name.toUpperCase() }}
+              </div>
+              <div class="showtime-font">
+                {{
+                  `${
+                    showsData.currentShow.startTime
+                      ? customTime(showsData.currentShow.startTime)
+                      : ""
+                  } - ${
+                    showsData.currentShow.endTime
+                      ? customTime(showsData.currentShow.endTime)
+                      : ""
+                  }, ${
+                    showsData.currentShow.day.toUpperCase()
+                      ? showsData.currentShow.day.toUpperCase()
+                      : ""
+                  }`
+                }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-else>
       <div
@@ -317,15 +335,6 @@ hr.spacing {
   width: 330px;
   margin-top: 13px;
   margin-bottom: 20px;
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.1s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0.8;
 }
 .medium-player {
   display: none;
