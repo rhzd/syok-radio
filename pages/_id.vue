@@ -7,7 +7,7 @@
           :streamToken="streamToken"
           :stationData="stationData"
           :host="host"
-          :isPlayoutHistory="isPlayoutHistory"
+          :gotPlayoutHistory="gotPlayoutHistory"
           :stationColor="stationColor"
         />
         <div
@@ -46,6 +46,7 @@
             :stationLogo="
               stationData.images.find((x) => x.name === 'square_image').url
             "
+            :stationCode="stationCode"
           />
         </div>
         <div class="flex other-info overflow-hidden">
@@ -280,6 +281,7 @@ export default {
       return {
         streamToken: streamToken,
         stationData: stationData.data,
+        stationCode: stationData.data.stationCode,
         stationColor: stationColor,
         showsData: shows ? shows : null,
         stationList: stationList ? stationList.data : [],
@@ -287,7 +289,7 @@ export default {
           ? moreFromUs.slice(0, 4)
           : moreFromUs.slice(0, 6),
         playoutHistory: playoutHistory ? playoutHistory.data : [],
-        isPlayoutHistory: playoutHistory ? true : false,
+        gotPlayoutHistory: playoutHistory ? true : false,
         host: `${baseURL}/${params.id}`,
       };
     } catch (e) {

@@ -1,5 +1,5 @@
 <template>
-  <div :style="bgImg" class="station-background-image">
+  <div>
     <div class="flex sponsored-container">
       <div class="station-logo-container start">
         <img class="station-logo start" :src="stationLogo" alt="syok" />
@@ -20,12 +20,26 @@
         </div>
       </div>
     </div>
+    <img
+      class="station-background-image max-player"
+      :src="fetchImage('large')"
+      alt="background image"
+      height="480"
+      width="850"
+    />
+    <img
+      class="station-background-image med-player"
+      :src="fetchImage('medium')"
+      alt="background image"
+      height="470"
+      width="450"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  props: ["backgroundImage", "stationLogo"],
+  props: ["backgroundImage", "stationLogo", "stationCode"],
   data() {
     return {
       sponsored: [
@@ -38,30 +52,36 @@ export default {
       ],
     };
   },
-  computed: {
-    bgImg() {
-      return {
-        "background-image": `url(${this.backgroundImage})`,
-      };
-    },
-  },
   methods: {
     openAds() {
       this.$root.$refs.MainPage.showAds();
+    },
+    fetchImage(size) {
+      let image
+      try {
+        image = require(`~/assets/images/background-image/${size}/${this.stationCode}.png`)
+      } catch (error) {
+        image = require(`~/assets/images/background-image/${size}/fallback.png`)
+      }
+      return image
     },
   },
 };
 </script>
 
 <style scoped>
+.max-player {
+  display: inline;
+}
+.med-player {
+  display: none;
+}
 .station-background-image {
-  background-size: contain;
-  background-position: center;
-  width: 100%;
-  height: 100%;
+  background-color: grey;
 }
 .sponsored-container {
   padding: 20px;
+  position: absolute;
 }
 .station-logo-container {
   height: 80px;
@@ -91,5 +111,22 @@ export default {
 }
 .end {
   border-radius: 0% 10% 10% 0%;
+}
+@media only screen and (max-width: 1199px) {
+  .max-player {
+    display: none;
+  }
+  .med-player {
+    display: inline;
+  }
+}
+
+@media only screen and (max-width: 799px) {
+  .max-player {
+    display: none;
+  }
+  .med-player {
+    display: none;
+  }
 }
 </style>

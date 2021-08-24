@@ -29,8 +29,17 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     "@nuxtjs/tailwindcss",
     "@nuxtjs/fontawesome",
-    "@nuxtjs/google-fonts"
+    "@nuxtjs/google-fonts",
+    "@nuxtjs/device",
+    "@aceforth/nuxt-optimized-images"
   ],
+  optimizedImages: {
+    optimizeImages: true,
+    pngquant: true
+  },
+  device: {
+    refreshOnResize: false
+  },
   fontawesome: {
     icons: {
       solid: [
@@ -40,7 +49,6 @@ export default {
         "faVolumeMute",
         "faShareSquare",
         "faTimes",
-        "faCode",
         "faThLarge",
         "faBars",
         "faChevronUp",
@@ -55,7 +63,7 @@ export default {
   googleFonts: {
     families: {
       Poppins: {
-        wght: [100, 200, 300, 400, 500, 600, 700, 800, 900]
+        wght: [300, 400, 500, 600, 700, 800]
       }
     },
     display: "swap",

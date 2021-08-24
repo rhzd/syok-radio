@@ -288,6 +288,16 @@ export default {
 </script>
 
 <style scoped>
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
 .bg-stationlist {
   background-color: rgb(234, 0, 41);
 }
@@ -309,7 +319,7 @@ export default {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ff4f4c;;
+  background: #ff4f4c;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -417,10 +427,7 @@ input[type="text"]:focus {
   width: 100px;
 }
 .station-container {
-  margin: 30px 45px 60px 55px;
-}
-.station-container-main {
-  margin: 0px 40px 0px 40px;
+  margin: 30px 35px 60px 55px;
 }
 .splinter-font {
   color: white;
@@ -497,6 +504,9 @@ input[type="text"]:focus {
 .min-player {
   display: none;
 }
+.station-container-main {
+  margin: 0px 30px 0px 40px;
+}
 
 @media only screen and (max-width: 1199px) {
   .vertical {
@@ -514,9 +524,6 @@ input[type="text"]:focus {
   }
   .station-font {
     margin-bottom: 0px;
-  }
-  .station-container {
-    margin: 0px 15px 30px 15px;
   }
   .content-container {
     height: 467px;
@@ -555,9 +562,6 @@ input[type="text"]:focus {
     margin-right: 5px;
     margin-left: 5px;
   }
-  .station-container-main {
-    margin: 0px 10px 0px 10px;
-  }
   .splinter-font {
     width: 190px;
   }
@@ -569,6 +573,12 @@ input[type="text"]:focus {
   }
   .splinter-image-container-main {
     margin: 0px 10px 10px 12px;
+  }
+  .station-container-main {
+    margin: 0px 0px 0px 10px;
+  }
+  .station-container {
+    margin: 0px 5px 30px 15px;
   }
 }
 
@@ -704,6 +714,13 @@ input[type="text"]:focus {
   }
   .station-main-container {
     position: unset;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  .content-container {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
 </style>

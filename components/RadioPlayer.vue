@@ -9,7 +9,7 @@
         </div>
         <div class="flex button-container">
           <font-awesome-icon
-            v-if="isPlayoutHistory"
+            v-if="gotPlayoutHistory"
             @click="toggleLastPlayed"
             class="icon bars"
             icon="bars"
@@ -29,6 +29,7 @@
         </div>
         <div class="flex button-container">
           <font-awesome-icon
+            v-if="gotPlayoutHistory"
             @click="toggleLastPlayed"
             class="icon bars text-white"
             icon="bars"
@@ -135,7 +136,7 @@
       class="flex media-player items-center justify-between"
       :style="{ 'background-color': stationColor.secondary }"
     >
-      <div>
+      <div class="flex">
         <button
           @click="shareFacebook"
           aria-label="share to facebook"
@@ -157,6 +158,7 @@
           />
         </button>
         <button
+          v-if="$device.isMobile"
           @click="shareWhatsapp"
           aria-label="share to whatsapp"
           class="rounded-full share-btn-circle"
@@ -212,7 +214,7 @@ export default {
     "stationData",
     "streamToken",
     "host",
-    "isPlayoutHistory",
+    "gotPlayoutHistory",
     "stationColor",
   ],
   data() {
@@ -286,9 +288,9 @@ export default {
     } else {
       this.isHlsSupported = false;
       this.audio.src = stream;
+      this.loading = false;
       this.audio.addEventListener("loadedmetadata", function (event) {
         this.audio.play();
-        this.loading = false;
       });
     }
   },
