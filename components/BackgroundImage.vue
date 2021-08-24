@@ -1,12 +1,12 @@
 <template>
-  <div @click="openAds" :style="bgImg" class="station-background-image">
+  <div :style="bgImg" class="station-background-image">
     <div class="flex sponsored-container">
       <div class="station-logo-container start">
         <img class="station-logo start" :src="stationLogo" alt="syok" />
       </div>
       <div v-for="(el, index) in sponsored" :key="index">
         <div
-          class="sponsored-logo-container"
+          class="flex justify-center items-center sponsored-logo-container"
           :class="index !== sponsored.length - 1 ? 'mid' : 'end'"
         >
           <a :href="el.link" target="_blank" class="flex justify-center">
@@ -30,20 +30,10 @@ export default {
     return {
       sponsored: [
         {
-          name: "celcom",
-          image: "https://www.celcom.com.my/assets/celcom_icon.svg",
-          link: "https://www.celcom.com.my/",
-        },
-        {
-          name: "goshop",
+          name: "syok",
           image:
-            "https://d3avoj45mekucs.cloudfront.net/rojakdaily/media/jessica-chua/news/2017/nov/astro%20goshop%20e-cod/goshop-logo.jpg",
-          link: "https://www.goshop.com.my/",
-        },
-        {
-          name: "celcom",
-          image: "https://www.celcom.com.my/assets/celcom_icon.svg",
-          link: "https://www.celcom.com.my/",
+            "https://i1.wp.com/prebiu.com/wp-content/uploads/2021/06/Logo_SYOK.png",
+          link: "https://www.syok.my/",
         },
       ],
     };

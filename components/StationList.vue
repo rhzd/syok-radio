@@ -298,13 +298,24 @@ export default {
   height: 567px;
   overflow: hidden;
   overflow-y: auto;
-  -ms-overflow-style: none; /* IE and Edge scrollbar hide */
-  scrollbar-width: none;
 }
-.content-container::-webkit-scrollbar {
-  /* other scrollbar hide */
-  display: none;
+
+::-webkit-scrollbar {
+  width: 10px;
 }
+
+::-webkit-scrollbar-track {
+  background: #b50000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ff4f4c;;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff8b88;
+}
+
 .search-container {
   vertical-align: middle;
   white-space: nowrap;

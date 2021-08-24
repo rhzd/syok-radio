@@ -160,6 +160,8 @@ export default {
     params,
     req,
     $colorChange,
+    $showsObject,
+    $moreFromUsObject,
   }) {
     try {
       $axios.setHeader(
@@ -223,57 +225,22 @@ export default {
       // MORE FROM US
 
       let stationList = await $axios.$get(`${syokURL}/radio/stations`);
-
-      let moreFromUsTemp = [];
-      let moreFromUs = [];
-      if (stationData.data.language !== "en") {
-        stationList.data.forEach((el) => {
-          if (
-            el.language == stationData.data.language &&
-            el.stationCode !== params.id
-          ) {
-            moreFromUsTemp.push(el);
-          }
-        });
-      }
-
-      stationList.data.forEach((el) => {
-        if (el.language == "en" && el.stationCode !== params.id) {
-          moreFromUsTemp.push(el);
-        }
-      });
-
-      let parent = stationList.data
-        .find((element) => element.stationCode == params.id)
-        .name.toLowerCase()
-        .split(" ")[0];
-
-      let mainStation = [];
-      let otherStation = [];
-
-      moreFromUsTemp.forEach((el) => {
-        if (el.name.toLowerCase().split(" ")[0] == parent) {
-          mainStation.push(el);
-        } else {
-          otherStation.push(el);
-        }
-      });
-
-      mainStation.sort(function (a, b) {
-        return a.name.length - b.name.length;
-      });
-
-      moreFromUs = mainStation.concat(otherStation);
+      let moreFromUs = $moreFromUsObject(
+        stationList.data,
+        stationData.data,
+        params.id
+      );
 
       // SHOWS
 
-      let showsTemp = null;
+      let showsData = null;
+      let shows = null;
 
       if (
         stationData.data.externalLinks &&
         stationData.data.externalLinks.find((x) => x.key === "programmes")
       ) {
-        showsTemp = await $axios
+        showsData = await $axios
           .$get(
             stationData.data.externalLinks.find((x) => x.key === "programmes")
               .url
@@ -283,174 +250,15 @@ export default {
           });
       }
 
-      let days = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-      let showsFiltered = {
-        Sunday: [],
-        Monday: [],
-        Tuesday: [],
-        Wednesday: [],
-        Thursday: [],
-        Friday: [],
-        Saturday: [],
-      };
-      let d = new Date();
-      let dayName = days[d.getDay()];
-      let dayNameTomorrow = days[d.getDay() + 1];
-      showsTemp.data.forEach((show) => {
-        const days = show.Day.split("|");
-        days.forEach((el) => {
-          showsFiltered[el].push({
-            day: el,
-            name: show.name,
-            image: show.SquareImage,
-            startTime: show.StartHour,
-            endTime: show.EndHour,
-          });
-        });
-      });
-
-      var time = new Date();
-      let minute =
-        time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-      let formattedTime = time.getHours() + "" + minute;
-
-      let finalShows = [
-        ...showsFiltered.Sunday.sort((a, b) => a.startTime - b.startTime),
-        ...showsFiltered.Monday.sort((a, b) => a.startTime - b.startTime),
-        ...showsFiltered.Tuesday.sort((a, b) => a.startTime - b.startTime),
-        ...showsFiltered.Wednesday.sort((a, b) => a.startTime - b.startTime),
-        ...showsFiltered.Thursday.sort((a, b) => a.startTime - b.startTime),
-        ...showsFiltered.Friday.sort((a, b) => a.startTime - b.startTime),
-        ...showsFiltered.Saturday.sort((a, b) => a.startTime - b.startTime),
-      ];
-
-      const currentShowIndex = finalShows.findIndex(
-        (show) =>
-          show.day === dayName &&
-          Number(show.startTime) <= Number(formattedTime) &&
-          Number(show.endTime) >= Number(formattedTime)
-      );
-
-      const noCurrentShowIndex = finalShows.findIndex(
-        (show) =>
-          show.day == dayName && Number(show.startTime) > Number(formattedTime)
-      );
-
-      const noCurrentShowTodayIndex = finalShows.findIndex(
-        (show) => show.day == dayNameTomorrow
-      );
-
-      let currentShow;
-
-      if (currentShowIndex !== -1) {
-        currentShow = finalShows[currentShowIndex];
-      } else {
-        currentShow = {
-          day: "Everyday",
-          name: stationData.data.name,
-          image: stationData.data.images.find((x) => x.name === "square_image")
-            .url,
-          startTime: "00:00",
-          endTime: "00:00",
-        };
+      if (showsData) {
+        shows = $showsObject(showsData.data, stationData.data);
       }
-
-      let upcomingShow = [];
-      let upcomingShowAfter = [];
-
-      let currentIndex = null;
-
-      if (currentShowIndex !== -1) {
-        currentIndex = currentShowIndex;
-      } else {
-        if (noCurrentShowIndex !== -1) {
-          currentIndex = noCurrentShowIndex;
-        } else {
-          if (noCurrentShowTodayIndex !== -1) {
-            currentIndex = noCurrentShowTodayIndex;
-          }
-        }
-      }
-
-      finalShows.forEach((show, index) => {
-        let a;
-        let b;
-
-        if (show.startTime.toString().length == 1) {
-          a = "000" + show.startTime.toString();
-        } else if (show.startTime.toString().length == 3) {
-          a = "0" + show.startTime.toString();
-        } else {
-          a = show.startTime.toString();
-        }
-
-        if (show.endTime.toString().length == 1) {
-          b = "000" + show.endTime.toString();
-        } else if (show.endTime.toString().length == 3) {
-          b = "0" + show.endTime.toString();
-        } else {
-          b = show.endTime.toString();
-        }
-
-        const divider = ":";
-        const position = 2;
-        let startTime = [a.slice(0, position), divider, a.slice(position)].join(
-          ""
-        );
-        let endTime = [b.slice(0, position), divider, b.slice(position)].join(
-          ""
-        );
-
-        let day;
-        if (show.day === dayName) {
-          day = "Today";
-        } else if (show.day === dayNameTomorrow) {
-          day = "Tomorrow";
-        } else {
-          day = show.day;
-        }
-        show.day = day;
-        show.startTime = startTime;
-        show.endTime = endTime;
-        if (currentShowIndex == -1) {
-          if (index >= currentIndex) {
-            upcomingShow.push(show);
-          } else {
-            if (show.day !== "Today" && show.day !== "Tomorrow") {
-              upcomingShowAfter.push(show);
-            }
-          }
-        } else {
-          if (index > currentIndex) {
-            upcomingShow.push(show);
-          } else {
-            if (show.day !== "Today" && show.day !== "Tomorrow") {
-              upcomingShowAfter.push(show);
-            }
-          }
-        }
-      });
-
-      upcomingShow = [...upcomingShow, ...upcomingShowAfter];
-
-      let shows = {
-        currentShow,
-        upcomingShow,
-      };
 
       // STATION COLOR
 
       let stationColor = {
         primary: "#fb2724",
-        secondary: $colorChange("#fb2724", -30),
+        secondary: $colorChange("#fb2724", -40),
         tertiary: $colorChange("#fb2724", 100),
       };
       if (
@@ -492,12 +300,6 @@ export default {
       isAds: false,
       isOpenLastPlayed: false,
       isOpenStationList: false,
-      defaultStationColor: {
-        primary: "#fb2724",
-        secondary: "#bc100e",
-        flat: "#b41717",
-        webplayer: "#a61818",
-      },
     };
   },
   created() {
