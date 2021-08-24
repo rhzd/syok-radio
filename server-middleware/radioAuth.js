@@ -10,9 +10,12 @@ app.all("/get-token", (req, res) => {
   let payload = {
     exp: expires,
     iat: init,
-    oid: process.env.OID_RADIO_STREAM,
+    oid: process.env.OID_RADIO_STREAM
   };
-  let token = jwt.sign(payload, Buffer.from(process.env.JWT_RADIO_STREAM, "base64"));
+  let token = jwt.sign(
+    payload,
+    Buffer.from(process.env.JWT_RADIO_STREAM, "base64")
+  );
   res.json({ data: token });
 });
 

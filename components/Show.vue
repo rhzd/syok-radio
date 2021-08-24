@@ -171,10 +171,7 @@
           max-player
         "
       >
-        <div
-          class="station-name"
-          :style="{ color: stationColor.secondary }"
-        >
+        <div class="station-name" :style="{ color: stationColor.secondary }">
           {{ stationName.toUpperCase() }}
         </div>
         <div class="station-desc">{{ stationDesc.toUpperCase() }}</div>
@@ -190,10 +187,7 @@
           class="chevron chevron-up"
           :icon="hover ? 'chevron-down' : 'chevron-up'"
         />
-        <div
-          class="station-name"
-          :style="{ color: stationColor.secondary }"
-        >
+        <div class="station-name" :style="{ color: stationColor.secondary }">
           {{ stationName.toUpperCase() }}
         </div>
         <div class="station-desc">{{ stationDesc.toUpperCase() }}</div>

@@ -36,7 +36,8 @@ export default {
         },
         {
           name: "goshop",
-          image: "https://d3avoj45mekucs.cloudfront.net/rojakdaily/media/jessica-chua/news/2017/nov/astro%20goshop%20e-cod/goshop-logo.jpg",
+          image:
+            "https://d3avoj45mekucs.cloudfront.net/rojakdaily/media/jessica-chua/news/2017/nov/astro%20goshop%20e-cod/goshop-logo.jpg",
           link: "https://www.goshop.com.my/",
         },
         {

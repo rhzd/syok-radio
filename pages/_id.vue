@@ -289,7 +289,7 @@ export default {
           stationData.data.additionalAttributes.stationColor[0].webplayer;
         stationColor.secondary = $colorChange(
           stationData.data.additionalAttributes.stationColor[0].webplayer,
-          -40,
+          -40
         );
         stationColor.tertiary = $colorChange(
           stationData.data.additionalAttributes.stationColor[0].webplayer,

@@ -13,13 +13,13 @@
             @click="toggleLastPlayed"
             class="icon bars"
             icon="bars"
-            :style="{ 'color': stationColor.tertiary }"
+            :style="{ color: stationColor.tertiary }"
           />
           <font-awesome-icon
             @click="toggleStationList"
             class="icon th-large"
             icon="th-large"
-            :style="{ 'color': stationColor.tertiary }"
+            :style="{ color: stationColor.tertiary }"
           />
         </div>
       </div>
@@ -32,7 +32,7 @@
             @click="toggleLastPlayed"
             class="icon bars text-white"
             icon="bars"
-            :style="{ 'color': stationColor.tertiary }"
+            :style="{ color: stationColor.tertiary }"
           />
         </div>
       </div>
@@ -55,116 +55,131 @@
       </div>
     </div>
     <!-- <transition name="fade" mode="out-in"> -->
-      <div
-        key="1"
-        v-if="!shareActive"
-        class="flex media-player items-center justify-between"
-        :style="{ 'background-color': stationColor.secondary }"
-      >
-        <div v-if="loading">
-          <button class="bg-white rounded-full btn-circle" aria-label="loading">
-            <font-awesome-icon
-              class="icon spinner"
-              icon="spinner"
-              :style="{ 'color': stationColor.secondary }"
-            />
-          </button>
-        </div>
-        <div v-else>
-          <button
-            class="bg-white rounded-full btn-circle"
-            aria-label="play"
-            v-show="paused"
-            @click="play"
-          >
-            <font-awesome-icon
-              class="icon play"
-              icon="play"
-              :style="{ 'color': stationColor.secondary }"
-            />
-          </button>
-          <button
-            class="bg-white rounded-full btn-circle"
-            aria-label="pause"
-            v-show="playing"
-            @click="pause"
-          >
-            <font-awesome-icon
-              class="icon stop"
-              icon="stop"
-              :style="{ 'color': stationColor.secondary }"
-            />
-          </button>
-        </div>
-
-        <div v-if="isHlsSupported" class="flex items-center">
-          <div class="volume-icon-container">
-            <font-awesome-icon
-              v-if="volume == 0"
-              class="icon volume"
-              icon="volume-mute"
-              @click="unmute"
-            />
-            <font-awesome-icon
-              v-else
-              class="icon volume"
-              icon="volume-down"
-              @click="mute"
-            />
-          </div>
-          <input
-            type="range"
-            :value="volume"
-            min="0"
-            max="100"
-            @input="volumeChange"
-            :style="{ 'background-size': volume + '%' + '100%' }"
-          />
-        </div>
-
-        <div>
+    <div
+      key="1"
+      v-if="!shareActive"
+      class="flex media-player items-center justify-between"
+      :style="{ 'background-color': stationColor.secondary }"
+    >
+      <div v-if="loading">
+        <button class="bg-white rounded-full btn-circle" aria-label="loading">
           <font-awesome-icon
-            class="icon share"
-            icon="share-square"
-            @click="shareActive = !shareActive"
+            class="icon spinner"
+            icon="spinner"
+            :style="{ color: stationColor.secondary }"
+          />
+        </button>
+      </div>
+      <div v-else>
+        <button
+          class="bg-white rounded-full btn-circle"
+          aria-label="play"
+          v-show="paused"
+          @click="play"
+        >
+          <font-awesome-icon
+            class="icon play"
+            icon="play"
+            :style="{ color: stationColor.secondary }"
+          />
+        </button>
+        <button
+          class="bg-white rounded-full btn-circle"
+          aria-label="pause"
+          v-show="playing"
+          @click="pause"
+        >
+          <font-awesome-icon
+            class="icon stop"
+            icon="stop"
+            :style="{ color: stationColor.secondary }"
+          />
+        </button>
+      </div>
+
+      <div v-if="isHlsSupported" class="flex items-center">
+        <div class="volume-icon-container">
+          <font-awesome-icon
+            v-if="volume == 0"
+            class="icon volume"
+            icon="volume-mute"
+            @click="unmute"
+          />
+          <font-awesome-icon
+            v-else
+            class="icon volume"
+            icon="volume-down"
+            @click="mute"
           />
         </div>
+        <input
+          type="range"
+          :value="volume"
+          min="0"
+          max="100"
+          @input="volumeChange"
+          :style="{ 'background-size': volume + '%' + '100%' }"
+        />
       </div>
-      <div
-        key="2"
-        v-else
-        class="flex media-player items-center justify-between"
-        :style="{ 'background-color': stationColor.secondary }"
-      >
-        <div>
-          <button @click="shareFacebook" aria-label="share to facebook" class="rounded-full share-btn-circle">
-            <font-awesome-icon
-              class="share-icon facebook"
-              :icon="['fab', 'facebook-f']"
-            />
-          </button>
-          <button @click="shareTwitter" aria-label="share to twitter" class="rounded-full share-btn-circle">
-            <font-awesome-icon
-              class="share-icon twitter"
-              :icon="['fab', 'twitter']"
-            />
-          </button>
-          <button @click="shareWhatsapp" aria-label="share to whatsapp" class="rounded-full share-btn-circle">
-            <font-awesome-icon
-              class="share-icon whatsapp"
-              :icon="['fab', 'whatsapp']"
-            />
-          </button>
-          <button @click="shareLink" aria-label="copy link" class="rounded-full share-btn-circle">
-            <font-awesome-icon class="share-icon link" icon="link" />
-          </button>
-        </div>
+      <div>
         <font-awesome-icon
-          class="icon times"
-          icon="times"
+          class="icon share"
+          icon="share-square"
           @click="shareActive = !shareActive"
         />
       </div>
+    </div>
+    <div
+      key="2"
+      v-else
+      class="flex media-player items-center justify-between"
+      :style="{ 'background-color': stationColor.secondary }"
+    >
+      <div>
+        <button
+          @click="shareFacebook"
+          aria-label="share to facebook"
+          class="rounded-full share-btn-circle"
+        >
+          <font-awesome-icon
+            class="share-icon facebook"
+            :icon="['fab', 'facebook-f']"
+          />
+        </button>
+        <button
+          @click="shareTwitter"
+          aria-label="share to twitter"
+          class="rounded-full share-btn-circle"
+        >
+          <font-awesome-icon
+            class="share-icon twitter"
+            :icon="['fab', 'twitter']"
+          />
+        </button>
+        <button
+          @click="shareWhatsapp"
+          aria-label="share to whatsapp"
+          class="rounded-full share-btn-circle"
+        >
+          <font-awesome-icon
+            class="share-icon whatsapp"
+            :icon="['fab', 'whatsapp']"
+          />
+        </button>
+        <button
+          @click="shareLink"
+          aria-label="copy link"
+          class="rounded-full share-btn-circle"
+        >
+          <font-awesome-icon class="share-icon link" icon="link" />
+        </button>
+      </div>
+      <font-awesome-icon
+        class="icon times"
+        icon="times"
+        @click="shareActive = !shareActive"
+      />
+    </div>
     <!-- </transition> -->
     <audio
       ref="audio"

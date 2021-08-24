@@ -9,7 +9,7 @@ export default function() {
   let payload = {
     exp: expires,
     iat: init,
-    oid: oid,
+    oid: oid
   };
   let token = jwt.sign(payload, Buffer.from(jwt_key, "base64"));
 }
