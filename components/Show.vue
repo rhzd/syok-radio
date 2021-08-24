@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="showsData.length > 0">
+    <div v-if="showsData">
       <transition name="fade" mode="out-in">
         <div key="1" v-if="open">
           <div
@@ -23,30 +23,24 @@
               <div class="show-image-container">
                 <img
                   class="show-image"
-                  :src="
-                    showsData[0].SquareImage
-                      ? showsData[0].SquareImage
-                      : squareImage
-                  "
-                  :alt="showsData[0].name"
+                  :src="showsData.currentShow.image ? showsData.currentShow.image : squareImage"
+                  :alt="showsData.currentShow.name"
                 />
               </div>
               <div class="flex flex-col justify-start">
                 <div class="title-font">CURRENT SHOW</div>
                 <div class="name-font">
-                  {{ showsData[0].name.toUpperCase() }}
+                  {{ showsData.currentShow.name.toUpperCase() }}
                 </div>
                 <div class="showtime-font">
                   {{
                     `${
-                      showsData[0].StartHour
-                        ? customTime(showsData[0].StartHour).replace(/\s/g, "")
+                      showsData.currentShow.startTime
+                        ? customTime(showsData.currentShow.startTime)
                         : ""
                     } - ${
-                      showsData[0].StartHour
-                        ? customTime(showsData[0].EndHour).replace(/\s/g, "")
-                        : ""
-                    }`
+                      showsData.currentShow.endTime ? customTime(showsData.currentShow.endTime) : ""
+                    }, ${showsData.currentShow.day.toUpperCase() ? showsData.currentShow.day.toUpperCase() : ""}`
                   }}
                 </div>
               </div>
@@ -64,13 +58,13 @@
               <div class="upcoming-title-font">UPCOMING SHOWS</div>
               <div
                 class="flex show-list-container"
-                v-for="show in showsData.slice(1)"
-                :key="show.id"
+                v-for="(show, index) in showsData.upcomingShow"
+                :key="index"
               >
                 <div class="show-image-container">
                   <img
                     class="show-image"
-                    :src="show.SquareImage ? show.SquareImage : squareImage"
+                    :src="show.image ? show.image : squareImage"
                     :alt="show.name"
                   />
                 </div>
@@ -78,15 +72,9 @@
                   <div class="names-font">{{ show.name.toUpperCase() }}</div>
                   <div class="showtime-font">
                     {{
-                      `${
-                        show.StartHour
-                          ? customTime(show.StartHour).replace(/\s/g, "")
-                          : ""
-                      } - ${
-                        show.EndHour
-                          ? customTime(show.EndHour).replace(/\s/g, "")
-                          : ""
-                      }`
+                      `${show.startTime ? customTime(show.startTime) : ""} - ${
+                        show.endTime ? customTime(show.endTime) : ""
+                      }, ${show.day.toUpperCase() ? show.day.toUpperCase() : ""}`
                     }}
                   </div>
                 </div>
@@ -115,30 +103,24 @@
               <div class="show-image-container">
                 <img
                   class="show-image"
-                  :src="
-                    showsData[0].SquareImage
-                      ? showsData[0].SquareImage
-                      : squareImage
-                  "
-                  :alt="showsData[0].name"
+                  :src="showsData.currentShow.image ? showsData.currentShow.image : squareImage"
+                  :alt="showsData.currentShow.name"
                 />
               </div>
               <div class="flex flex-col justify-start">
                 <div class="title-font">CURRENT SHOW</div>
                 <div class="name-font">
-                  {{ showsData[0].name.toUpperCase() }}
+                  {{ showsData.currentShow.name.toUpperCase() }}
                 </div>
                 <div class="showtime-font">
                   {{
                     `${
-                      showsData[0].StartHour
-                        ? customTime(showsData[0].StartHour).replace(/\s/g, "")
+                      showsData.currentShow.startTime
+                        ? customTime(showsData.currentShow.startTime)
                         : ""
                     } - ${
-                      showsData[0].StartHour
-                        ? customTime(showsData[0].EndHour).replace(/\s/g, "")
-                        : ""
-                    }`
+                      showsData.currentShow.endTime ? customTime(showsData.currentShow.endTime) : ""
+                    }, ${showsData.currentShow.day.toUpperCase() ? showsData.currentShow.day.toUpperCase() : ""}`
                   }}
                 </div>
               </div>
@@ -204,76 +186,18 @@ export default {
       return this.open ? "shows-container-open" : "shows-container";
     },
   },
-  mounted() {
-    let days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    let shows = {
-      Sunday: [],
-      Monday: [],
-      Tuesday: [],
-      Wednesday: [],
-      Thursday: [],
-      Friday: [],
-      Saturday: [],
-    };
-    let d = new Date();
-    let dayName = days[d.getDay()];
-    this.showsData.forEach((show) => {
-      let test = show.Day.split("|");
-      test.forEach((el) => {
-        shows[el].push({
-          day: el,
-          name: show.name,
-          startTime: show.StartHour,
-          endTime: show.EndHour,
-        });
-      });
-    });
-
-    var time = new Date();
-    let minute = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-    let formattedTime = time.getHours() + "" + minute;
-    console.log(Number(formattedTime));
-
-    let finalShows = [
-      ...shows.Sunday,
-      ...shows.Monday,
-      ...shows.Tuesday,
-      ...shows.Wednesday,
-      ...shows.Thursday,
-      ...shows.Friday,
-      ...shows.Saturday,
-    ];
-
-    console.log(finalShows);
-
-    const index = finalShows.findIndex(
-      (show) =>
-        show.day === dayName &&
-        Number(show.startTime) <= Number(formattedTime) &&
-        Number(show.endTime) >= Number(formattedTime)
-    );
-
-    if (index) {
-      currentShow = finalShows[index]
-    }
-
-    console.log(finalShows[index]);
-    console.log(dayName);
-  },
   methods: {
-    customTime(data) {
-      return new Date("1970-01-01T" + data + "Z").toLocaleTimeString(
-        {},
-        { timeZone: "UTC", hour12: true, hour: "numeric" }
-      );
+    customTime(time) {
+      time = time
+        .toString()
+        .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+      if (time.length > 1) {
+        time = time.slice(1);
+        time[5] = +time[0] < 12 ? "AM" : "PM";
+        time[0] = +time[0] % 12 || 12;
+      }
+      return time[0] + time[5];
     },
   },
 };

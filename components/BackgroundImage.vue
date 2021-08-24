@@ -4,7 +4,7 @@
       <div class="station-logo-container start">
         <img class="station-logo start" :src="stationLogo" alt="syok" />
       </div>
-      <div v-for="(el, index) in sponsored" :key="el.name">
+      <div v-for="(el, index) in sponsored" :key="index">
         <div
           class="sponsored-logo-container"
           :class="index !== sponsored.length - 1 ? 'mid' : 'end'"

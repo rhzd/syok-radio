@@ -11,7 +11,7 @@
       <div class="error-box">:(</div>
     </div>
     <div v-else class="list-container overflow-y-auto overflow-x-hidden">
-      <div v-for="el in playoutHistory.slice(1)" :key="el.song.id">
+      <div v-for="(el, index) in playoutHistory.slice(1)" :key="index">
         <div class="flex song-list">
           <div
             class="rounded album-container"
