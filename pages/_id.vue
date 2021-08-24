@@ -420,11 +420,21 @@ export default {
         show.day = day;
         show.startTime = startTime;
         show.endTime = endTime;
-        if (index >= currentIndex) {
-          upcomingShow.push(show);
+        if (currentShowIndex == -1) {
+          if (index >= currentIndex) {
+            upcomingShow.push(show);
+          } else {
+            if (show.day !== "Today" && show.day !== "Tomorrow") {
+              upcomingShowAfter.push(show);
+            }
+          }
         } else {
-          if (show.day !== "Today" && show.day !== "Tomorrow") {
-            upcomingShowAfter.push(show);
+          if (index > currentIndex) {
+            upcomingShow.push(show);
+          } else {
+            if (show.day !== "Today" && show.day !== "Tomorrow") {
+              upcomingShowAfter.push(show);
+            }
           }
         }
       });
