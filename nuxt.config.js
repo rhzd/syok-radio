@@ -114,7 +114,7 @@ export default {
     syokPassword: process.env.SYOK_PASSWORD
   },
   serverMiddleware: [
-    { path: "/api", handler: "~/server-middleware/radioAuth.js" }
+    { path: "/api", handler: "~/server-middleware/main.js" },
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

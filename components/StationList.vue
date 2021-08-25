@@ -189,9 +189,9 @@
 
 <script>
 export default {
-  props: ["stationList"],
   data() {
     return {
+      stations: [],
       search: "",
       selectedStation: [],
       isDropDown: false,
@@ -205,8 +205,18 @@ export default {
       splinterStations: [],
     };
   },
+  async fetch() {
+    try {
+      let response = await fetch("http://localhost:3000/api/stations").then(
+        (res) => res.json()
+      );
+      this.stations = response.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
   mounted() {
-    this.selectedStation = this.stationList.filter((station) => {
+    this.selectedStation = this.stations.filter((station) => {
       return station.language.toLowerCase();
     });
     this.splinterStations = this.selectedStation.filter(
@@ -272,13 +282,13 @@ export default {
   watch: {
     picked: function (val) {
       if (val.code !== "all") {
-        this.selectedStation = this.stationList.filter((station) => {
+        this.selectedStation = this.stations.filter((station) => {
           return station.language
             .toLowerCase()
             .includes(val.code.toLowerCase());
         });
       } else {
-        this.selectedStation = this.stationList.filter((station) => {
+        this.selectedStation = this.stations.filter((station) => {
           return station.language.toLowerCase();
         });
       }

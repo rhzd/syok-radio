@@ -1,6 +1,6 @@
 <template>
-  <div :style="{ 'background-color': stationColor.primary }" v-if="stationData">
-    <StationList v-show="isOpenStationList" :stationList="stationList" />
+  <div :style="{ 'background-color': station.color.primary }" v-if="station">
+    <StationList v-show="isOpenStationList" />
     <div v-show="!isOpenStationList" class="flex my-container">
       <div class="left-panel overflow-hidden">
         <RadioPlayer
@@ -97,14 +97,14 @@
 export default {
   head() {
     return {
-      title: this.stationData.name,
+      title: this.station.name,
       meta: [
-        { hid: "title", property: "title", content: this.stationData.name },
+        { hid: "title", property: "title", content: this.station.name },
         {
           hid: "description",
           name: "description",
           property: "description",
-          content: this.stationData.description,
+          content: this.station.description,
         },
         { hid: "robots", property: "robots", content: "index, follow" },
 
@@ -113,19 +113,17 @@ export default {
         {
           hid: "og:title",
           property: "og:title",
-          content: this.stationData.name,
+          content: this.station.name,
         },
         {
           hid: "og:description",
           property: "og:description",
-          content: this.stationData.description,
+          content: this.station.description,
         },
         {
           hid: "og:image",
           property: "og:image",
-          content: this.stationData.images.find(
-            (x) => x.name === "landscape_image"
-          ).url,
+          content: this.station.images.landscapeImage,
         },
 
         {
@@ -137,172 +135,45 @@ export default {
         {
           hid: "twitter:title",
           property: "twitter:title",
-          content: this.stationData.name,
+          content: this.station.name,
         },
         {
           hid: "twitter:description",
           property: "twitter:description",
-          content: this.stationData.description,
+          content: this.station.description,
         },
         {
           hid: "twitter:image",
           property: "twitter:image",
-          content: this.stationData.images.find(
+          content: this.station.images.find(
             (x) => x.name === "landscape_image"
           ).url,
         },
       ],
     };
   },
-  async asyncData({
-    $config: { syokUsername, syokPassword, syokURL, baseURL },
-    $axios,
-    error,
-    params,
-    req,
-    $colorChange,
-    $showsObject,
-    $moreFromUsObject,
-  }) {
-    try {
-      $axios.setHeader(
-        "Authorization",
-        `Basic ${Buffer.from(`${syokUsername}:${syokPassword}`).toString(
-          "base64"
-        )}`
-      );
-      const syokToken = await $axios.$post(`${syokURL}/authenticate`);
-      $axios.setHeader("Authorization", `Bearer ${syokToken.data}`);
-      const stationData = await $axios.$get(
-        `${syokURL}/radio/streams/${params.id}`
-      );
-
-      let streamToken = "";
-
-      if (stationData.data.streams[0].endpoint.includes("revma")) {
-        let path = new URL(stationData.data.streams[0].endpoint).pathname;
-        await fetch(
-          `https://www.revma.com/api/stations/${
-            path.split("/")[1]
-          }/private_stream_token?minutes=1440`,
-          {
-            headers: {
-              "x-auth-token": "1598352525wMVCYpxLcUBjGSkS7dHq",
-            },
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            streamToken = new URL(data).searchParams.get("rj-auth");
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      } else if (stationData.data.streams[0].endpoint.includes("rastream")) {
-        let getToken = await $axios
-          .$get(`${baseURL}/api/get-token`)
-          .catch((error) => {
-            console.log(error);
-          });
-        streamToken = getToken.data;
-      }
-
-      // PLAYOUT HISTORY
-
-      let playoutHistory = null;
-      if (
-        stationData.data.externalLinks &&
-        stationData.data.externalLinks.find((x) => x.key === "playoutHistory")
-      ) {
-        playoutHistory = await $axios.$get(
-          `${
-            stationData.data.externalLinks.find(
-              (x) => x.key === "playoutHistory"
-            ).url
-          }`
-        );
-      }
-
-      // MORE FROM US
-
-      let stationList = await $axios.$get(`${syokURL}/radio/stations`);
-      let moreFromUs = $moreFromUsObject(
-        stationList.data,
-        stationData.data,
-        params.id
-      );
-
-      // SHOWS
-
-      let showsData = null;
-      let shows = null;
-
-      if (
-        stationData.data.externalLinks &&
-        stationData.data.externalLinks.find((x) => x.key === "programmes")
-      ) {
-        showsData = await $axios
-          .$get(
-            stationData.data.externalLinks.find((x) => x.key === "programmes")
-              .url
-          )
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-
-      if (showsData) {
-        shows = $showsObject(showsData.data, stationData.data);
-      }
-
-      // STATION COLOR
-
-      let stationColor = {
-        primary: "#fb2724",
-        secondary: $colorChange("#fb2724", -40),
-        tertiary: $colorChange("#fb2724", 100),
-      };
-      if (
-        stationData.data.additionalAttributes &&
-        stationData.data.additionalAttributes.stationColor
-      ) {
-        stationColor.primary =
-          stationData.data.additionalAttributes.stationColor[0].webplayer;
-        stationColor.secondary = $colorChange(
-          stationData.data.additionalAttributes.stationColor[0].webplayer,
-          -40
-        );
-        stationColor.tertiary = $colorChange(
-          stationData.data.additionalAttributes.stationColor[0].webplayer,
-          100
-        );
-      }
-
-      return {
-        streamToken: streamToken,
-        stationData: stationData.data,
-        stationCode: stationData.data.stationCode,
-        stationColor: stationColor,
-        showsData: shows ? shows : null,
-        stationList: stationList ? stationList.data : [],
-        moreFromUs: playoutHistory
-          ? moreFromUs.slice(0, 4)
-          : moreFromUs.slice(0, 6),
-        playoutHistory: playoutHistory ? playoutHistory.data : [],
-        gotPlayoutHistory: playoutHistory ? true : false,
-        host: `${baseURL}/${params.id}`,
-      };
-    } catch (e) {
-      console.log(e);
-      error(e);
-    }
-  },
   data() {
     return {
       isAds: false,
       isOpenLastPlayed: false,
       isOpenStationList: false,
+      station: null
     };
+  },
+  watch: {
+    "$route.query": "$fetch",
+  },
+  async fetch() {
+    try {
+      const station = await fetch(`http://localhost:3000/api/station/${this.$route.params.id}`).then(
+        (res) => res.json()
+      );
+      this.station = station.data;
+      console.log(this.$route.params.id);
+      console.log(station);
+    } catch (error) {
+      throw new Error(error);
+    }
   },
   created() {
     this.$root.$refs.MainPage = this;
