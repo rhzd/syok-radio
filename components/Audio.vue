@@ -1,5 +1,5 @@
 <template>
-  <audio ref="player" id="player" controls>
+  <audio class="op-player__media" id="audio" controls>
     <source :src="stream" />
   </audio>
 </template>
@@ -15,16 +15,20 @@ export default {
     };
   },
   mounted() {
-    this.$ref.player.src = this.stream;
-    this.$player = new OpenPlayerJS("player", {
+    // this.$refs.player.src = this.stream;
+    // console.log(this.$refs.player);
+    this.$player = new OpenPlayerJS("audio", {
       hls: {
         startLevel: -1,
       },
       showLoaderOnInit: false,
-      pauseOthers: false,
+      pauseOthers: true,
     });
     console.log(this.$player);
     this.$player.init();
+    this.$player.getElement().addEventListener("hlsFragParsingMetadata", (event) => {
+      console.log(event.detail.data.frag.title);
+    });
 
     // this.$player.on(Hls.Events.MANIFEST_PARSED, function () {
     //   video.play();
