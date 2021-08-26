@@ -4,6 +4,7 @@
       <h5>{{ error.statusCode }}</h5>
       <br />
       <h1>Oops, {{ error.message }}</h1>
+      <h1>Oops, {{ error.message }}</h1>
     </div>
   </div>
 </template>
@@ -44,11 +45,19 @@ body {
 }
 
 .fof h1 {
-  font-size: 24px;
+  font-size: 32px;
   display: inline-block;
   padding-right: 12px;
   animation: type 0.5s alternate infinite;
   color: #888;
+}
+
+.fof h3 {
+  font-size: 24px;
+  display: inline-block;
+  padding-right: 12px;
+  color: #888;
+  line-height: 1;
 }
 
 .fof h5 {
