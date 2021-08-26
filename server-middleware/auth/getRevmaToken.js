@@ -15,7 +15,7 @@ export default async function getRevmaToken(link) {
         }
       )
       .then(response => {
-        return new URL(response.data.data).searchParams.get("rj-auth");
+        return new URL(response.data).searchParams.get("rj-auth");
       });
     return token;
   } catch (error) {

@@ -209,18 +209,19 @@ export default {
     try {
       const stations = await this.$axios.$get(`/api/stations`);
       this.stations = stations.data;
+
+      this.selectedStation = this.stations.filter((station) => {
+        return station.language.toLowerCase();
+      });
+
+      this.splinterStations = this.selectedStation.filter(
+        (station) =>
+          station.stationCode.includes("-") || station.stationCode.includes("_")
+      );
+
     } catch (error) {
       throw new Error(error);
     }
-  },
-  mounted() {
-    this.selectedStation = this.stations.filter((station) => {
-      return station.language.toLowerCase();
-    });
-    this.splinterStations = this.selectedStation.filter(
-      (station) =>
-        station.stationCode.includes("-") || station.stationCode.includes("_")
-    );
   },
   methods: {
     selectStation(val) {

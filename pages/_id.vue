@@ -73,12 +73,9 @@
           >
             <MoreFromUs
               :station="{
-                name: station.name,
-                stationCode: station.stationCode,
-                logo: station.images.logo,
                 color: station.color,
               }"
-              :gotPlayoutHistory="gotPlayoutHistory"
+              :suggestion="suggestion"
             />
           </div>
         </div>
@@ -111,59 +108,60 @@
 <script>
 export default {
   head() {
-    return {
-      title: this.station.name,
-      meta: [
-        { hid: "title", property: "title", content: this.station.name },
-        {
-          hid: "description",
-          name: "description",
-          property: "description",
-          content: this.station.description,
-        },
-        { hid: "robots", property: "robots", content: "index, follow" },
+    if (process.server) {
+      return {
+        title: this.station.name,
+        meta: [
+          { hid: "title", property: "title", content: this.station.name },
+          {
+            hid: "description",
+            name: "description",
+            property: "description",
+            content: this.station.description,
+          },
+          { hid: "robots", property: "robots", content: "index, follow" },
 
-        { hid: "og:type", property: "og:type", content: "website" },
-        { hid: "og:url", property: "og:url", content: this.host },
-        {
-          hid: "og:title",
-          property: "og:title",
-          content: this.station.name,
-        },
-        {
-          hid: "og:description",
-          property: "og:description",
-          content: this.station.description,
-        },
-        {
-          hid: "og:image",
-          property: "og:image",
-          content: this.station.images.landscapeImage,
-        },
-
-        {
-          hid: "twitter:card",
-          property: "twitter:card",
-          content: "summary_large_image",
-        },
-        { hid: "twitter:url", property: "twitter:url", content: this.host },
-        {
-          hid: "twitter:title",
-          property: "twitter:title",
-          content: this.station.name,
-        },
-        {
-          hid: "twitter:description",
-          property: "twitter:description",
-          content: this.station.description,
-        },
-        {
-          hid: "twitter:image",
-          property: "twitter:image",
-          content: this.station.images.landscapeImage,
-        },
-      ],
-    };
+          { hid: "og:type", property: "og:type", content: "website" },
+          { hid: "og:url", property: "og:url", content: this.host },
+          {
+            hid: "og:title",
+            property: "og:title",
+            content: this.station.name,
+          },
+          {
+            hid: "og:description",
+            property: "og:description",
+            content: this.station.description,
+          },
+          {
+            hid: "og:image",
+            property: "og:image",
+            content: this.station.images.landscapeImage,
+          },
+          {
+            hid: "twitter:card",
+            property: "twitter:card",
+            content: "summary_large_image",
+          },
+          { hid: "twitter:url", property: "twitter:url", content: this.host },
+          {
+            hid: "twitter:title",
+            property: "twitter:title",
+            content: this.station.name,
+          },
+          {
+            hid: "twitter:description",
+            property: "twitter:description",
+            content: this.station.description,
+          },
+          {
+            hid: "twitter:image",
+            property: "twitter:image",
+            content: this.station.images.landscapeImage,
+          },
+        ],
+      };
+    }
   },
   data() {
     return {
@@ -173,6 +171,7 @@ export default {
       gotPlayoutHistory: false,
       host: null,
       station: null,
+      suggestion: [],
     };
   },
   watch: {
@@ -183,10 +182,18 @@ export default {
       const station = await this.$axios.$get(
         `/api/station/${this.$route.params.id}`
       );
-      this.station = station.data;
-      this.host = `${this.$config.baseURL}/${this.$route.params.id}`;
-      this.gotPlayoutHistory =
+      const stations = await this.$axios.$get(`/api/stations`);
+      const gotPlayoutHistory =
         station.data.playoutHistory.length > 0 ? true : false;
+      this.suggestion = this.$suggestion(
+        stations.data,
+        station.data.language,
+        station.data.stationCode,
+        gotPlayoutHistory
+      );
+      this.station = station.data;
+      this.gotPlayoutHistory = gotPlayoutHistory;
+      this.host = `${this.$config.baseURL}/${this.$route.params.id}`;
     } catch (error) {
       throw new Error(error);
     }

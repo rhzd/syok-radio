@@ -25,7 +25,10 @@
               />
             </div>
           </NuxtLink>
-          <NuxtLink :to="`/${station.stationCode}`" class="station-name-container">
+          <NuxtLink
+            :to="`/${station.stationCode}`"
+            class="station-name-container"
+          >
             <div class="station-name text-white">
               {{ station.name.toUpperCase() }}
             </div>
@@ -72,7 +75,10 @@
               />
             </div>
           </NuxtLink>
-          <NuxtLink :to="`/${station.stationCode}`" class="station-name-container">
+          <NuxtLink
+            :to="`/${station.stationCode}`"
+            class="station-name-container"
+          >
             <div class="station-name text-white">
               {{ station.name.toUpperCase() }}
             </div>
@@ -108,25 +114,7 @@
 
 <script>
 export default {
-  props: ["station", "gotPlayoutHistory"],
-  data() {
-    return {
-      suggestion: [],
-    };
-  },
-  async fetch() {
-    try {
-      const stations = await this.$axios.$get(`/api/stations`);
-      this.suggestion = this.$suggestion(
-        stations.data,
-        this.station.language,
-        this.station.stationCode,
-        this.gotPlayoutHistory
-      );
-    } catch (error) {
-      throw new Error(error);
-    }
-  },
+  props: ["station", "suggestion"],
 };
 </script>
 
