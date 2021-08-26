@@ -56,16 +56,18 @@ export default ({ app }, inject) => {
     let dayName = days[d.getDay()];
     let dayNameTomorrow = days[d.getDay() + 1];
     showsData.forEach(show => {
-      const days = show.Day.split("|");
-      days.forEach(el => {
-        showsFiltered[el].push({
-          day: el,
-          name: show.name,
-          image: show.SquareImage,
-          startTime: show.StartHour,
-          endTime: show.EndHour
+      if (show.Day) {
+        const days = show.Day.split("|");
+        days.forEach(el => {
+          showsFiltered[el].push({
+            day: el,
+            name: show.name,
+            image: show.SquareImage,
+            startTime: show.StartHour,
+            endTime: show.EndHour
+          });
         });
-      });
+      }
     });
 
     var time = new Date();
