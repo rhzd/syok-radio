@@ -181,9 +181,15 @@
         @click="shareActive = !shareActive"
       />
     </div>
-    <audio class="op-player__media" id="audio" controls>
-      <source :src="`${station.stream}&listenerid=${listenerId}`" />
-    </audio>
+    <div>
+      <audio
+        class="op-player__media op-player"
+        id="audio"
+        controls
+      >
+        <source :src="`${station.stream}&listenerid=${listenerId}`" />
+      </audio>
+    </div>
   </div>
 </template>
 
@@ -250,6 +256,7 @@ export default {
             }
           }
         }
+        console.log(dict.data);
         if (dict.data) {
           if (this.currentMetadata) {
             if (dict.data.current_song.track !== this.currentMetadata.track) {
