@@ -91,22 +91,22 @@
           >
             <div class="w-full flex flex-col items-center min-player">
               <div class="flex justify-center">
-                <a :href="`/${station.stationCode}`"
+                <NuxtLink :to="`/${station.stationCode}`"
                   ><img
                     class="station-image-min"
                     :src="station.logo"
                     :alt="station.name"
-                /></a>
+                /></NuxtLink>
               </div>
             </div>
             <div class="flex flex-col items-center max-player">
               <div class="station-image-container-main">
-                <a :href="`/${station.stationCode}`"
+                <NuxtLink :to="`/${station.stationCode}`"
                   ><img
                     class="station-image"
                     :src="station.logo"
                     :alt="station.name"
-                /></a>
+                /></NuxtLink>
               </div>
               <div class="station-font-main">
                 {{ station.description }}
@@ -119,12 +119,12 @@
                 :key="splinter.name"
               >
                 <div class="splinter-image-container-main">
-                  <a :href="`/${splinter.stationCode}`"
+                  <NuxtLink :to="`/${splinter.stationCode}`"
                     ><img
                       class="station-image"
                       :src="splinter.logo"
                       :alt="splinter.name"
-                  /></a>
+                  /></NuxtLink>
                 </div>
                 <div class="splinter-font">
                   <div class="splinter-name-font">
@@ -146,9 +146,9 @@
             :key="dvr.name"
           >
             <div class="station-image-container">
-              <a :href="`/${dvr.stationCode}`"
+              <NuxtLink :to="`/${dvr.stationCode}`"
                 ><img class="station-image" :src="dvr.logo" :alt="dvr.name"
-              /></a>
+              /></NuxtLink>
             </div>
             <div class="other-station-font">
               {{ dvr.name.toUpperCase() }}
@@ -163,12 +163,12 @@
         >
           <div v-for="station in filteredSearch" :key="station.name">
             <div class="station-image-container">
-              <a :href="`/${station.stationCode}`"
+              <NuxtLink :to="`/${station.stationCode}`"
                 ><img
                   class="station-image"
                   :src="station.logo"
                   :alt="station.name"
-              /></a>
+              /></NuxtLink>
             </div>
             <div class="flex flex-wrap justify-center">
               <div class="station-font">{{ station.name.toUpperCase() }}</div>
@@ -191,7 +191,7 @@
 export default {
   data() {
     return {
-      stations: [],
+      stations: null,
       search: "",
       selectedStation: [],
       isDropDown: false,
@@ -207,10 +207,8 @@ export default {
   },
   async fetch() {
     try {
-      let response = await fetch("http://localhost:3000/api/stations").then(
-        (res) => res.json()
-      );
-      this.stations = response.data;
+      const stations = await this.$axios.$get(`/api/stations`);
+      this.stations = stations.data;
     } catch (error) {
       throw new Error(error);
     }

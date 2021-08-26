@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="showsData">
+    <div v-if="station.shows">
       <div key="1" v-if="open">
         <div
           class="
@@ -22,34 +22,20 @@
             <div class="show-image-container">
               <img
                 class="show-image"
-                :src="
-                  showsData.currentShow.image
-                    ? showsData.currentShow.image
-                    : squareImage
-                "
-                :alt="showsData.currentShow.name"
+                :src="station.shows.currentShow.image"
+                :alt="station.shows.currentShow.name"
               />
             </div>
             <div class="flex flex-col justify-start">
               <div class="title-font">CURRENT SHOW</div>
               <div class="name-font">
-                {{ showsData.currentShow.name.toUpperCase() }}
+                {{ station.shows.currentShow.name.toUpperCase() }}
               </div>
               <div class="showtime-font">
                 {{
-                  `${
-                    showsData.currentShow.startTime
-                      ? customTime(showsData.currentShow.startTime)
-                      : ""
-                  } - ${
-                    showsData.currentShow.endTime
-                      ? customTime(showsData.currentShow.endTime)
-                      : ""
-                  }, ${
-                    showsData.currentShow.day.toUpperCase()
-                      ? showsData.currentShow.day.toUpperCase()
-                      : ""
-                  }`
+                  `${station.shows.currentShow.startTime} - ${
+                    station.shows.currentShow.endTime
+                  }, ${station.shows.currentShow.day.toUpperCase()}`
                 }}
               </div>
             </div>
@@ -67,23 +53,19 @@
             <div class="upcoming-title-font">UPCOMING SHOWS</div>
             <div
               class="flex show-list-container"
-              v-for="(show, index) in showsData.upcomingShow"
+              v-for="(show, index) in station.shows.upcomingShow"
               :key="index"
             >
               <div class="show-image-container">
-                <img
-                  class="show-image"
-                  :src="show.image ? show.image : squareImage"
-                  :alt="show.name"
-                />
+                <img class="show-image" :src="show.image" :alt="show.name" />
               </div>
               <div class="flex flex-col justify-center">
                 <div class="names-font">{{ show.name.toUpperCase() }}</div>
                 <div class="showtime-font">
                   {{
-                    `${show.startTime ? customTime(show.startTime) : ""} - ${
-                      show.endTime ? customTime(show.endTime) : ""
-                    }, ${show.day.toUpperCase() ? show.day.toUpperCase() : ""}`
+                    `${show.startTime} - ${
+                      show.endTime
+                    }, ${show.day.toUpperCase()}`
                   }}
                 </div>
               </div>
@@ -112,34 +94,20 @@
             <div class="show-image-container">
               <img
                 class="show-image"
-                :src="
-                  showsData.currentShow.image
-                    ? showsData.currentShow.image
-                    : squareImage
-                "
-                :alt="showsData.currentShow.name"
+                :src="station.shows.currentShow.image"
+                :alt="station.shows.currentShow.name"
               />
             </div>
             <div class="flex flex-col justify-start">
               <div class="title-font">CURRENT SHOW</div>
               <div class="name-font">
-                {{ showsData.currentShow.name.toUpperCase() }}
+                {{ station.shows.currentShow.name.toUpperCase() }}
               </div>
               <div class="showtime-font">
                 {{
-                  `${
-                    showsData.currentShow.startTime
-                      ? customTime(showsData.currentShow.startTime)
-                      : ""
-                  } - ${
-                    showsData.currentShow.endTime
-                      ? customTime(showsData.currentShow.endTime)
-                      : ""
-                  }, ${
-                    showsData.currentShow.day.toUpperCase()
-                      ? showsData.currentShow.day.toUpperCase()
-                      : ""
-                  }`
+                  `${station.shows.currentShow.startTime} - ${
+                    station.shows.currentShow.endTime
+                  }, ${station.shows.currentShow.day.toUpperCase()}`
                 }}
               </div>
             </div>
@@ -158,10 +126,10 @@
           max-player
         "
       >
-        <div class="station-name" :style="{ color: stationColor.secondary }">
-          {{ stationName.toUpperCase() }}
+        <div class="station-name" :style="{ color: station.color.secondary }">
+          {{ station.name.toUpperCase() }}
         </div>
-        <div class="station-desc">{{ stationDesc.toUpperCase() }}</div>
+        <div class="station-desc">{{ station.description.toUpperCase() }}</div>
       </div>
       <div
         class="flex flex-col justify-start items-center bg-white medium-player"
@@ -174,10 +142,10 @@
           class="chevron chevron-up"
           :icon="hover ? 'chevron-down' : 'chevron-up'"
         />
-        <div class="station-name" :style="{ color: stationColor.secondary }">
-          {{ stationName.toUpperCase() }}
+        <div class="station-name" :style="{ color: station.color.secondary }">
+          {{ station.name.toUpperCase() }}
         </div>
-        <div class="station-desc">{{ stationDesc.toUpperCase() }}</div>
+        <div class="station-desc">{{ station.description.toUpperCase() }}</div>
       </div>
     </div>
   </div>
@@ -185,14 +153,7 @@
 
 <script>
 export default {
-  props: [
-    "showsData",
-    "stationName",
-    "stationDesc",
-    "stationColor",
-    "squareImage",
-    "isOpenLastPlayed",
-  ],
+  props: ["station"],
   data() {
     return {
       open: false,
@@ -204,20 +165,7 @@ export default {
       return this.open ? "shows-container-open" : "shows-container";
     },
   },
-  methods: {
-    customTime(time) {
-      time = time
-        .toString()
-        .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-
-      if (time.length > 1) {
-        time = time.slice(1);
-        time[5] = +time[0] < 12 ? "AM" : "PM";
-        time[0] = +time[0] % 12 || 12;
-      }
-      return time[0] + time[5];
-    },
-  },
+  methods: {},
 };
 </script>
 

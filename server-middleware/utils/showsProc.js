@@ -1,4 +1,4 @@
-export default async function showsProc(showsData, stationName, stationLogo) {
+export default function showsProc(showsData, stationName, stationLogo) {
   try {
     const days = [
       "Sunday",
@@ -27,7 +27,7 @@ export default async function showsProc(showsData, stationName, stationLogo) {
         showsFiltered[el].push({
           day: el,
           name: show.name,
-          image: show.SquareImage,
+          image: show.SquareImage ? show.SquareImage : stationLogo,
           startTime: show.StartHour,
           endTime: show.EndHour
         });
@@ -74,8 +74,8 @@ export default async function showsProc(showsData, stationName, stationLogo) {
         day: "Everyday",
         name: stationName,
         image: stationLogo,
-        startTime: "00:00",
-        endTime: "00:00"
+        startTime: customTime("00:00"),
+        endTime: customTime("00:00")
       };
     }
 
@@ -134,8 +134,8 @@ export default async function showsProc(showsData, stationName, stationLogo) {
         day = show.day;
       }
       show.day = day;
-      show.startTime = startTime;
-      show.endTime = endTime;
+      show.startTime = customTime(startTime);
+      show.endTime = customTime(endTime);
       if (currentShowIndex == -1) {
         if (index >= currentIndex) {
           upcomingShow.push(show);
@@ -155,12 +155,29 @@ export default async function showsProc(showsData, stationName, stationLogo) {
       }
     });
 
-    upcomingShow = [...upcomingShow, ...upcomingShowAfter];
+    upcomingShow = [...upcomingShow, ...upcomingShowAfter].slice(0, 6);
 
     return {
       currentShow,
       upcomingShow
     };
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+function customTime(time) {
+  try {
+    time = time
+      .toString()
+      .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+    if (time.length > 1) {
+      time = time.slice(1);
+      time[5] = +time[0] < 12 ? "AM" : "PM";
+      time[0] = +time[0] % 12 || 12;
+    }
+    return time[0] + time[5];
   } catch (error) {
     throw new Error(error);
   }

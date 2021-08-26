@@ -4,67 +4,82 @@
     <div v-show="!isOpenStationList" class="flex my-container">
       <div class="left-panel overflow-hidden">
         <RadioPlayer
-          :streamToken="streamToken"
-          :stationData="stationData"
-          :host="host"
+          :station="{
+            stationCode: station.stationCode,
+            language: station.language,
+            stream: station.stream,
+            name: station.name,
+            description: station.description,
+            color: station.color,
+            logo: station.images.logo,
+          }"
           :gotPlayoutHistory="gotPlayoutHistory"
-          :stationColor="stationColor"
+          :host="host"
         />
         <div
           class="custom-bg"
           :style="{
-            'background-color': stationColor.secondary,
+            'background-color': station.color.secondary,
           }"
         >
           <Show
             v-if="!isOpenLastPlayed"
-            :showsData="showsData"
-            :stationName="stationData.name"
-            :stationDesc="stationData.description"
-            :stationColor="stationColor"
-            :squareImage="
-              stationData.images.find((x) => x.name === 'square_image').url
-            "
+            :station="{
+              name: station.name,
+              description: station.description,
+              color: station.color,
+              shows: station.shows,
+            }"
           />
         </div>
         <div v-if="isOpenLastPlayed" class="last-played-left-panel">
           <LastPlayedSong
-            :squareImage="
-              stationData.images.find((x) => x.name === 'square_image').url
-            "
-            :playoutHistory="playoutHistory"
-            :stationColor="stationColor"
+            :station="{
+              playoutHistory: station.playoutHistory,
+              color: station.color,
+              logo: station.images.logo,
+            }"
           />
         </div>
       </div>
       <div class="right-panel overflow-hidden">
         <div class="radio-banner overflow-hidden">
           <BackgroundImage
-            :backgroundImage="
-              stationData.images.find((x) => x.name === 'background_images').url
-            "
-            :stationLogo="
-              stationData.images.find((x) => x.name === 'square_image').url
-            "
-            :stationCode="stationCode"
+            :station="{
+              stationCode: station.stationCode,
+              logo: station.images.logo,
+            }"
           />
         </div>
         <div class="flex other-info overflow-hidden">
-          <div v-if="playoutHistory.length > 0" class="last-played-song">
+          <div
+            v-if="station.playoutHistory.length > 0"
+            class="last-played-song"
+          >
             <LastPlayedSong
-              :squareImage="
-                stationData.images.find((x) => x.name === 'square_image').url
-              "
-              :playoutHistory="playoutHistory"
-              :stationColor="stationColor"
+              :station="{
+                playoutHistory: station.playoutHistory,
+                color: station.color,
+                logo: station.images.logo,
+              }"
             />
           </div>
           <div
             :class="
-              playoutHistory.length > 0 ? 'more-from-us' : 'more-from-us-full'
+              station.playoutHistory.length > 0
+                ? 'more-from-us'
+                : 'more-from-us-full'
             "
           >
-            <MoreFromUs :moreFromUs="moreFromUs" :stationColor="stationColor" />
+            <MoreFromUs
+              :station="{
+                name: station.name,
+                stationCode: station.stationCode,
+                logo: station.images.logo,
+                color: station.color,
+              }"
+              :gotPlayoutHistory="gotPlayoutHistory"
+            />
           </div>
         </div>
       </div>
@@ -145,9 +160,7 @@ export default {
         {
           hid: "twitter:image",
           property: "twitter:image",
-          content: this.station.images.find(
-            (x) => x.name === "landscape_image"
-          ).url,
+          content: this.station.images.landscapeImage,
         },
       ],
     };
@@ -157,20 +170,23 @@ export default {
       isAds: false,
       isOpenLastPlayed: false,
       isOpenStationList: false,
-      station: null
+      gotPlayoutHistory: false,
+      host: null,
+      station: null,
     };
   },
   watch: {
-    "$route.query": "$fetch",
+    "$route.params.id": "$fetch",
   },
   async fetch() {
     try {
-      const station = await fetch(`http://localhost:3000/api/station/${this.$route.params.id}`).then(
-        (res) => res.json()
+      const station = await this.$axios.$get(
+        `/api/station/${this.$route.params.id}`
       );
       this.station = station.data;
-      console.log(this.$route.params.id);
-      console.log(station);
+      this.host = `${this.$config.baseURL}/${this.$route.params.id}`;
+      this.gotPlayoutHistory =
+        station.data.playoutHistory.length > 0 ? true : false;
     } catch (error) {
       throw new Error(error);
     }

@@ -1,5 +1,5 @@
 export default ({ app }, inject) => {
-  inject("suggestion", (stationList, language, stationCode) => {
+  inject("suggestion", (stationList, language, stationCode, gotPlayoutHistory) => {
     let suggestion = [];
     if (language !== "en") {
       stationList.forEach(el => {
@@ -58,6 +58,6 @@ export default ({ app }, inject) => {
       });
     });
 
-    return data;
+    return gotPlayoutHistory ? data.slice(0, 4) : data.slice(0, 6)
   });
 };

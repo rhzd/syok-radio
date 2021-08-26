@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-export default async function getPlayoutHistory(token, url) {
+export default async function getPlayoutHistory(token, url, stationLogo) {
   try {
     let data = [];
     const playoutHistory = await axios
@@ -10,14 +10,14 @@ export default async function getPlayoutHistory(token, url) {
         }
       })
       .then(response => {
-        // console.log(response.data.data);
         return response.data.data;
       });
       playoutHistory.forEach(el => {
       data.push({
+        id: el.song.id,
         track: el.song.track,
         artist: el.song.artist,
-        coverUrl: el.song.coverUrl ? el.song.coverUrl : null
+        coverUrl: el.song.coverUrl ? el.song.coverUrl : stationLogo
       });
     });
     return data;

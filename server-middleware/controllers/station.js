@@ -11,7 +11,9 @@ export default async function getStationData(id) {
     const token = await getSyokToken();
     const station = await getStation(token, id);
     const stream = await getStream(
-      station.streams.find(x => x.platform === "web").endpoint
+      station.streams.find(x => x.platform === "web").endpoint,
+      id,
+      station.language
     );
     const logo = station.images.find(x => x.name === "square_image").url;
     const landscapeImage = station.images.find(
@@ -30,8 +32,8 @@ export default async function getStationData(id) {
     ) {
       const primaryColor = station.additionalAttributes.stationColor[0].webplayer;
       color.primary = primaryColor;
-      color.secondary = await colorProc(primaryColor, -40);
-      color.tertiary = await colorProc(primaryColor, 100);
+      color.secondary = colorProc(primaryColor, -40);
+      color.tertiary = colorProc(primaryColor, 100);
     }
 
     let playoutHistory = [];
@@ -41,11 +43,12 @@ export default async function getStationData(id) {
     ) {
       playoutHistory = await getPlayoutHistory(
         token,
-        station.externalLinks.find(x => x.key === "playoutHistory").url
+        station.externalLinks.find(x => x.key === "playoutHistory").url,
+        logo
       );
     }
 
-    let shows = [];
+    let shows = null;
     if (
       station.externalLinks &&
       station.externalLinks.find(x => x.key === "programmes")
@@ -54,7 +57,7 @@ export default async function getStationData(id) {
         token,
         station.externalLinks.find(x => x.key === "programmes").url
       );
-      shows = await showsProc(data, station.name, logo);
+      shows = showsProc(data, station.name, logo);
     }
 
     const data = {

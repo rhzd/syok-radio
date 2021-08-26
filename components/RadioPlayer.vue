@@ -13,13 +13,13 @@
             @click="toggleLastPlayed"
             class="icon bars"
             icon="bars"
-            :style="{ color: stationColor.tertiary }"
+            :style="{ color: station.color.tertiary }"
           />
           <font-awesome-icon
             @click="toggleStationList"
             class="icon th-large"
             icon="th-large"
-            :style="{ color: stationColor.tertiary }"
+            :style="{ color: station.color.tertiary }"
           />
         </div>
       </div>
@@ -33,40 +33,34 @@
             @click="toggleLastPlayed"
             class="icon bars text-white"
             icon="bars"
-            :style="{ color: stationColor.tertiary }"
+            :style="{ color: station.color.tertiary }"
           />
         </div>
       </div>
       <img
         class="square"
         alt="Current song"
-        :src="
-          currentMetadata
-            ? currentMetadata.coverUrl
-              ? currentMetadata.coverUrl
-              : stationData.images[1].url
-            : stationData.images[1].url
-        "
+        :src="currentMetadata && currentMetadata.coverUrl ? currentMetadata.coverUrl : station.logo"
       />
       <div class="title-font text-white">
-        {{ currentMetadata ? currentMetadata.track : stationData.description }}
+        {{ currentMetadata ? currentMetadata.track : station.description }}
       </div>
       <div class="artist-font text-white">
-        {{ currentMetadata ? currentMetadata.artist : stationData.name }}
+        {{ currentMetadata ? currentMetadata.artist : station.name }}
       </div>
     </div>
     <div
       key="1"
       v-if="!shareActive"
       class="flex media-player items-center justify-between"
-      :style="{ 'background-color': stationColor.secondary }"
+      :style="{ 'background-color': station.color.secondary }"
     >
       <div v-if="loading">
         <button class="bg-white rounded-full btn-circle" aria-label="loading">
           <font-awesome-icon
             class="icon spinner"
             icon="spinner"
-            :style="{ color: stationColor.secondary }"
+            :style="{ color: station.color.secondary }"
           />
         </button>
       </div>
@@ -80,7 +74,7 @@
           <font-awesome-icon
             class="icon play"
             icon="play"
-            :style="{ color: stationColor.secondary }"
+            :style="{ color: station.color.secondary }"
           />
         </button>
         <button
@@ -92,7 +86,7 @@
           <font-awesome-icon
             class="icon stop"
             icon="stop"
-            :style="{ color: stationColor.secondary }"
+            :style="{ color: station.color.secondary }"
           />
         </button>
       </div>
@@ -133,7 +127,7 @@
       key="2"
       v-else
       class="flex media-player items-center justify-between"
-      :style="{ 'background-color': stationColor.secondary }"
+      :style="{ 'background-color': station.color.secondary }"
     >
       <div class="flex">
         <button
@@ -208,13 +202,7 @@ export default {
       ],
     };
   },
-  props: [
-    "stationData",
-    "streamToken",
-    "host",
-    "gotPlayoutHistory",
-    "stationColor",
-  ],
+  props: ["station", "host", "gotPlayoutHistory"],
   data() {
     return {
       loading: true,
@@ -229,19 +217,8 @@ export default {
   mounted() {
     this.audio = this.$refs["audio"];
     this.audio.volume = 0.3;
-    const uri_component = encodeURIComponent(
-      `companionads:true;tags:radioactive;stationid:${this.stationData.stationCode}`
-    );
-    const lang = encodeURIComponent(`["${this.stationData.language}"]`);
     const listenerId = com_adswizz_synchro_getListenerId();
-    let stream;
-    if (this.stationData.streams[0].endpoint.includes("revma")) {
-      stream = `${this.stationData.streams[0].endpoint}?rj-auth=${this.streamToken}&awparams=${uri_component}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
-    } else if (this.stationData.streams[0].endpoint.includes("rastream")) {
-      stream = `${this.stationData.streams[0].endpoint}?authtoken=${this.streamToken}&awparams=${uri_component}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
-    } else {
-      stream = null;
-    }
+    let stream = `${this.station.stream}&listenerid=${listenerId}`;
 
     if (Hls.isSupported()) {
       let hls = new Hls();
@@ -338,7 +315,7 @@ export default {
     },
     shareTwitter() {
       window.open(
-        `https://twitter.com/intent/tweet?text=I%20am%20listening%20to%20${this.stationData.name}.%20Stream%20us%20online%20now.%20${this.host}`,
+        `https://twitter.com/intent/tweet?text=I%20am%20listening%20to%20${this.station.name}.%20Stream%20us%20online%20now.%20${this.host}`,
         "Twitter",
         "width=500,height=350"
       );
@@ -352,7 +329,7 @@ export default {
     },
     shareWhatsapp() {
       window.open(
-        `whatsapp://send?text=I am listening to ${this.stationData.name}. Stream us online now. ${this.host}`
+        `whatsapp://send?text=I am listening to ${this.station.name}. Stream us online now. ${this.host}`
       );
     },
     shareLink() {
@@ -366,7 +343,6 @@ export default {
       alert(`Copied ${this.host} to clipboard!`);
     },
   },
-  watch: {},
 };
 </script>
 

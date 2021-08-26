@@ -2,7 +2,7 @@
   <div>
     <div class="flex sponsored-container">
       <div class="station-logo-container start">
-        <img class="station-logo start" :src="stationLogo" alt="syok" />
+        <img class="station-logo start" :src="station.logo" alt="syok" />
       </div>
       <div v-for="(el, index) in sponsored" :key="index">
         <div
@@ -39,7 +39,7 @@
 
 <script>
 export default {
-  props: ["backgroundImage", "stationLogo", "stationCode"],
+  props: ["station"],
   data() {
     return {
       sponsored: [
@@ -59,7 +59,7 @@ export default {
     fetchImage(size) {
       let image
       try {
-        image = require(`~/assets/images/background-image/${size}/${this.stationCode}.png`)
+        image = require(`~/assets/images/background-image/${size}/${this.station.stationCode}.png`)
       } catch (error) {
         image = require(`~/assets/images/background-image/${size}/fallback.png`)
       }

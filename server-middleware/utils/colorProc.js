@@ -1,4 +1,4 @@
-export default async function colorProc(col, amt) {
+export default function colorProc(col, amt) {
   try {
     let usePound = false;
 

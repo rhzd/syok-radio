@@ -4,33 +4,33 @@
       @click="$root.$refs.MainPage.toggleLastPlayed()"
       class="icon-close"
       icon="times"
-      :style="{ color: stationColor.secondary }"
+      :style="{ color: station.color.secondary }"
     />
     <div class="header-font">LAST PLAYED SONGS</div>
-    <div class="error-container" v-if="playoutHistory.length < 1">
+    <div class="error-container" v-if="station.playoutHistory.length < 1">
       <div class="error-box">:(</div>
     </div>
     <div v-else class="list-container overflow-y-auto overflow-x-hidden">
-      <div v-for="(el, index) in playoutHistory.slice(1)" :key="index">
+      <div v-for="(el, index) in station.playoutHistory.slice(1)" :key="index">
         <div class="flex song-list">
           <div
             class="rounded album-container"
-            :style="{ 'background-image': 'url(' + squareImage + ')' }"
+            :style="{ 'background-image': 'url(' + station.logo + ')' }"
           >
             <img
               class="rounded album-art"
-              :alt="`${el.song.artist} - ${el.song.track}`"
+              :alt="`${el.artist} - ${el.track}`"
               @error="setAltImg"
-              :src="el.song.coverUrl ? el.song.coverUrl : squareImage"
+              :src="el.coverUrl"
             />
           </div>
 
           <div class="song-info flex flex-col justify-center">
             <div class="title-font">
-              {{ el.song.track }}
+              {{ el.track }}
             </div>
             <div class="artist-font">
-              {{ el.song.artist }}
+              {{ el.artist }}
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
 
 <script>
 export default {
-  props: ["playoutHistory", "squareImage", "stationColor"],
+  props: ["station"],
   data() {
     return {
       sameSong: false,
@@ -52,23 +52,23 @@ export default {
   },
   methods: {
     fetchPlayoutHistory(currentMetadata) {
-      if (this.playoutHistory.length > 0) {
+      if (this.station.playoutHistory.length > 0) {
         if (currentMetadata) {
-          if (currentMetadata.id !== this.playoutHistory[0].song.id) {
-            this.playoutHistory.unshift({ song: currentMetadata });
+          if (currentMetadata.id !== this.playoutHistory[0].id) {
+            this.station.playoutHistory.unshift(currentMetadata);
           }
         }
       } else {
         if (currentMetadata) {
-          this.playoutHistory.push({ song: currentMetadata });
+          this.station.playoutHistory.push(currentMetadata);
         }
       }
       if (this.playoutHistory.length == 20) {
-        this.playoutHistory.pop();
+        this.station.playoutHistory.pop();
       }
     },
     setAltImg(event) {
-      event.target.src = this.squareImage;
+      event.target.src = this.station.logo;
     },
   },
 };

@@ -2,21 +2,21 @@
   <div>
     <div
       class="header-font text-white"
-      :class="moreFromUs.length == 6 ? 'margin-full' : 'margin-normal'"
+      :class="suggestion.length == 6 ? 'margin-full' : 'margin-normal'"
     >
       MORE FROM US
     </div>
     <div class="max-player">
       <div
         class="flex"
-        :class="moreFromUs.length == 6 ? 'margin-full' : 'margin-normal'"
+        :class="suggestion.length == 6 ? 'margin-full' : 'margin-normal'"
       >
         <div
           class="flex flex-col station-info-container"
-          v-for="station in moreFromUs"
+          v-for="station in suggestion"
           :key="station.stationCode"
         >
-          <a :href="`/${station.stationCode}`">
+          <NuxtLink :to="`/${station.stationCode}`">
             <div class="station-logo-container">
               <img
                 class="station-logo"
@@ -24,12 +24,12 @@
                 :alt="station.name"
               />
             </div>
-          </a>
-          <a :href="`/${station.stationCode}`" class="station-name-container">
+          </NuxtLink>
+          <NuxtLink :to="`/${station.stationCode}`" class="station-name-container">
             <div class="station-name text-white">
               {{ station.name.toUpperCase() }}
             </div>
-          </a>
+          </NuxtLink>
         </div>
         <div class="flex flex-col station-info-container">
           <div>
@@ -41,8 +41,8 @@
                 class="icon"
                 icon="th-large"
                 :style="{
-                  color: stationColor.tertiary,
-                  border: `7px ${stationColor.tertiary} solid`,
+                  color: station.color.tertiary,
+                  border: `7px ${station.color.tertiary} solid`,
                 }"
               />
             </div>
@@ -60,10 +60,10 @@
       <div class="flex margin-normal">
         <div
           class="flex flex-col station-info-container"
-          v-for="station in moreFromUs.slice(0, 4)"
+          v-for="station in suggestion.slice(0, 4)"
           :key="station.stationCode"
         >
-          <a :href="`/${station.stationCode}`">
+          <NuxtLink :to="`/${station.stationCode}`">
             <div class="station-logo-container">
               <img
                 class="station-logo"
@@ -71,12 +71,12 @@
                 :alt="station.name"
               />
             </div>
-          </a>
-          <a :href="`/${station.stationCode}`" class="station-name-container">
+          </NuxtLink>
+          <NuxtLink :to="`/${station.stationCode}`" class="station-name-container">
             <div class="station-name text-white">
               {{ station.name.toUpperCase() }}
             </div>
-          </a>
+          </NuxtLink>
         </div>
         <div class="flex flex-col station-info-container">
           <div>
@@ -88,8 +88,8 @@
                 class="icon"
                 icon="th-large"
                 :style="{
-                  color: stationColor.tertiary,
-                  border: `7px ${stationColor.tertiary} solid`,
+                  color: station.color.tertiary,
+                  border: `7px ${station.color.tertiary} solid`,
                 }"
               />
             </div>
@@ -108,9 +108,24 @@
 
 <script>
 export default {
-  props: ["moreFromUs", "stationColor"],
+  props: ["station", "gotPlayoutHistory"],
   data() {
-    return {};
+    return {
+      suggestion: [],
+    };
+  },
+  async fetch() {
+    try {
+      const stations = await this.$axios.$get(`/api/stations`);
+      this.suggestion = this.$suggestion(
+        stations.data,
+        this.station.language,
+        this.station.stationCode,
+        this.gotPlayoutHistory
+      );
+    } catch (error) {
+      throw new Error(error);
+    }
   },
 };
 </script>
