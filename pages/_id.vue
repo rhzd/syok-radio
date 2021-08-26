@@ -1,61 +1,40 @@
 <template>
-  <div :style="{ 'background-color': station.color.primary }" v-if="station">
-    <StationList v-show="isOpenStationList" />
-    <div v-show="!isOpenStationList" class="flex my-container">
-      <div class="left-panel overflow-hidden">
-        <RadioPlayer
-          :station="{
-            stationCode: station.stationCode,
-            language: station.language,
-            stream: station.stream,
-            name: station.name,
-            description: station.description,
-            color: station.color,
-            logo: station.images.logo,
-          }"
-          :gotPlayoutHistory="gotPlayoutHistory"
-          :host="host"
-        />
-        <div
-          class="custom-bg"
-          :style="{
-            'background-color': station.color.secondary,
-          }"
-        >
-          <Show
-            v-if="!isOpenLastPlayed"
+  <div>
+    <div v-if="$fetchState.pending" class="flex my-container"><Loading /></div>
+    <div v-if="station" :style="{ 'background-color': station.color.primary }">
+      <StationList v-show="isOpenStationList" />
+      <div v-show="!isOpenStationList" class="flex my-container">
+        <div class="left-panel overflow-hidden">
+          <RadioPlayer
             :station="{
+              stationCode: station.stationCode,
+              language: station.language,
+              stream: station.stream,
               name: station.name,
               description: station.description,
               color: station.color,
-              shows: station.shows,
-            }"
-          />
-        </div>
-        <div v-if="isOpenLastPlayed" class="last-played-left-panel">
-          <LastPlayedSong
-            :station="{
-              playoutHistory: station.playoutHistory,
-              color: station.color,
               logo: station.images.logo,
             }"
+            :gotPlayoutHistory="gotPlayoutHistory"
+            :host="host"
           />
-        </div>
-      </div>
-      <div class="right-panel overflow-hidden">
-        <div class="radio-banner overflow-hidden">
-          <BackgroundImage
-            :station="{
-              stationCode: station.stationCode,
-              logo: station.images.logo,
-            }"
-          />
-        </div>
-        <div class="flex other-info overflow-hidden">
           <div
-            v-if="station.playoutHistory.length > 0"
-            class="last-played-song"
+            class="custom-bg"
+            :style="{
+              'background-color': station.color.secondary,
+            }"
           >
+            <Show
+              v-if="!isOpenLastPlayed"
+              :station="{
+                name: station.name,
+                description: station.description,
+                color: station.color,
+                shows: station.shows,
+              }"
+            />
+          </div>
+          <div v-if="isOpenLastPlayed" class="last-played-left-panel">
             <LastPlayedSong
               :station="{
                 playoutHistory: station.playoutHistory,
@@ -64,39 +43,63 @@
               }"
             />
           </div>
-          <div
-            :class="
-              station.playoutHistory.length > 0
-                ? 'more-from-us'
-                : 'more-from-us-full'
-            "
-          >
-            <MoreFromUs
+        </div>
+        <div class="right-panel overflow-hidden">
+          <div class="radio-banner overflow-hidden">
+            <BackgroundImage
               :station="{
-                color: station.color,
+                stationCode: station.stationCode,
+                logo: station.images.logo,
               }"
-              :suggestion="suggestion"
             />
           </div>
+          <div class="flex other-info overflow-hidden">
+            <div
+              v-if="station.playoutHistory.length > 0"
+              class="last-played-song"
+            >
+              <LastPlayedSong
+                :station="{
+                  playoutHistory: station.playoutHistory,
+                  color: station.color,
+                  logo: station.images.logo,
+                }"
+              />
+            </div>
+            <div
+              :class="
+                station.playoutHistory.length > 0
+                  ? 'more-from-us'
+                  : 'more-from-us-full'
+              "
+            >
+              <MoreFromUs
+                :station="{
+                  color: station.color,
+                }"
+                :suggestion="suggestion"
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      <div v-if="isAds" id="overlay-ad" @click="hideAds">
-        <div class="wrap">
-          <div class="image">
-            <a target="_blank" href="/">
-              <div class="ad-image-container">
-                <!-- <img
+        <div v-if="isAds" id="overlay-ad" @click="hideAds">
+          <div class="wrap">
+            <div class="image">
+              <a target="_blank" href="/">
+                <div class="ad-image-container">
+                  <!-- <img
                 src="https://www.rawshorts.com/blog/wp-content/uploads/2019/10/how-to-use-facebook-video-ads.png"
                 class="ad-image"
               /> -->
+                </div>
+              </a>
+              <div>
+                <font-awesome-icon
+                  class="icon-close"
+                  icon="times"
+                  @click="hideAds"
+                />
               </div>
-            </a>
-            <div>
-              <font-awesome-icon
-                class="icon-close"
-                icon="times"
-                @click="hideAds"
-              />
             </div>
           </div>
         </div>
@@ -107,8 +110,19 @@
 
 <script>
 export default {
+  data() {
+    return {
+      isAds: false,
+      isOpenLastPlayed: false,
+      isOpenStationList: false,
+      gotPlayoutHistory: false,
+      host: null,
+      station: null,
+      suggestion: [],
+    };
+  },
   head() {
-    if (process.server) {
+    if (process.server && this.station) {
       return {
         title: this.station.name,
         meta: [
@@ -163,19 +177,15 @@ export default {
       };
     }
   },
-  data() {
-    return {
-      isAds: false,
-      isOpenLastPlayed: false,
-      isOpenStationList: false,
-      gotPlayoutHistory: false,
-      host: null,
-      station: null,
-      suggestion: [],
-    };
-  },
+  // watch: {
+  //   "$route.params.id": "$fetch",
+  //   "$route.params.id": "console.log('testes')",
+  // },
   watch: {
-    "$route.params.id": "$fetch",
+    "$route.params.key1"(value) {
+      this.log()
+      $fetch
+    },
   },
   async fetch() {
     try {
@@ -195,7 +205,10 @@ export default {
       this.gotPlayoutHistory = gotPlayoutHistory;
       this.host = `${this.$config.baseURL}/${this.$route.params.id}`;
     } catch (error) {
-      throw new Error(error);
+      if (process.server) {
+        this.$nuxt.error({ statusCode: 404, message: "Station not found" });
+      }
+      throw new Error("Station not found");
     }
   },
   created() {
@@ -203,6 +216,9 @@ export default {
   },
   mounted() {},
   methods: {
+    log() {
+      console.log('manaaaaaaaaa');
+    },
     showAds() {
       this.isAds = true;
     },

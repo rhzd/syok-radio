@@ -22,16 +22,18 @@ export default function showsProc(showsData, stationName, stationLogo) {
     const dayName = days[d.getDay()];
     const dayNameTomorrow = days[d.getDay() + 1];
     showsData.forEach(show => {
-      const days = show.Day.split("|");
-      days.forEach(el => {
-        showsFiltered[el].push({
-          day: el,
-          name: show.name,
-          image: show.SquareImage ? show.SquareImage : stationLogo,
-          startTime: show.StartHour,
-          endTime: show.EndHour
+      if (show.Day) {
+        const days = show.Day.split("|");
+        days.forEach(el => {
+          showsFiltered[el].push({
+            day: el,
+            name: show.name,
+            image: show.SquareImage ? show.SquareImage : stationLogo,
+            startTime: show.StartHour,
+            endTime: show.EndHour
+          });
         });
-      });
+      }
     });
 
     const time = new Date();

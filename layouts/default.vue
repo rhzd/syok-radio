@@ -1,14 +1,10 @@
 <template>
   <div class="bg-color h-screen flex flex-wrap justify-center content-center">
     <div class="player-container overflow-hidden">
-      <Nuxt />
+      <Nuxt/>
     </div>
   </div>
 </template>
-
-<script>
-export default {};
-</script>
 
 <style>
 body {

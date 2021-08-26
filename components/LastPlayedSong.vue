@@ -54,7 +54,7 @@ export default {
     fetchPlayoutHistory(currentMetadata) {
       if (this.station.playoutHistory.length > 0) {
         if (currentMetadata) {
-          if (currentMetadata.id !== this.playoutHistory[0].id) {
+          if (currentMetadata.id !== this.station.playoutHistory[0].id) {
             this.station.playoutHistory.unshift(currentMetadata);
           }
         }
@@ -63,7 +63,7 @@ export default {
           this.station.playoutHistory.push(currentMetadata);
         }
       }
-      if (this.playoutHistory.length == 20) {
+      if (this.station.playoutHistory.length == 20) {
         this.station.playoutHistory.pop();
       }
     },

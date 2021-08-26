@@ -63,14 +63,14 @@ export default {
   },
   data() {
     return {
-      host: null
+      host: null,
     };
   },
   async fetch() {
     try {
       this.host = this.$config.baseURL;
     } catch (error) {
-      throw new Error(error);
+      return this.$nuxt.error({ statusCode: 404, message: 'Data not found' })
     }
   },
 };

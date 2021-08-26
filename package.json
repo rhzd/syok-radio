@@ -16,7 +16,8 @@
     "express": "^4.17.1",
     "hls.js": "^1.0.7",
     "jsonwebtoken": "^8.5.1",
-    "nuxt": "^2.15.7"
+    "nuxt": "^2.15.7",
+    "openplayerjs": "^2.8.2"
   },
   "devDependencies": {
     "@aceforth/nuxt-optimized-images": "^1.4.0",

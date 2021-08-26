@@ -40,7 +40,11 @@
       <img
         class="square"
         alt="Current song"
-        :src="currentMetadata && currentMetadata.coverUrl ? currentMetadata.coverUrl : station.logo"
+        :src="
+          currentMetadata && currentMetadata.coverUrl
+            ? currentMetadata.coverUrl
+            : station.logo
+        "
       />
       <div class="title-font text-white">
         {{ currentMetadata ? currentMetadata.track : station.description }}
@@ -175,33 +179,18 @@
         @click="shareActive = !shareActive"
       />
     </div>
-    <audio
+    <Audio :stream="station.stream" />
+    <!-- <audio
       ref="audio"
       @canplay="updatePaused"
       @playing="updatePaused"
       @pause="updatePaused"
-    ></audio>
+    ></audio> -->
   </div>
 </template>
 
 <script>
-import Hls from "hls.js";
-
 export default {
-  head() {
-    return {
-      script: [
-        {
-          src: "https://synchrobox.adswizz.com/register2.php",
-          defer: true,
-        },
-        {
-          src: "https://cdn.adswizz.com/adswizz/js/SynchroClient2.js",
-          defer: true,
-        },
-      ],
-    };
-  },
   props: ["station", "host", "gotPlayoutHistory"],
   data() {
     return {
@@ -212,62 +201,8 @@ export default {
       audio: null,
       currentMetadata: null,
       isHlsSupported: false,
+      componentKey: 0,
     };
-  },
-  mounted() {
-    this.audio = this.$refs["audio"];
-    this.audio.volume = 0.3;
-    const listenerId = com_adswizz_synchro_getListenerId();
-    let stream = `${this.station.stream}&listenerid=${listenerId}`;
-
-    if (Hls.isSupported()) {
-      let hls = new Hls();
-      hls.loadSource(stream);
-      hls.attachMedia(this.audio);
-      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-        this.audio.play();
-      });
-      hls.on(Hls.Events.FRAG_PARSING_METADATA, (event, data) => {
-        let dict = {};
-        let tmp = data["frag"]["title"].split("=");
-        if (tmp.length > 0) {
-          if (tmp[0] == "title") {
-            dict["title"] = tmp[1].replace(",url", "").replace(/"/g, "").trim();
-          }
-          if (tmp.length == 3 && tmp[2].toString()[1] === "%") {
-            try {
-              dict["data"] = JSON.parse(
-                decodeURIComponent(tmp[2].substring(1, tmp[2].length - 1))
-              );
-            } catch (err) {
-              console.error("Metadata Parsing Error", err);
-              console.error(decodeURIComponent(tmp[2].replace('"', "")));
-            }
-          }
-        }
-        if (dict.data) {
-          if (this.currentMetadata) {
-            if (dict.data.current_song.track !== this.currentMetadata.track) {
-              this.$root.$refs.LastPlayedSong.fetchPlayoutHistory(
-                dict.data.current_song
-              );
-            }
-          } else {
-            this.$root.$refs.LastPlayedSong.fetchPlayoutHistory(
-              dict.data.current_song
-            );
-          }
-        }
-        this.currentMetadata = dict.data ? dict.data.current_song : null;
-      });
-    } else {
-      this.isHlsSupported = false;
-      this.audio.src = stream;
-      this.loading = false;
-      this.audio.addEventListener("loadedmetadata", function (event) {
-        this.audio.play();
-      });
-    }
   },
   computed: {
     playing() {
@@ -275,6 +210,9 @@ export default {
     },
   },
   methods: {
+    forceRerender() {
+      this.componentKey += 1;
+    },
     shareToggle() {
       this.shareActive = !this.shareActive;
     },

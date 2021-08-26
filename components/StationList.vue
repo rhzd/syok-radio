@@ -220,7 +220,7 @@ export default {
       );
 
     } catch (error) {
-      throw new Error(error);
+      this.$nuxt.error({ statusCode: 500, message: 'Server error' })
     }
   },
   methods: {
