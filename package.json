@@ -14,9 +14,9 @@
     "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.15.1",
     "express": "^4.17.1",
+    "hls.js": "^1.0.10",
     "jsonwebtoken": "^8.5.1",
-    "nuxt": "^2.15.7",
-    "openplayerjs": "^2.8.2"
+    "nuxt": "^2.15.7"
   },
   "devDependencies": {
     "@aceforth/nuxt-optimized-images": "^1.4.0",

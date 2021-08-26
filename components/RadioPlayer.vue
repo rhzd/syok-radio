@@ -183,18 +183,17 @@
     </div>
     <div>
       <audio
-        class="op-player__media op-player"
-        id="audio"
-        controls
-      >
-        <source :src="`${station.stream}&listenerid=${listenerId}`" />
-      </audio>
+        ref="audio"
+        @canplay="updatePaused"
+        @playing="updatePaused"
+        @pause="updatePaused"
+      ></audio>
     </div>
   </div>
 </template>
 
 <script>
-import OpenPlayerJS from "openplayerjs";
+import Hls from "hls.js";
 
 export default {
   head() {
@@ -217,30 +216,32 @@ export default {
       loading: true,
       paused: true,
       shareActive: false,
-      volume: 30,
+      volume: 100,
+      audio: null,
       currentMetadata: null,
       isHlsSupported: false,
-      $player: null,
-      stream: null,
-      listenerId: null,
     };
   },
   mounted() {
-    this.listenerId = com_adswizz_synchro_getListenerId();
-    this.$player = new OpenPlayerJS("audio", {
-      hls: {
+    this.audio = this.$refs["audio"];
+    this.audio.volume = 1;
+    let listenerId = com_adswizz_synchro_getListenerId();
+    let stream = `${this.station.stream}&listenerid=${listenerId}`;
+
+    if (Hls.isSupported()) {
+      let config = {
         startLevel: -1,
-      },
-      showLoaderOnInit: false,
-      pauseOthers: true,
-    });
-    console.log(this.$player);
-    this.$player.init();
-    this.$player
-      .getElement()
-      .addEventListener("hlsFragParsingMetadata", (event) => {
+      };
+      this.hls = new Hls(config);
+      this.hls.loadSource(stream);
+      this.hls.attachMedia(this.audio);
+      this.hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+        this.audio.play();
+      });
+      this.hls.on(Hls.Events.FRAG_PARSING_METADATA, (event, data) => {
         let dict = {};
-        let tmp = event.detail.data.frag.title.split("=");
+        let tmp = data["frag"]["title"].split("=");
+        // console.log(tmp);
         if (tmp.length > 0) {
           if (tmp[0] == "title") {
             dict["title"] = tmp[1].replace(",url", "").replace(/"/g, "").trim();
@@ -256,7 +257,6 @@ export default {
             }
           }
         }
-        console.log(dict.data);
         if (dict.data) {
           if (this.currentMetadata) {
             if (dict.data.current_song.track !== this.currentMetadata.track) {
@@ -272,6 +272,17 @@ export default {
         }
         this.currentMetadata = dict.data ? dict.data.current_song : null;
       });
+    } else {
+      this.isHlsSupported = false;
+      this.audio.src = stream;
+      this.loading = false;
+      this.audio.addEventListener("loadedmetadata", function (event) {
+        this.audio.play();
+      });
+    }
+  },
+  beforeUpdate() {
+    console.log(this.hls);
   },
   computed: {
     playing() {
@@ -290,6 +301,11 @@ export default {
       this.audio = event.target;
       this.paused = event.target.paused;
       this.loading = false;
+      if (Hls.isSupported()) {
+        this.isHlsSupported = true;
+      } else {
+        this.isHlsSupported = false;
+      }
     },
     play() {
       this.audio.play();
@@ -303,8 +319,8 @@ export default {
       this.volume = 0;
     },
     unmute() {
-      this.audio.volume = 0.3;
-      this.volume = 30;
+      this.audio.volume = 1;
+      this.volume = 100;
     },
     toggleLastPlayed() {
       this.$root.$refs.MainPage.toggleLastPlayed();
@@ -342,7 +358,6 @@ export default {
       alert(`Copied ${this.host} to clipboard!`);
     },
   },
-  watch: {},
 };
 </script>
 

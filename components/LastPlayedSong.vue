@@ -52,6 +52,7 @@ export default {
   },
   methods: {
     fetchPlayoutHistory(currentMetadata) {
+      console.log('currentMetadata', currentMetadata);
       if (this.station.playoutHistory.length > 0) {
         if (currentMetadata) {
           if (currentMetadata.id !== this.station.playoutHistory[0].id) {
