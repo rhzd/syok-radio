@@ -110,17 +110,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      isAds: false,
-      isOpenLastPlayed: false,
-      isOpenStationList: false,
-      gotPlayoutHistory: false,
-      host: null,
-      station: null,
-      suggestion: [],
-    };
-  },
   head() {
     if (process.server && this.station) {
       return {
@@ -177,15 +166,8 @@ export default {
       };
     }
   },
-  // watch: {
-  //   "$route.params.id": "$fetch",
-  //   "$route.params.id": "console.log('testes')",
-  // },
   watch: {
-    "$route.params.key1"(value) {
-      this.log()
-      $fetch
-    },
+    "$route.params.id": "$fetch",
   },
   async fetch() {
     try {
@@ -211,14 +193,21 @@ export default {
       throw new Error("Station not found");
     }
   },
+  data() {
+    return {
+      isAds: false,
+      isOpenLastPlayed: false,
+      isOpenStationList: false,
+      gotPlayoutHistory: false,
+      host: null,
+      station: null,
+      suggestion: [],
+    };
+  },
   created() {
     this.$root.$refs.MainPage = this;
   },
-  mounted() {},
   methods: {
-    log() {
-      console.log('manaaaaaaaaa');
-    },
     showAds() {
       this.isAds = true;
     },
