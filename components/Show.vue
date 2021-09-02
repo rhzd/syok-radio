@@ -11,9 +11,8 @@
             shows-container-open
           "
         >
-          <div>
+          <div class="chevron-container" @click="open = !open">
             <font-awesome-icon
-              @click="open = !open"
               class="chevron chevron-down"
               icon="chevron-down"
             />
@@ -101,12 +100,8 @@
             shows-container
           "
         >
-          <div>
-            <font-awesome-icon
-              @click="open = !open"
-              class="chevron chevron-up"
-              icon="chevron-up"
-            />
+          <div class="chevron-container" @click="open = !open">
+            <font-awesome-icon class="chevron chevron-up" icon="chevron-up" />
           </div>
           <div class="flex w-full">
             <div class="show-image-container">
@@ -222,6 +217,11 @@ export default {
 </script>
 
 <style scoped>
+.chevron-container {
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
 .shows-container {
   height: 120px;
   border-radius: 20px 20px 0px 0px;
@@ -322,7 +322,6 @@ export default {
   color: #b1b1b1;
   margin-bottom: 2px;
   margin-top: 2px;
-  cursor: pointer;
 }
 .chevron-up {
   margin-top: 2px;

@@ -220,7 +220,7 @@ export default {
       loading: true,
       paused: true,
       shareActive: false,
-      volume: 30,
+      volume: 100,
       audio: null,
       currentMetadata: null,
       isHlsSupported: false,
@@ -228,7 +228,7 @@ export default {
   },
   mounted() {
     this.audio = this.$refs["audio"];
-    this.audio.volume = 0.3;
+    this.audio.volume = 1;
     const uri_component = encodeURIComponent(
       `companionads:true;tags:radioactive;stationid:${this.stationData.stationCode}`
     );
@@ -327,8 +327,8 @@ export default {
       this.volume = 0;
     },
     unmute() {
-      this.audio.volume = 0.3;
-      this.volume = 30;
+      this.audio.volume = 1;
+      this.volume = 100;
     },
     toggleLastPlayed() {
       this.$root.$refs.MainPage.toggleLastPlayed();

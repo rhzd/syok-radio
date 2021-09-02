@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import jwt from 'jsonwebtoken';
 export default {
   head() {
     return {
@@ -155,7 +156,7 @@ export default {
     };
   },
   async asyncData({
-    $config: { syokUsername, syokPassword, syokURL, baseURL },
+    $config: { syokUsername, syokPassword, syokURL, baseURL, OIDRadioStream, JWTRadioStream  },
     $axios,
     error,
     params,
@@ -199,12 +200,19 @@ export default {
             console.error("Error:", error);
           });
       } else if (stationData.data.streams[0].endpoint.includes("rastream")) {
-        let getToken = await $axios
-          .$get(`${baseURL}/api/get-token`)
-          .catch((error) => {
-            console.log(error);
-          });
-        streamToken = getToken.data;
+        let limit = 60 * 60 * 24; // 180 seconds
+        let init = Math.floor(Date.now() / 1000);
+        let expires = Math.floor(Date.now() / 1000) + limit;
+        let payload = {
+          exp: expires,
+          iat: init,
+          oid: OIDRadioStream,
+        };
+        let token = jwt.sign(
+          payload,
+          Buffer.from(JWTRadioStream, "base64")
+        );
+        streamToken = token;
       }
 
       // PLAYOUT HISTORY

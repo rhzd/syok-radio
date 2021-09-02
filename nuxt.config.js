@@ -90,32 +90,29 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      name: 'Syok Radio',
+      name: "Syok Radio",
       short_name: "Syok Radio",
       lang: "en",
       theme_color: "#212121"
     },
     meta: {
-      "name": "Syok Radio",
+      name: "Syok Radio",
       "theme-color": "#212121"
     }
   },
   publicRuntimeConfig: {
-    syokURL: process.env.SYOK_URL,
-    baseURL: process.env.BASE_URL,
-    gtm: {
-      id: process.env.GOOGLE_TAG_MANAGER_ID
-    }
+    // gtm: {
+    //   id: process.env.GOOGLE_TAG_MANAGER_ID
+    // }
   },
   privateRuntimeConfig: {
     JWTRadioStream: process.env.JWT_RADIO_STREAM,
     OIDRadioStream: process.env.OID_RADIO_STREAM,
     syokUsername: process.env.SYOK_USERNAME,
-    syokPassword: process.env.SYOK_PASSWORD
+    syokPassword: process.env.SYOK_PASSWORD,
+    syokURL: process.env.SYOK_URL,
+    baseURL: process.env.BASE_URL
   },
-  serverMiddleware: [
-    { path: "/api", handler: "~/server-middleware/radioAuth.js" }
-  ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {}
