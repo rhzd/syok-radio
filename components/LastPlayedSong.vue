@@ -109,7 +109,7 @@ export default {
 .album-art {
   width: 50px;
   height: 50px;
-  border: 1px solid lightgrey;
+  border: 0.1px solid lightgrey;
 }
 .header-font {
   margin-top: 18px;

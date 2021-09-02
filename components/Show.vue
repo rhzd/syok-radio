@@ -250,7 +250,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 6px;
-  border: 1px solid lightgrey;
+  border: 0.1px solid lightgrey;
 }
 .show-list-container {
   margin-bottom: 10px;

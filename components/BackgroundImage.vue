@@ -101,7 +101,7 @@ export default {
 .station-logo {
   height: 100%;
   width: 100%;
-  border-right: solid 1px lightgrey;
+  border-right: solid 0.1px lightgrey;
 }
 .start {
   border-radius: 10% 0% 0% 10%;
