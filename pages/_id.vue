@@ -94,7 +94,8 @@
 </template>
 
 <script>
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+
 export default {
   head() {
     return {
@@ -156,7 +157,14 @@ export default {
     };
   },
   async asyncData({
-    $config: { syokUsername, syokPassword, syokURL, baseURL, OIDRadioStream, JWTRadioStream  },
+    $config: {
+      syokUsername,
+      syokPassword,
+      syokURL,
+      baseURL,
+      OIDRadioStream,
+      JWTRadioStream,
+    },
     $axios,
     error,
     params,
@@ -174,14 +182,23 @@ export default {
       );
       const syokToken = await $axios.$post(`${syokURL}/authenticate`);
       $axios.setHeader("Authorization", `Bearer ${syokToken.data}`);
-      const stationData = await $axios.$get(
-        `${syokURL}/radio/streams/${params.id}`
-      );
+      
+      let reStation = []
+
+      const stationList = await $axios.$get(`${syokURL}/radio/streams/groups`);
+
+      stationList.data.forEach((element) => {
+        element.stations.forEach((station) => {
+          reStation.push(station);
+        });
+      });
+
+      const stationData = reStation.find(el=> el.stationCode == params.id)
 
       let streamToken = "";
 
-      if (stationData.data.streams[0].endpoint.includes("revma")) {
-        let path = new URL(stationData.data.streams[0].endpoint).pathname;
+      if (stationData.streams[0].endpoint.includes("revma")) {
+        let path = new URL(stationData.streams[0].endpoint).pathname;
         await fetch(
           `https://www.revma.com/api/stations/${
             path.split("/")[1]
@@ -199,7 +216,7 @@ export default {
           .catch((error) => {
             console.error("Error:", error);
           });
-      } else if (stationData.data.streams[0].endpoint.includes("rastream")) {
+      } else if (stationData.streams[0].endpoint.includes("rastream")) {
         let limit = 60 * 60 * 24; // 180 seconds
         let init = Math.floor(Date.now() / 1000);
         let expires = Math.floor(Date.now() / 1000) + limit;
@@ -208,10 +225,7 @@ export default {
           iat: init,
           oid: OIDRadioStream,
         };
-        let token = jwt.sign(
-          payload,
-          Buffer.from(JWTRadioStream, "base64")
-        );
+        let token = jwt.sign(payload, Buffer.from(JWTRadioStream, "base64"));
         streamToken = token;
       }
 
@@ -219,12 +233,12 @@ export default {
 
       let playoutHistory = null;
       if (
-        stationData.data.externalLinks &&
-        stationData.data.externalLinks.find((x) => x.key === "playoutHistory")
+        stationData.externalLinks &&
+        stationData.externalLinks.find((x) => x.key === "playoutHistory")
       ) {
         playoutHistory = await $axios.$get(
           `${
-            stationData.data.externalLinks.find(
+            stationData.externalLinks.find(
               (x) => x.key === "playoutHistory"
             ).url
           }`
@@ -233,10 +247,9 @@ export default {
 
       // MORE FROM US
 
-      let stationList = await $axios.$get(`${syokURL}/radio/stations`);
       let moreFromUs = $moreFromUsObject(
-        stationList.data,
-        stationData.data,
+        reStation,
+        stationData,
         params.id
       );
 
@@ -246,12 +259,12 @@ export default {
       let shows = null;
 
       if (
-        stationData.data.externalLinks &&
-        stationData.data.externalLinks.find((x) => x.key === "programmes")
+        stationData.externalLinks &&
+        stationData.externalLinks.find((x) => x.key === "programmes")
       ) {
         showsData = await $axios
           .$get(
-            stationData.data.externalLinks.find((x) => x.key === "programmes")
+            stationData.externalLinks.find((x) => x.key === "programmes")
               .url
           )
           .catch((error) => {
@@ -260,7 +273,7 @@ export default {
       }
 
       if (showsData) {
-        shows = $showsObject(showsData.data, stationData.data);
+        shows = $showsObject(showsData.data, stationData);
       }
 
       // STATION COLOR
@@ -271,28 +284,28 @@ export default {
         tertiary: $colorChange("#fb2724", 100),
       };
       if (
-        stationData.data.additionalAttributes &&
-        stationData.data.additionalAttributes.stationColor
+        stationData.additionalAttributes &&
+        stationData.additionalAttributes.stationColor
       ) {
         stationColor.primary =
-          stationData.data.additionalAttributes.stationColor[0].webplayer;
+          stationData.additionalAttributes.stationColor[0].webplayer;
         stationColor.secondary = $colorChange(
-          stationData.data.additionalAttributes.stationColor[0].webplayer,
+          stationData.additionalAttributes.stationColor[0].webplayer,
           -40
         );
         stationColor.tertiary = $colorChange(
-          stationData.data.additionalAttributes.stationColor[0].webplayer,
+          stationData.additionalAttributes.stationColor[0].webplayer,
           100
         );
       }
 
       return {
         streamToken: streamToken,
-        stationData: stationData.data,
-        stationCode: stationData.data.stationCode,
+        stationData: stationData,
+        stationCode: stationData.stationCode,
         stationColor: stationColor,
         showsData: shows ? shows : null,
-        stationList: stationList ? stationList.data : [],
+        stationList: reStation ? reStation : [],
         moreFromUs: playoutHistory
           ? moreFromUs.slice(0, 4)
           : moreFromUs.slice(0, 6),

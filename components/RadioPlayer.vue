@@ -374,7 +374,7 @@ export default {
 .square {
   width: 300px;
   height: 300px;
-  background-color: lightgrey;
+  background-color: white;
   border-radius: 6px;
 }
 .header-font {

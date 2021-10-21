@@ -22,10 +22,18 @@ export default {
       const syokToken = await $axios.$post(`${syokURL}/authenticate`);
       $axios.setHeader("Authorization", `Bearer ${syokToken.data}`);
 
-      let stationList = await $axios.$get(`${syokURL}/radio/stations`);
+      const stationList = await $axios.$get(`${syokURL}/radio/streams/groups`);
+
+      let reStation = []
+
+      stationList.data.forEach((element) => {
+        element.stations.forEach((station) => {
+          reStation.push(station);
+        });
+      });
 
       return {
-        stationList: stationList.data,
+        stationList: reStation,
       };
     } catch (e) {
       error(e);

@@ -94,7 +94,9 @@
                 <a :href="`/${station.stationCode}`"
                   ><img
                     class="station-image-min"
-                    :src="station.logo"
+                    :src="
+                      station.images.find((x) => x.name === 'square_image').url
+                    "
                     :alt="station.name"
                 /></a>
               </div>
@@ -104,7 +106,9 @@
                 <a :href="`/${station.stationCode}`"
                   ><img
                     class="station-image"
-                    :src="station.logo"
+                    :src="
+                      station.images.find((x) => x.name === 'square_image').url
+                    "
                     :alt="station.name"
                 /></a>
               </div>
@@ -115,14 +119,17 @@
             <div class="flex flex-wrap station-container-main-splinter">
               <div
                 class="flex"
-                v-for="splinter in filteredSplinter(station.stationCode)"
+                v-for="splinter in filteredSplinter(station.groupId)"
                 :key="splinter.name"
               >
                 <div class="splinter-image-container-main">
                   <a :href="`/${splinter.stationCode}`"
                     ><img
                       class="station-image"
-                      :src="splinter.logo"
+                      :src="
+                        station.images.find((x) => x.name === 'square_image')
+                          .url
+                      "
                       :alt="splinter.name"
                   /></a>
                 </div>
@@ -147,7 +154,10 @@
           >
             <div class="station-image-container">
               <a :href="`/${dvr.stationCode}`"
-                ><img class="station-image" :src="dvr.logo" :alt="dvr.name"
+                ><img
+                  class="station-image"
+                  :src="dvr.images.find((x) => x.name === 'square_image').url"
+                  :alt="dvr.name"
               /></a>
             </div>
             <div class="other-station-font">
@@ -166,7 +176,9 @@
               <a :href="`/${station.stationCode}`"
                 ><img
                   class="station-image"
-                  :src="station.logo"
+                  :src="
+                    station.images.find((x) => x.name === 'square_image').url
+                  "
                   :alt="station.name"
               /></a>
             </div>
@@ -202,17 +214,12 @@ export default {
         { code: "zh", name: "Chinese" },
         { code: "ta", name: "Tamil" },
       ],
-      splinterStations: [],
     };
   },
   mounted() {
     this.selectedStation = this.stationList.filter((station) => {
       return station.language.toLowerCase();
     });
-    this.splinterStations = this.selectedStation.filter(
-      (station) =>
-        station.stationCode.includes("-") || station.stationCode.includes("_")
-    );
   },
   methods: {
     selectStation(val) {
@@ -227,39 +234,18 @@ export default {
     },
     filteredMain() {
       return this.filteredList().filter(
-        (station) =>
-          (!station.stationCode.includes("-") &&
-            !station.stationCode.includes("_")) ||
-          station.stationCode.includes("amp-melody")
+        (station) => station.radioType == "primary"
       );
     },
     filteredSplinter(val) {
-      return this.splinterStations.filter((station) => {
-        return (
-          station.stationCode.toLowerCase().includes(val.toLowerCase()) &&
-          !station.stationCode.includes("amp-melody")
-        );
-      });
+      return this.filteredList().filter(
+        (station) => station.groupId == val && station.radioType !== 'primary'
+      );
     },
     filteredOther() {
-      let arr = [];
-      let final = [];
-      this.filteredMain().forEach((element) => {
-        let test = this.selectedStation.filter((station) => {
-          return station.stationCode
-            .toLowerCase()
-            .includes(element.stationCode.toLowerCase());
-        });
-        test.forEach((el) => {
-          arr.push(el);
-        });
-      });
-      this.selectedStation.forEach((el) => {
-        if (!arr.some((element) => element.stationCode === el.stationCode)) {
-          final.push(el);
-        }
-      });
-      return final;
+      return this.filteredList().filter(
+        (station) => station.groupId == "other radio & station"
+      );
     },
   },
   computed: {

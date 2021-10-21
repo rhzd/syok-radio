@@ -20,7 +20,7 @@
             <div class="station-logo-container">
               <img
                 class="station-logo"
-                :src="station.logo"
+                :src="station.images.find((x) => x.name === 'square_image').url"
                 :alt="station.name"
               />
             </div>
@@ -67,7 +67,7 @@
             <div class="station-logo-container">
               <img
                 class="station-logo"
-                :src="station.logo"
+                :src="station.images.find((x) => x.name === 'square_image').url"
                 :alt="station.name"
               />
             </div>
@@ -140,6 +140,7 @@ export default {
 }
 .station-logo {
   border-radius: 15px;
+  background-color: white;
 }
 .station-name {
   width: 100px;
