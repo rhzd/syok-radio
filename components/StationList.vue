@@ -127,7 +127,7 @@
                     ><img
                       class="station-image"
                       :src="
-                        station.images.find((x) => x.name === 'square_image')
+                        splinter.images.find((x) => x.name === 'square_image')
                           .url
                       "
                       :alt="splinter.name"
