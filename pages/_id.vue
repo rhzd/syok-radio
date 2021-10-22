@@ -95,7 +95,7 @@
 
 <script>
 import jwt from "jsonwebtoken";
-
+import tempData from "../static/data.json";
 export default {
   head() {
     return {
@@ -182,10 +182,14 @@ export default {
       );
       const syokToken = await $axios.$post(`${syokURL}/authenticate`);
       $axios.setHeader("Authorization", `Bearer ${syokToken.data}`);
-      
-      let reStation = []
 
-      const stationList = await $axios.$get(`${syokURL}/radio/streams/groups`);
+      let reStation = [];
+
+      const stationList = await $axios
+        .$get(`${syokURL}/radio/streams/groups`)
+        .catch((error) => {
+          return tempData;
+        });
 
       stationList.data.forEach((element) => {
         element.stations.forEach((station) => {
@@ -193,7 +197,7 @@ export default {
         });
       });
 
-      const stationData = reStation.find(el=> el.stationCode == params.id)
+      const stationData = reStation.find((el) => el.stationCode == params.id);
 
       let streamToken = "";
 
@@ -238,20 +242,15 @@ export default {
       ) {
         playoutHistory = await $axios.$get(
           `${
-            stationData.externalLinks.find(
-              (x) => x.key === "playoutHistory"
-            ).url
+            stationData.externalLinks.find((x) => x.key === "playoutHistory")
+              .url
           }`
         );
       }
 
       // MORE FROM US
 
-      let moreFromUs = $moreFromUsObject(
-        reStation,
-        stationData,
-        params.id
-      );
+      let moreFromUs = $moreFromUsObject(reStation, stationData, params.id);
 
       // SHOWS
 
@@ -264,8 +263,7 @@ export default {
       ) {
         showsData = await $axios
           .$get(
-            stationData.externalLinks.find((x) => x.key === "programmes")
-              .url
+            stationData.externalLinks.find((x) => x.key === "programmes").url
           )
           .catch((error) => {
             console.log(error);

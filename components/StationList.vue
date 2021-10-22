@@ -239,7 +239,7 @@ export default {
     },
     filteredSplinter(val) {
       return this.filteredList().filter(
-        (station) => station.groupId == val && station.radioType !== 'primary'
+        (station) => station.groupId == val && station.radioType !== "primary"
       );
     },
     filteredOther() {
@@ -409,7 +409,6 @@ input[type="text"]:focus {
   color: white;
   font-size: 14px;
   font-weight: 300;
-  margin-bottom: 35px;
   width: 100px;
 }
 .station-container {
@@ -491,7 +490,7 @@ input[type="text"]:focus {
   display: none;
 }
 .station-container-main {
-  margin: 0px 30px 0px 40px;
+  margin: 0 30px 35px 40px;
 }
 
 @media only screen and (max-width: 1199px) {

@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import tempData from "../static/data.json";
 export default {
   head() {},
   async asyncData({
@@ -22,9 +23,12 @@ export default {
       const syokToken = await $axios.$post(`${syokURL}/authenticate`);
       $axios.setHeader("Authorization", `Bearer ${syokToken.data}`);
 
-      const stationList = await $axios.$get(`${syokURL}/radio/streams/groups`);
-
-      let reStation = []
+      const stationList = await $axios
+        .$get(`${syokURL}/radio/streams/groups`)
+        .catch((error) => {
+          return tempData;
+        });
+      let reStation = [];
 
       stationList.data.forEach((element) => {
         element.stations.forEach((station) => {
