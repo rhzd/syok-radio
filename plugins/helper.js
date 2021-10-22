@@ -216,17 +216,14 @@ export default ({ app }, inject) => {
       }
     });
 
-    let parent = stationList
-      .find(element => element.stationCode == paramsId)
-      .name.toLowerCase()
-      .split(" ")[0];
+    let parent = stationList.find(element => element.stationCode == paramsId).groupId;
 
     let mainStation = [];
     let langStation = [];
     let otherStation = [];
 
     moreFromUsData.forEach(el => {
-      if (el.name.toLowerCase().split(" ")[0] == parent) {
+      if (el.groupId == parent) {
         mainStation.push(el);
       } else {
         if (el.language == stationData.language) {
@@ -238,15 +235,15 @@ export default ({ app }, inject) => {
     });
 
     mainStation.sort((a, b) => {
-      return a.name.length - b.name.length;
+      return a.displayOrder;
     });
 
     langStation.sort((a, b) => {
-      return a.name.length - b.name.length;
+      return a.displayOrder;
     });
 
     otherStation.sort((a, b) => {
-      return a.name.length - b.name.length;
+      return a.displayOrder;
     });
 
     return [...mainStation, ...langStation, ...otherStation];

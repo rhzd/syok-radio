@@ -560,7 +560,7 @@ input[type="text"]:focus {
     margin: 0px 10px 10px 12px;
   }
   .station-container-main {
-    margin: 0px 0px 0px 10px;
+    margin: 0px 0px 35px 10px;
   }
   .station-container {
     margin: 0px 5px 30px 15px;
