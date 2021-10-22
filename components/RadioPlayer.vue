@@ -5,7 +5,7 @@
       <div class="flex min-player items-center justify-between">
         <div class="flex flex-col">
           <div class="now-playing-min-font text-white">NOW PLAYING</div>
-          <div class="station-font text-white">HITZ</div>
+          <div class="station-font text-white">{{ stationData.name }}</div>
         </div>
         <div class="flex button-container">
           <font-awesome-icon

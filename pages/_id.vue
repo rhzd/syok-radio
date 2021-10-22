@@ -40,9 +40,7 @@
       <div class="right-panel overflow-hidden">
         <div class="radio-banner overflow-hidden">
           <BackgroundImage
-            :backgroundImage="
-              stationData.images.find((x) => x.name === 'background_images').url
-            "
+            :backgroundImage="stationData.images"
             :stationLogo="
               stationData.images.find((x) => x.name === 'square_image').url
             "

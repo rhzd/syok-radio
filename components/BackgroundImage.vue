@@ -57,13 +57,17 @@ export default {
       this.$root.$refs.MainPage.showAds();
     },
     fetchImage(size) {
-      let image
+      let image;
       try {
-        image = require(`~/assets/images/background-image/${size}/${this.stationCode}.png`)
+        if (size == "medium") {
+          image = this.backgroundImage.find((x) => x.name === 'web_background_md').url;
+        } else {
+          image = this.backgroundImage.find((x) => x.name === 'web_background_lg').url;
+        }
       } catch (error) {
-        image = require(`~/assets/images/background-image/${size}/fallback.png`)
+        image = require(`~/assets/images/background-image/fallback-${size}.png`);
       }
-      return image
+      return image;
     },
   },
 };
