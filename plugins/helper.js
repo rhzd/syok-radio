@@ -34,7 +34,7 @@ export default ({ app }, inject) => {
   });
 
   inject("showsObject", (showsData, stationData) => {
-    let days = [
+    const days = [
       "Sunday",
       "Monday",
       "Tuesday",
@@ -52,9 +52,9 @@ export default ({ app }, inject) => {
       Friday: [],
       Saturday: []
     };
-    let d = new Date();
-    let dayName = days[d.getDay()];
-    let dayNameTomorrow = days[d.getDay() + 1];
+    const d = new Date();
+    const dayName = days[d.getDay()];
+    const dayNameTomorrow = days[d.getDay() + 1];
     showsData.forEach(show => {
       if (show.Day) {
         const days = show.Day.split("|");
@@ -70,12 +70,12 @@ export default ({ app }, inject) => {
       }
     });
 
-    var time = new Date();
-    let minute =
+    const time = new Date();
+    const minute =
       time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
-    let formattedTime = time.getHours() + "" + minute;
+    const formattedTime = time.getHours() + "" + minute;
 
-    let finalShows = [
+    const finalShows = [
       ...showsFiltered.Sunday.sort((a, b) => a.startTime - b.startTime),
       ...showsFiltered.Monday.sort((a, b) => a.startTime - b.startTime),
       ...showsFiltered.Tuesday.sort((a, b) => a.startTime - b.startTime),
@@ -154,10 +154,10 @@ export default ({ app }, inject) => {
 
       const divider = ":";
       const position = 2;
-      let startTime = [a.slice(0, position), divider, a.slice(position)].join(
+      const startTime = [a.slice(0, position), divider, a.slice(position)].join(
         ""
       );
-      let endTime = [b.slice(0, position), divider, b.slice(position)].join("");
+      const endTime = [b.slice(0, position), divider, b.slice(position)].join("");
 
       let day;
       if (show.day === dayName) {
@@ -216,7 +216,7 @@ export default ({ app }, inject) => {
       }
     });
 
-    let parent = stationList.find(element => element.stationCode == paramsId).groupId;
+    const parent = stationList.find(element => element.stationCode == paramsId).groupId;
 
     let mainStation = [];
     let langStation = [];

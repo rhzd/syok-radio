@@ -235,9 +235,7 @@ export default {
     const lang = encodeURIComponent(`["${this.stationData.language}"]`);
     const listenerId = com_adswizz_synchro_getListenerId();
     let stream;
-    if (this.stationData.streams[0].endpoint.includes("revma")) {
-      stream = `${this.stationData.streams[0].endpoint}?rj-auth=${this.streamToken}&awparams=${uri_component}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
-    } else if (this.stationData.streams[0].endpoint.includes("rastream")) {
+    if (this.stationData.streams[0].endpoint.includes("rastream")) {
       stream = `${this.stationData.streams[0].endpoint}?authtoken=${this.streamToken}&awparams=${uri_component}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
     } else {
       stream = null;
@@ -251,6 +249,8 @@ export default {
         this.audio.play();
       });
       hls.on(Hls.Events.FRAG_PARSING_METADATA, (event, data) => {
+        console.log(data["frag"]["title"].split("="));
+
         let dict = {};
         let tmp = data["frag"]["title"].split("=");
         if (tmp.length > 0) {
@@ -271,17 +271,16 @@ export default {
         if (dict.data) {
           if (this.currentMetadata) {
             if (dict.data.current_song.track !== this.currentMetadata.track) {
-              this.$root.$refs.LastPlayedSong.fetchPlayoutHistory(
+              this.$nuxt.$emit(
+                "fetchPlayoutHistory",
                 dict.data.current_song
               );
             }
           } else {
-            this.$root.$refs.LastPlayedSong.fetchPlayoutHistory(
-              dict.data.current_song
-            );
+            this.$nuxt.$emit("fetchPlayoutHistory", dict.data.current_song);
           }
+          this.currentMetadata = dict.data ? dict.data.current_song : null;
         }
-        this.currentMetadata = dict.data ? dict.data.current_song : null;
       });
     } else {
       this.isHlsSupported = false;

@@ -199,35 +199,16 @@ export default {
 
       let streamToken = "";
 
-      if (stationData.streams[0].endpoint.includes("revma")) {
-        let path = new URL(stationData.streams[0].endpoint).pathname;
-        await fetch(
-          `https://www.revma.com/api/stations/${
-            path.split("/")[1]
-          }/private_stream_token?minutes=1440`,
-          {
-            headers: {
-              "x-auth-token": "1598352525wMVCYpxLcUBjGSkS7dHq",
-            },
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            streamToken = new URL(data).searchParams.get("rj-auth");
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      } else if (stationData.streams[0].endpoint.includes("rastream")) {
-        let limit = 60 * 60 * 24; // 180 seconds
-        let init = Math.floor(Date.now() / 1000);
-        let expires = Math.floor(Date.now() / 1000) + limit;
-        let payload = {
+      if (stationData.streams[0].endpoint.includes("rastream")) {
+        const limit = 60 * 60 * 24; // 180 seconds
+        const init = Math.floor(Date.now() / 1000);
+        const expires = Math.floor(Date.now() / 1000) + limit;
+        const payload = {
           exp: expires,
           iat: init,
           oid: OIDRadioStream,
         };
-        let token = jwt.sign(payload, Buffer.from(JWTRadioStream, "base64"));
+        const token = jwt.sign(payload, Buffer.from(JWTRadioStream, "base64"));
         streamToken = token;
       }
 

@@ -48,10 +48,7 @@ export default {
     };
   },
   created() {
-    this.$root.$refs.LastPlayedSong = this;
-  },
-  methods: {
-    fetchPlayoutHistory(currentMetadata) {
+    this.$nuxt.$on("fetchPlayoutHistory", async (currentMetadata) => {
       if (this.playoutHistory.length > 0) {
         if (currentMetadata) {
           if (currentMetadata.id !== this.playoutHistory[0].song.id) {
@@ -66,7 +63,9 @@ export default {
       if (this.playoutHistory.length == 20) {
         this.playoutHistory.pop();
       }
-    },
+    });
+  },
+  methods: {
     setAltImg(event) {
       event.target.src = this.squareImage;
     },
