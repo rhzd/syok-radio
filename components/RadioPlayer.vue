@@ -266,20 +266,26 @@ export default {
               console.error("Metadata Parsing Error", err);
               console.error(decodeURIComponent(tmp[2].replace('"', "")));
             }
-          }
-        }
-        if (dict.data) {
-          if (this.currentMetadata) {
-            if (dict.data.current_song.track !== this.currentMetadata.track) {
-              this.$nuxt.$emit(
-                "fetchPlayoutHistory",
-                dict.data.current_song
+          } else if (tmp.length == 4 && tmp[3].toString()[1] === "%") {
+            try {
+              dict["data"] = JSON.parse(
+                decodeURIComponent(tmp[3].substring(1, tmp[3].length - 1))
               );
+            } catch (err) {
+              console.error("Metadata Parsing Error", err);
+              console.error(decodeURIComponent(tmp[3].replace('"', "")));
             }
-          } else {
-            this.$nuxt.$emit("fetchPlayoutHistory", dict.data.current_song);
           }
-          this.currentMetadata = dict.data ? dict.data.current_song : null;
+          if (dict.data) {
+            if (this.currentMetadata) {
+              if (dict.data.current_song.track !== this.currentMetadata.track) {
+                this.$nuxt.$emit("fetchPlayoutHistory", dict.data.current_song);
+              }
+            } else {
+              this.$nuxt.$emit("fetchPlayoutHistory", dict.data.current_song);
+            }
+            this.currentMetadata = dict.data ? dict.data.current_song : null;
+          }
         }
       });
     } else {
