@@ -197,6 +197,10 @@ export default {
 
       const stationData = reStation.find((el) => el.stationCode == params.id);
 
+      const parentStationColor = stationList.data.find(
+        (el) => el.groupId == stationData.groupId
+      ).theme.webplayer;
+
       let streamToken = "";
 
       if (stationData.streams[0].endpoint.includes("rastream")) {
@@ -255,25 +259,17 @@ export default {
 
       // STATION COLOR
 
+      console.log("stationData", stationData);
+
       let stationColor = {
         primary: "#fb2724",
         secondary: $colorChange("#fb2724", -40),
         tertiary: $colorChange("#fb2724", 100),
       };
-      if (
-        stationData.additionalAttributes &&
-        stationData.additionalAttributes.stationColor
-      ) {
-        stationColor.primary =
-          stationData.additionalAttributes.stationColor[0].webplayer;
-        stationColor.secondary = $colorChange(
-          stationData.additionalAttributes.stationColor[0].webplayer,
-          -40
-        );
-        stationColor.tertiary = $colorChange(
-          stationData.additionalAttributes.stationColor[0].webplayer,
-          100
-        );
+      if (parentStationColor) {
+        stationColor.primary = parentStationColor;
+        stationColor.secondary = $colorChange(parentStationColor, -40);
+        stationColor.tertiary = $colorChange(parentStationColor, 100);
       }
 
       return {

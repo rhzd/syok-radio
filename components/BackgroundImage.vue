@@ -1,18 +1,15 @@
 <template>
   <div>
     <div class="flex sponsored-container">
-      <div class="station-logo-container start">
-        <img class="station-logo start" :src="stationLogo" alt="syok" />
-      </div>
       <div v-for="(el, index) in sponsored" :key="index">
         <div
           class="flex justify-center items-center sponsored-logo-container"
-          :class="index !== sponsored.length - 1 ? 'mid' : 'end'"
+          :class="index !== sponsored.length - 1 ? 'single' : 'single'"
         >
-          <a :href="el.link" target="_blank" class="flex justify-center">
+          <a :href="el.link" target="_blank" class="flex justify-center" style="padding: 10px;">
             <img
               class="sponsored-logo"
-              :class="index !== sponsored.length - 1 ? 'mid' : 'end'"
+              :class="index !== sponsored.length - 1 ? 'single' : 'single'"
               :src="el.image"
               :alt="el.name"
             />
@@ -45,9 +42,8 @@ export default {
       sponsored: [
         {
           name: "syok",
-          image:
-            "https://i1.wp.com/prebiu.com/wp-content/uploads/2021/06/Logo_SYOK.png",
-          link: "https://www.syok.my/",
+          image: require(`~/assets/images/syok-logo.png`),
+          link: "https://syok.my/"
         },
       ],
     };
@@ -115,6 +111,9 @@ export default {
 }
 .end {
   border-radius: 0% 10% 10% 0%;
+}
+.single {
+  border-radius: 10%;
 }
 @media only screen and (max-width: 1199px) {
   .max-player {
