@@ -1,5 +1,10 @@
 <template>
-  <div class="bg-color h-screen flex flex-wrap justify-center content-center">
+  <div class="bg-color h-screen mobile-friendly">
+    <img
+      class="header-logo-mobile"
+      src="~/assets/images/syok-logo-no-space.png"
+      alt="syok"
+    />
     <div class="player-container overflow-hidden">
       <Nuxt />
     </div>
@@ -22,11 +27,22 @@ body {
 }
 .bg-color {
   background-color: #212121;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .player-container {
   width: 1200px;
   height: 700px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.header-logo-mobile {
+  display: none;
+}
+.mobile-friendly {
+  align-content: flex-start;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media only screen and (max-width: 1199px) {
@@ -51,6 +67,19 @@ body {
   .player-container {
     width: 350px;
     height: 550px;
+  }
+  .header-logo-mobile {
+    display: block;
+    width: 150px;
+    margin: 20px 137px;
+  }
+  .mobile-friendly {
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 </style>

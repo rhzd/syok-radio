@@ -638,7 +638,7 @@ input[type="range"]::-ms-track {
     letter-spacing: 1px;
   }
   .station-font {
-    line-height: 11px;
+    line-height: 17px;
     font-size: 18px;
     font-weight: 400;
   }

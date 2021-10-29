@@ -239,7 +239,7 @@ export default {
   border-radius: 20px 20px 0px 0px;
 }
 .show-image-container {
-  height: 80px;
+  /* height: 80px; */
   width: 80px;
   background-color: darkgrey;
   border-radius: 6px;
@@ -248,7 +248,7 @@ export default {
 }
 .show-image {
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   border-radius: 6px;
   border: 0.1px solid lightgrey;
 }
