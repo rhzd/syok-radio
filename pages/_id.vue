@@ -203,7 +203,7 @@ export default {
 
       let streamToken = "";
 
-      if (stationData.streams[0].endpoint.includes("rastream")) {
+      if (stationData.streams[0].endpoint) {
         const limit = 60 * 60 * 24; // 180 seconds
         const init = Math.floor(Date.now() / 1000);
         const expires = Math.floor(Date.now() / 1000) + limit;
