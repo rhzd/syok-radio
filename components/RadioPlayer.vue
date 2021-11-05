@@ -235,7 +235,7 @@ export default {
     const lang = encodeURIComponent(`["${this.stationData.language}"]`);
     const listenerId = com_adswizz_synchro_getListenerId();
     let stream;
-    if (this.stationData.streams[0].endpoint.includes("rastream")) {
+    if (this.stationData.streams[0].endpoint) {
       stream = `${this.stationData.streams[0].endpoint}?authtoken=${this.streamToken}&awparams=${uri_component}&listenerid=${listenerId}&lan=${lang}&setLanguage=true`;
     } else {
       stream = null;
